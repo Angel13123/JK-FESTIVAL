@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 export type Artist = {
   id: string;
   name: string;
@@ -41,7 +43,7 @@ export type Order = {
     customerEmail: string;
     customerCountry: string;
     totalAmount: number;
-    createdAt: string; // ISO 8601 date string
+    createdAt: Timestamp | string; // ISO 8601 date string or Firestore Timestamp
     ticketItems: {
         ticketTypeId: string;
         quantity: number;
@@ -57,7 +59,7 @@ export type Ticket = {
     ownerName: string;
     status: 'valid' | 'used' | 'revoked';
     code: string; // The "Gemini" generated code
-    createdAt: string; // ISO 8601 date string
+    createdAt: Timestamp | string; // ISO 8601 date string or Firestore Timestamp
 };
 
 export type OrderStats = {

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -9,6 +8,7 @@ import { validateTicket, markTicketAsUsed } from "@/lib/orders-service";
 import type { Ticket as TicketType } from "@/lib/types";
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { Timestamp } from "firebase/firestore";
 
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -58,6 +58,21 @@ function ResultCard({ result }: { result: ValidationResult }) {
 
     const { icon, title, cardClass } = statusConfig[result.status];
 
+    const getJsDateFromTimestamp = (timestamp: any): Date | null => {
+        if (timestamp instanceof Timestamp) {
+            return timestamp.toDate();
+        }
+        if (typeof timestamp === 'string') {
+            const date = new Date(timestamp);
+            if (!isNaN(date.getTime())) {
+                return date;
+            }
+        }
+        return null;
+    }
+
+    const purchaseDate = result.ticket?.createdAt ? getJsDateFromTimestamp(result.ticket.createdAt) : null;
+
     return (
         <Card className={`${baseClasses} ${cardClass} animate-fade-in-up`}>
             <CardHeader className="items-center space-y-4">
@@ -78,7 +93,7 @@ function ResultCard({ result }: { result: ValidationResult }) {
                          </div>
                          <div className="flex items-center gap-3">
                             <Calendar className="h-4 w-4 text-muted-foreground"/>
-                            <span><strong>Comprado:</strong> {result.ticket.createdAt ? format(new Date(result.ticket.createdAt), "d 'de' MMMM, yyyy 'a las' HH:mm", { locale: es }) : 'N/A'}</span>
+                            <span><strong>Comprado:</strong> {purchaseDate ? format(purchaseDate, "d 'de' MMMM, yyyy 'a las' HH:mm", { locale: es }) : 'N/A'}</span>
                          </div>
                     </div>
                 )}
@@ -106,7 +121,8 @@ export default function ScanPage() {
 
     if (validationResponse.status === 'valid' && validationResponse.ticket) {
       await markTicketAsUsed(validationResponse.ticket.id);
-      setResult({ ...validationResponse, status: 'valid' });
+      // We show the ticket as valid, but it has now been marked as used in the backend
+      setResult({ ...validationResponse, status: 'valid' }); 
     } else {
       setResult(validationResponse);
     }
@@ -157,4 +173,3 @@ export default function ScanPage() {
     </div>
   );
 }
-
