@@ -1,60 +1,11 @@
-/**
- * @file Firestore Security Rules for JK Festival Orders and Tickets
- * @core_philosophy: This ruleset enforces a data model where orders and tickets are stored in separate collections.
- *  All read and write operations are governed by the principle of authorization independence.
- *  That is, read and write rules on 'tickets' do not require fetching data from the 'orders' collection.
- * @data_structure:
- *  - /orders/{orderId}: Stores order information.
- *  - /tickets/{ticketId}: Stores ticket information, including the orderId to which it belongs.
- * @key_security_decisions:
- *  - Users cannot list all orders or tickets (listing is only possible through application logic)
- *  - Data validation is minimal to allow for rapid prototyping and schema iteration.
- * @denormalization_for_authorization:
- *  - The tickets collection denormalizes customerName and customerEmail to avoid the need for fetching the parent order document during authorization.
- */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    /**
-     * @description Defines if the current user is signed in.
-     * @path N/A
-     * @allow N/A
-     * @deny N/A
-     * @principle Requires the user to be authenticated.
-     */
-    function isSignedIn() {
-      return request.auth != null;
-    }
-
-    /**
-     * @description Rules for the orders collection.
-     * @path /orders/{orderId}
-     * @allow Anyone can create an order.
-     * @deny Reading, updating, or deleting orders is disallowed.
-     * @principle Allows public creation of orders for ticket purchases.
-     */
-    match /orders/{orderId} {
-      allow get: if false;
-      allow list: if false;
-      allow create: if true; // Allow anyone to create an order
-      allow update: if false;
-      allow delete: if false;
-    }
-
-    /**
-     * @description Rules for the tickets collection.
-     * @path /tickets/{ticketId}
-     * @allow Anyone can create a ticket. An admin (signed-in user) can update a ticket's status.
-     * @deny Public users cannot update or delete tickets.
-     * @principle Allows public ticket creation during checkout and admin validation.
-     */
-    match /tickets/{ticketId} {
-      allow get: if false;
-      allow list: if false;
-      allow create: if true; // Allow anyone to create tickets
-      allow update: if true; // Allow updates (e.g., changing status to 'used')
-      allow delete: if false;
+    // WARNING: These rules are completely open and are not secure.
+    // They are intended for initial development and testing only.
+    // You should secure your database before deploying to production.
+    match /{document=**} {
+      allow read, write: if true;
     }
   }
 }
