@@ -8,7 +8,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { createOrderAndTickets } from "@/lib/orders-service";
-import { useAuth } from "@/context/AuthContext";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -31,7 +30,6 @@ export default function CheckoutPage() {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const total = getCartTotal(ticketTypes);
-  const { user } = useAuth();
 
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -156,9 +154,9 @@ export default function CheckoutPage() {
                       )}/>
                   </div>
                   
-                  <Button type="submit" className="w-full transition-transform duration-300 hover:scale-105" size="lg" disabled={isLoading || !user}>
+                  <Button type="submit" className="w-full transition-transform duration-300 hover:scale-105" size="lg" disabled={isLoading}>
                     {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                    {!user ? 'Inicia sesión para comprar' : (isLoading ? 'Procesando pago...' : `Pagar ahora ${total.toFixed(2)} EUR`)}
+                    {isLoading ? 'Procesando pago...' : `Pagar ahora ${total.toFixed(2)} EUR`}
                   </Button>
                   <p className="text-xs text-center text-muted-foreground pt-2">
                       Al hacer clic, se simulará una pasarela de pago.
