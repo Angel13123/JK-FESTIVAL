@@ -35,11 +35,16 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     if (quantity <= 0) {
       removeFromCart(ticketTypeId);
     } else {
-      setCartItems(prevItems =>
-        prevItems.map(item =>
-          item.ticketTypeId === ticketTypeId ? { ...item, quantity } : item
-        )
-      );
+      setCartItems(prevItems => {
+        const existingItem = prevItems.find(item => item.ticketTypeId === ticketTypeId);
+        if (existingItem) {
+          return prevItems.map(item =>
+            item.ticketTypeId === ticketTypeId ? { ...item, quantity } : item
+          );
+        }
+        // If the item doesn't exist, add it to the cart
+        return [...prevItems, { ticketTypeId, quantity }];
+      });
     }
   };
 
