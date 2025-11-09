@@ -23,7 +23,7 @@ export default function TicketsPage() {
   return (
     <div className="bg-card">
       <div className="container mx-auto max-w-screen-lg px-4 py-16">
-        <div className="text-center mb-12">
+        <div className="text-center mb-12 animate-fade-in-down">
           <h1 className="text-4xl md:text-5xl font-bold font-headline tracking-tight">Consigue tus entradas</h1>
           <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
             Asegura tu sitio en el JK Festival. Elige tu experiencia y prepárate para vivir algo único.
@@ -32,11 +32,15 @@ export default function TicketsPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
           <div className="space-y-6">
-            {ticketTypes.filter(t => t.isAvailable).map(ticket => {
+            {ticketTypes.filter(t => t.isAvailable).map((ticket, index) => {
               const cartItem = cartItems.find(item => item.ticketTypeId === ticket.id);
               const quantity = cartItem ? cartItem.quantity : 0;
               return (
-                <Card key={ticket.id} className={`transition-all ${quantity > 0 ? 'border-primary ring-2 ring-primary' : ''}`}>
+                <Card 
+                  key={ticket.id} 
+                  className={`transition-all duration-300 hover:shadow-lg hover:-translate-y-1 animate-fade-in-up ${quantity > 0 ? 'border-primary ring-2 ring-primary' : ''}`}
+                  style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'both' }}
+                >
                   <CardHeader>
                     <CardTitle className="font-headline text-2xl">{ticket.name}</CardTitle>
                     <CardDescription className="text-3xl font-bold text-primary">{ticket.price} EUR</CardDescription>
@@ -89,7 +93,7 @@ export default function TicketsPage() {
              ))}
           </div>
 
-          <div className="sticky top-24">
+          <div className="sticky top-24 animate-fade-in">
             <Card className="bg-background">
               <CardHeader>
                 <CardTitle className="font-headline text-2xl">Resumen del pedido</CardTitle>

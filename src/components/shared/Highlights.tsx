@@ -30,7 +30,11 @@ export function Highlights() {
       <div className="container mx-auto max-w-screen-xl px-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
           {highlights.map((highlight, index) => (
-            <Card key={index} className="text-center bg-card hover:shadow-lg transition-shadow duration-300">
+            <Card 
+              key={index} 
+              className="text-center bg-card hover:shadow-lg transition-all duration-300 hover:-translate-y-1 animate-fade-in-up"
+              style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'both' }}
+            >
               <CardHeader className="items-center">
                 <div className="bg-primary/10 p-4 rounded-full">
                   {highlight.icon}
