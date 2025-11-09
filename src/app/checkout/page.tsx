@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { createOrder } from "@/lib/orders-service";
+import { createOrderAndTickets } from "@/lib/orders-service";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -51,8 +51,8 @@ export default function CheckoutPage() {
 
     if (isSuccess) {
       try {
-        // Create order and tickets
-        createOrder({
+        // Create order and tickets in Firestore
+        const newOrder = await createOrderAndTickets({
             customerName: values.fullName,
             customerEmail: values.email,
             totalAmount: total,
@@ -65,13 +65,14 @@ export default function CheckoutPage() {
         });
 
         clearCart();
-        router.push('/payment/success');
+        // Pass the new order ID to the success page
+        router.push(`/payment/success?orderId=${newOrder.id}`);
       } catch(e) {
          console.error(e);
          toast({
             variant: "destructive",
             title: "Error al registrar el pedido",
-            description: "Hubo un problema al guardar tu compra. Por favor, intenta de nuevo."
+            description: "Hubo un problema al guardar tu compra en la base de datos. Por favor, intenta de nuevo."
          });
          router.push('/payment/failure');
       }
