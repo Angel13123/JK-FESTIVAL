@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { validateTicket, markTicketAsUsed } from "@/lib/orders-service";
 
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -17,13 +18,6 @@ import { Music } from "lucide-react";
 const formSchema = z.object({
   ticketCode: z.string().min(5, "El código de entrada es demasiado corto."),
 });
-
-// Mock database of tickets
-const mockTicketDatabase = {
-  "VALID-123": { used: false, owner: "Juan Pérez" },
-  "USED-456": { used: true, owner: "Ana García" },
-  "VALID-789": { used: false, owner: "Carlos López" },
-};
 
 type ValidationStatus = "idle" | "valid" | "used" | "not_found";
 interface ValidationResult {
@@ -44,23 +38,18 @@ export default function ScanPage() {
     setIsLoading(true);
     setResult({status: 'idle', message: ''});
 
-    // TODO: In a real app, this would be an API call to a database.
-    // It would also ideally use a camera to scan a QR code.
+    // In a real app, this would be an API call to a database.
+    // For now, we interact with our in-memory service.
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     const code = values.ticketCode.toUpperCase();
-    const ticket = mockTicketDatabase[code as keyof typeof mockTicketDatabase];
+    const validationResponse = validateTicket(code);
 
-    if (ticket) {
-      if (ticket.used) {
-        setResult({status: 'used', message: `Entrada ya utilizada. Propietario: ${ticket.owner}.`});
-      } else {
-        setResult({status: 'valid', message: `Entrada válida. Propietario: ${ticket.owner}.`});
-        // Mock updating the database
-        ticket.used = true;
-      }
+    if (validationResponse.status === 'valid' && validationResponse.ticket) {
+      markTicketAsUsed(validationResponse.ticket.id);
+      setResult({status: 'valid', message: `Entrada válida. Propietario: ${validationResponse.ticket.ownerName}.`});
     } else {
-      setResult({status: 'not_found', message: 'Entrada no encontrada en la base de datos.'});
+      setResult({status: validationResponse.status, message: validationResponse.message});
     }
 
     setIsLoading(false);
@@ -93,8 +82,8 @@ export default function ScanPage() {
           <p className="text-muted-foreground">Introduce el código para validar la entrada de un asistente.</p>
         </div>
       </div>
-      <div className="flex items-center justify-center">
-        <Card className="w-full max-w-md animate-fade-in-up">
+      <div className="flex items-center justify-center animate-fade-in-up">
+        <Card className="w-full max-w-md">
             <CardHeader className="text-center items-center">
                 <Music className="h-8 w-8 text-primary" />
                 <CardTitle className="font-headline text-2xl">Escanear Código</CardTitle>
@@ -110,7 +99,7 @@ export default function ScanPage() {
                         <FormItem>
                           <FormLabel>Código de Entrada</FormLabel>
                           <FormControl>
-                            <Input placeholder="Ej: VALID-123" {...field} autoFocus />
+                            <Input placeholder="Ej: JKF-XXXX-XXXX" {...field} autoFocus className="font-mono text-center"/>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -124,7 +113,7 @@ export default function ScanPage() {
                 </Form>
                 
                 <p className="text-xs text-center text-muted-foreground mt-4">
-                  // TODO: Integrar lector de códigos QR.
+                  En el futuro, se integrará un lector de códigos QR.
                 </p>
 
                 {result.status !== 'idle' && (

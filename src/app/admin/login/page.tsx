@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
 import { Music, Loader2 } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,6 +20,7 @@ const formSchema = z.object({
 
 export default function AdminLoginPage() {
   const router = useRouter();
+  const { user, login } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,32 +29,34 @@ export default function AdminLoginPage() {
     defaultValues: { email: "", password: "" },
   });
 
+  useEffect(() => {
+    if (user) {
+      router.push("/admin");
+    }
+  }, [user, router]);
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     setError(null);
-    
-    // TODO: Implement real authentication with Firebase Auth or another provider.
-    // This is a mock authentication flow.
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    if (values.email === "admin@jkfestival.com" && values.password === "password") {
-      // On successful authentication, you would typically set a session cookie or token.
-      // For this demo, we just navigate to the admin dashboard.
+    try {
+      await login(values.email, values.password);
       router.push("/admin");
-    } else {
+    } catch (error: any) {
       setError("Email o contraseña incorrectos.");
+      console.error(error);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <div className="w-full max-w-md">
-         <div className="flex justify-center items-center gap-2 mb-6">
+         <div className="flex justify-center items-center gap-2 mb-6 animate-fade-in-down">
             <Music className="h-8 w-8 text-primary" />
             <span className="text-2xl font-bold font-headline">JK Festival - Admin</span>
           </div>
-        <Card>
+        <Card className="animate-fade-in-up">
           <CardHeader>
             <CardTitle>Acceso al panel</CardTitle>
             <CardDescription>Introduce tus credenciales para gestionar el festival.</CardDescription>
@@ -87,7 +91,7 @@ export default function AdminLoginPage() {
                   )}
                 />
                 {error && <p className="text-sm font-medium text-destructive">{error}</p>}
-                <Button type="submit" className="w-full" disabled={isLoading}>
+                <Button type="submit" className="w-full transition-transform hover:scale-105" disabled={isLoading}>
                   {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Iniciar sesión
                 </Button>

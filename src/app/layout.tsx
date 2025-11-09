@@ -3,6 +3,7 @@ import { Poppins, PT_Sans } from 'next/font/google';
 import './globals.css';
 import { cn } from '@/lib/utils';
 import { CartProvider } from '@/context/CartContext';
+import { AuthProvider } from '@/context/AuthContext';
 import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
@@ -42,10 +43,12 @@ export default function RootLayout({
           fontBody.variable
         )}
       >
-        <CartProvider>
-          {children}
-          <Toaster />
-        </CartProvider>
+        <AuthProvider>
+          <CartProvider>
+            {children}
+            <Toaster />
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );

@@ -32,6 +32,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { PlusCircle, Edit } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const ticketSchema = z.object({
   id: z.string().optional(),
@@ -82,6 +83,7 @@ function TicketForm({ ticket, onSave, closeDialog }: { ticket?: TicketFormData; 
 
 
 export default function AdminTicketsPage() {
+  const { toast } = useToast();
   const [tickets, setTickets] = useState<TicketType[]>(mockTicketTypes);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingTicket, setEditingTicket] = useState<TicketFormData | undefined>(undefined);
@@ -90,6 +92,7 @@ export default function AdminTicketsPage() {
     // TODO: This should be an API call to the backend.
     if (editingTicket) {
       setTickets(tickets.map(t => t.id === editingTicket.id ? { ...t, ...data, benefits: data.benefits.split(',') } : t));
+      toast({ title: "Tipo de entrada actualizado", description: `Se ha modificado ${data.name}.` });
     } else {
       const newTicket: TicketType = {
         id: `ticket_${Date.now()}`,
@@ -97,6 +100,7 @@ export default function AdminTicketsPage() {
         benefits: data.benefits.split(','),
       };
       setTickets([...tickets, newTicket]);
+      toast({ title: "Tipo de entrada creado", description: `Se ha creado ${data.name}.` });
     }
     setEditingTicket(undefined);
   };
@@ -112,7 +116,7 @@ export default function AdminTicketsPage() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 animate-fade-in-up">
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold font-headline">Gestionar Tipos de Entradas</h1>
@@ -120,7 +124,7 @@ export default function AdminTicketsPage() {
         </div>
          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button onClick={openNewDialog}><PlusCircle className="mr-2 h-4 w-4" />Añadir Tipo</Button>
+            <Button onClick={openNewDialog} className="transition-transform hover:scale-105"><PlusCircle className="mr-2 h-4 w-4" />Añadir Tipo</Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
@@ -132,7 +136,7 @@ export default function AdminTicketsPage() {
         </Dialog>
       </div>
 
-      <div className="border rounded-lg">
+      <div className="border rounded-lg bg-card transition-shadow hover:shadow-lg">
         <Table>
           <TableHeader>
             <TableRow>
@@ -144,11 +148,11 @@ export default function AdminTicketsPage() {
           </TableHeader>
           <TableBody>
             {tickets.map((ticket) => (
-              <TableRow key={ticket.id}>
+              <TableRow key={ticket.id} className="transition-colors hover:bg-muted/50">
                 <TableCell className="font-medium">{ticket.name}</TableCell>
                 <TableCell>{ticket.price} EUR</TableCell>
                 <TableCell>
-                  <Badge variant={ticket.isAvailable ? 'default' : 'outline'} className={ticket.isAvailable ? 'bg-green-500' : ''}>
+                  <Badge variant={ticket.isAvailable ? 'default' : 'outline'} className={ticket.isAvailable ? 'bg-green-500 hover:bg-green-600' : ''}>
                     {ticket.isAvailable ? 'Activo' : 'Inactivo'}
                   </Badge>
                 </TableCell>

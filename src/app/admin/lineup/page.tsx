@@ -32,6 +32,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { PlusCircle, Edit } from "lucide-react";
 import Image from "next/image";
+import { useToast } from "@/hooks/use-toast";
 
 const artistSchema = z.object({
   id: z.string().optional(),
@@ -97,16 +98,18 @@ function ArtistForm({ artist, onSave, closeDialog }: { artist?: ArtistFormData; 
 }
 
 export default function AdminLineupPage() {
+  const { toast } = useToast();
   const [artists, setArtists] = useState<Artist[]>(mockArtists);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingArtist, setEditingArtist] = useState<Artist | undefined>(undefined);
   
   const handleSave = (data: ArtistFormData) => {
-    // TODO: This should be an API call.
     if (editingArtist) {
       setArtists(artists.map(a => a.id === editingArtist.id ? { ...a, ...data } : a));
+       toast({ title: "Artista actualizado", description: `${data.name} ha sido modificado.` });
     } else {
       setArtists([...artists, { ...data, id: `artist_${Date.now()}` }]);
+       toast({ title: "Artista añadido", description: `${data.name} ha sido añadido al lineup.` });
     }
     setEditingArtist(undefined);
   };
@@ -123,7 +126,7 @@ export default function AdminLineupPage() {
 
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 animate-fade-in-up">
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold font-headline">Gestionar Lineup</h1>
@@ -131,7 +134,7 @@ export default function AdminLineupPage() {
         </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button onClick={openNewDialog}><PlusCircle className="mr-2 h-4 w-4" />Añadir Artista</Button>
+            <Button onClick={openNewDialog} className="transition-transform hover:scale-105"><PlusCircle className="mr-2 h-4 w-4" />Añadir Artista</Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[625px]">
             <DialogHeader>
@@ -143,7 +146,7 @@ export default function AdminLineupPage() {
         </Dialog>
       </div>
 
-      <div className="border rounded-lg">
+      <div className="border rounded-lg bg-card transition-shadow hover:shadow-lg">
         <Table>
           <TableHeader>
             <TableRow>
@@ -156,7 +159,7 @@ export default function AdminLineupPage() {
           </TableHeader>
           <TableBody>
             {artists.map((artist) => (
-              <TableRow key={artist.id}>
+              <TableRow key={artist.id} className="transition-colors hover:bg-muted/50">
                 <TableCell className="font-medium">
                   <div className="flex items-center gap-3">
                     <Image src={artist.imageUrl} alt={artist.name} width={40} height={40} className="rounded-full object-cover" />

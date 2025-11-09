@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { createOrder } from "@/lib/orders-service";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,6 +15,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
   fullName: z.string().min(2, "El nombre completo es obligatorio."),
@@ -25,6 +27,7 @@ const formSchema = z.object({
 export default function CheckoutPage() {
   const { cartItems, getCartTotal, clearCart } = useCart();
   const router = useRouter();
+  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const total = getCartTotal(ticketTypes);
 
@@ -38,24 +41,50 @@ export default function CheckoutPage() {
     },
   });
 
-  const createMockCheckoutSession = async (values: z.infer<typeof formSchema>) => {
-    console.log("Creating mock checkout session with data:", {
-      ...values,
-      cart: cartItems,
-      total: total,
-    });
-    
+  const handleCheckout = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    const isSuccess = Math.random() > 0.2; 
-    setIsLoading(false);
     
+    // Simulate payment processing
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    const isSuccess = Math.random() > 0.1; // 90% success rate
+
     if (isSuccess) {
-      clearCart();
-      router.push('/payment/success');
+      try {
+        // Create order and tickets
+        createOrder({
+            customerName: values.fullName,
+            customerEmail: values.email,
+            totalAmount: total,
+            cartItems: cartItems
+        });
+        
+        toast({
+            title: "¡Compra completada!",
+            description: "Tu pedido se ha procesado correctamente."
+        });
+
+        clearCart();
+        router.push('/payment/success');
+      } catch(e) {
+         console.error(e);
+         toast({
+            variant: "destructive",
+            title: "Error al registrar el pedido",
+            description: "Hubo un problema al guardar tu compra. Por favor, intenta de nuevo."
+         });
+         router.push('/payment/failure');
+      }
     } else {
+      toast({
+        variant: "destructive",
+        title: "Error en el pago",
+        description: "No se pudo procesar tu pago. Por favor, intenta de nuevo."
+      });
       router.push('/payment/failure');
     }
+    
+    setIsLoading(false);
   };
 
 
@@ -79,14 +108,14 @@ export default function CheckoutPage() {
           <p className="mt-4 text-lg text-muted-foreground">Ya casi has terminado. Completa tus datos para recibir tus entradas.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 animate-fade-in-up">
           <Card className="bg-card transition-shadow duration-300 hover:shadow-xl">
             <CardHeader>
               <CardTitle>Tus datos</CardTitle>
             </CardHeader>
             <CardContent>
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(createMockCheckoutSession)} className="space-y-6">
+                <form onSubmit={form.handleSubmit(handleCheckout)} className="space-y-6">
                   <FormField control={form.control} name="fullName" render={({ field }) => (
                       <FormItem>
                         <FormLabel>Nombre completo</FormLabel>
@@ -123,7 +152,7 @@ export default function CheckoutPage() {
                     {isLoading ? 'Procesando pago...' : `Pagar ahora ${total.toFixed(2)} EUR`}
                   </Button>
                   <p className="text-xs text-center text-muted-foreground pt-2">
-                      // TODO: Al hacer clic, se redirigirá a una pasarela de pago como Stripe.
+                      Al hacer clic, se simulará una pasarela de pago.
                   </p>
                 </form>
               </Form>
