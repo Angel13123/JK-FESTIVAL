@@ -46,7 +46,7 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted p-4">
+    <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <div className="w-full max-w-md">
          <div className="flex justify-center items-center gap-2 mb-6">
             <Music className="h-8 w-8 text-primary" />

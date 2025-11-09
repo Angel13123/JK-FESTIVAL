@@ -12,6 +12,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Loader2, Ticket, CheckCircle, XCircle, AlertCircle } from "lucide-react";
 import { Music } from "lucide-react";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
 const formSchema = z.object({
   ticketCode: z.string().min(5, "El código de entrada es demasiado corto."),
@@ -65,15 +67,6 @@ export default function ScanPage() {
     setIsLoading(false);
     form.reset();
   }
-
-  const getAlertVariant = (status: ValidationStatus) => {
-    switch (status) {
-      case 'valid': return 'default';
-      case 'used': return 'destructive';
-      case 'not_found': return 'destructive';
-      default: return 'default';
-    }
-  };
   
   const ResultIcon = () => {
     switch(result.status){
@@ -94,55 +87,63 @@ export default function ScanPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center items-center">
-            <Music className="h-8 w-8 text-primary" />
-            <CardTitle className="font-headline text-2xl">Validación de Entradas</CardTitle>
-            <CardDescription>Introduce el código para validar la entrada.</CardDescription>
-        </CardHeader>
-        <CardContent>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                <FormField
-                  control={form.control}
-                  name="ticketCode"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Código de Entrada</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Ej: VALID-123" {...field} autoFocus />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
-                  {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Ticket className="mr-2 h-4 w-4"/>}
-                  Validar entrada
-                </Button>
-              </form>
-            </Form>
-            
-            <p className="text-xs text-center text-muted-foreground mt-4">
-              // TODO: Integrar lector de códigos QR.
-            </p>
+    <>
+       <div className="flex justify-between items-center mb-8">
+        <div>
+          <h1 className="text-3xl font-bold font-headline">Validación de Entradas</h1>
+          <p className="text-muted-foreground">Introduce el código para validar la entrada de un asistente.</p>
+        </div>
+      </div>
+      <div className="flex items-center justify-center">
+        <Card className="w-full max-w-md animate-fade-in-up">
+            <CardHeader className="text-center items-center">
+                <Music className="h-8 w-8 text-primary" />
+                <CardTitle className="font-headline text-2xl">Escanear Código</CardTitle>
+                <CardDescription>Introduce el código manualmente.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    <FormField
+                      control={form.control}
+                      name="ticketCode"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Código de Entrada</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Ej: VALID-123" {...field} autoFocus />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Button type="submit" className="w-full transition-transform hover:scale-105" size="lg" disabled={isLoading}>
+                      {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Ticket className="mr-2 h-4 w-4"/>}
+                      Validar entrada
+                    </Button>
+                  </form>
+                </Form>
+                
+                <p className="text-xs text-center text-muted-foreground mt-4">
+                  // TODO: Integrar lector de códigos QR.
+                </p>
 
-            {result.status !== 'idle' && (
-              <Alert className={`mt-6 ${getAlertClass(result.status)}`}>
-                  <ResultIcon />
-                  <AlertTitle className="font-bold">
-                      {result.status === 'valid' && 'Entrada Válida'}
-                      {result.status === 'used' && 'Entrada Ya Utilizada'}
-                      {result.status === 'not_found' && 'Entrada No Encontrada'}
-                  </AlertTitle>
-                  <AlertDescription>
-                    {result.message}
-                  </AlertDescription>
-              </Alert>
-            )}
-        </CardContent>
-      </Card>
-    </div>
+                {result.status !== 'idle' && (
+                  <Alert className={`mt-6 ${getAlertClass(result.status)}`}>
+                      <ResultIcon />
+                      <AlertTitle className="font-bold">
+                          {result.status === 'valid' && 'Entrada Válida'}
+                          {result.status === 'used' && 'Entrada Ya Utilizada'}
+                          {result.status === 'not_found' && 'Entrada No Encontrada'}
+                      </AlertTitle>
+                      <AlertDescription>
+                        {result.message}
+                      </AlertDescription>
+                  </Alert>
+                )}
+            </CardContent>
+          </Card>
+      </div>
+    </>
   );
 }

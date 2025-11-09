@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Mic, Ticket, Music } from "lucide-react";
+import { Home, Mic, Ticket, Music, QrCode, LogOut } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -11,13 +11,14 @@ const adminNavLinks = [
   { href: "/admin", label: "Dashboard", icon: Home },
   { href: "/admin/lineup", label: "Lineup", icon: Mic },
   { href: "/admin/tickets-types", label: "Tipos de Entradas", icon: Ticket },
+  { href: "/scan", label: "Validar Entradas", icon: QrCode },
 ];
 
 export function AdminSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 flex-shrink-0 border-r bg-background flex flex-col">
+    <aside className="w-64 flex-shrink-0 border-r bg-background flex-col hidden md:flex">
       <div className="h-16 border-b flex items-center px-6">
         <Link href="/admin" className="flex items-center gap-2 font-bold text-lg font-headline">
           <Music className="h-6 w-6 text-primary" />
@@ -31,7 +32,7 @@ export function AdminSidebar() {
               <Button
                 asChild
                 variant={pathname === link.href ? "secondary" : "ghost"}
-                className="w-full justify-start"
+                className="w-full justify-start transition-transform hover:translate-x-1"
               >
                 <Link href={link.href}>
                   <link.icon className="mr-2 h-4 w-4" />
@@ -43,8 +44,14 @@ export function AdminSidebar() {
         </ul>
       </nav>
       <div className="mt-auto p-4 border-t">
-        <Button variant="outline" className="w-full">
+        <Button variant="outline" className="w-full transition-colors hover:border-primary">
             <Link href="/">Volver a la web</Link>
+        </Button>
+         <Button variant="ghost" className="w-full justify-start text-muted-foreground mt-2">
+            <Link href="/admin/login">
+                <LogOut className="mr-2 h-4 w-4" />
+                Cerrar sesión
+            </Link>
         </Button>
       </div>
     </aside>

@@ -2,9 +2,6 @@ import type { Metadata } from 'next';
 import { Poppins, PT_Sans } from 'next/font/google';
 import './globals.css';
 import { cn } from '@/lib/utils';
-import { Toaster } from "@/components/ui/toaster"
-import { Navbar } from '@/components/layout/Navbar';
-import { Footer } from '@/components/layout/Footer';
 import { CartProvider } from '@/context/CartContext';
 
 export const metadata: Metadata = {
@@ -45,12 +42,7 @@ export default function RootLayout({
         )}
       >
         <CartProvider>
-          <div className="relative flex min-h-screen flex-col">
-            <Navbar />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </div>
-          <Toaster />
+          {children}
         </CartProvider>
       </body>
     </html>
