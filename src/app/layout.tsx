@@ -3,6 +3,7 @@ import { Poppins, PT_Sans } from 'next/font/google';
 import './globals.css';
 import { cn } from '@/lib/utils';
 import { CartProvider } from '@/context/CartContext';
+import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
   title: 'JK Festival',
@@ -43,6 +44,7 @@ export default function RootLayout({
       >
         <CartProvider>
           {children}
+          <Toaster />
         </CartProvider>
       </body>
     </html>

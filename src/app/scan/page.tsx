@@ -12,8 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Loader2, Ticket, CheckCircle, XCircle, AlertCircle } from "lucide-react";
 import { Music } from "lucide-react";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+
 
 const formSchema = z.object({
   ticketCode: z.string().min(5, "El código de entrada es demasiado corto."),
