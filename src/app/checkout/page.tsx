@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { createOrderAndTickets } from "@/lib/orders-service";
+import { useAuth } from "@/context/AuthContext";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -30,6 +31,8 @@ export default function CheckoutPage() {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const total = getCartTotal(ticketTypes);
+  const { user } = useAuth();
+
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -67,13 +70,18 @@ export default function CheckoutPage() {
         clearCart();
         // Pass the new order ID to the success page
         router.push(`/payment/success?orderId=${newOrder.id}`);
-      } catch(e) {
+      } catch(e: any) {
          console.error(e);
-         toast({
-            variant: "destructive",
-            title: "Error al registrar el pedido",
-            description: "Hubo un problema al guardar tu compra en la base de datos. Por favor, intenta de nuevo."
-         });
+         // Do not show a generic toast for permission errors,
+         // they are now handled globally. Only show for other types of errors.
+         if (e.name !== 'FirebaseError') {
+            toast({
+              variant: "destructive",
+              title: "Error al registrar el pedido",
+              description: "Hubo un problema al guardar tu compra. Por favor, intenta de nuevo."
+            });
+         }
+         // Redirect to failure page for any kind of error during creation.
          router.push('/payment/failure');
       }
     } else {
@@ -148,9 +156,9 @@ export default function CheckoutPage() {
                       )}/>
                   </div>
                   
-                  <Button type="submit" className="w-full transition-transform duration-300 hover:scale-105" size="lg" disabled={isLoading}>
+                  <Button type="submit" className="w-full transition-transform duration-300 hover:scale-105" size="lg" disabled={isLoading || !user}>
                     {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                    {isLoading ? 'Procesando pago...' : `Pagar ahora ${total.toFixed(2)} EUR`}
+                    {!user ? 'Inicia sesión para comprar' : (isLoading ? 'Procesando pago...' : `Pagar ahora ${total.toFixed(2)} EUR`)}
                   </Button>
                   <p className="text-xs text-center text-muted-foreground pt-2">
                       Al hacer clic, se simulará una pasarela de pago.

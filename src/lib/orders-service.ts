@@ -11,6 +11,7 @@ import {
 import { db } from '@/firebase/client'; // Assuming db is your Firestore instance
 import type { Order, Ticket, CartItem, OrderStats } from './types';
 import { ticketTypes } from './data';
+import { FirestorePermissionError, errorEmitter } from '@/firebase';
 
 // --- Ticket Code Generation ---
 
@@ -97,8 +98,19 @@ export async function createOrderAndTickets(payload: CreateOrderPayload): Promis
     }
   }
 
-  await batch.commit();
-  console.log("New order and tickets created in Firestore:", newOrder.id);
+  // Chain a .catch() to handle potential permission errors from the batch commit.
+  batch.commit().catch(error => {
+    // We assume the error is from creating the order, as it's a common entry point.
+    // A more granular approach might be needed if rules are complex.
+    const permissionError = new FirestorePermissionError({
+      path: orderRef.path, // We use the order path as the primary context for the batch write
+      operation: 'create',
+      requestResourceData: newOrder,
+    });
+    // Emit the contextual error globally.
+    errorEmitter.emit('permission-error', permissionError);
+  });
+
   return newOrder;
 }
 
@@ -169,6 +181,12 @@ export async function markTicketAsUsed(ticketId: string): Promise<boolean> {
         return true;
     } catch (error) {
         console.error("Error marking ticket as used:", error);
+        const permissionError = new FirestorePermissionError({
+          path: ticketRef.path,
+          operation: 'update',
+          requestResourceData: { status: 'used' },
+        });
+        errorEmitter.emit('permission-error', permissionError);
         return false;
     }
 }
