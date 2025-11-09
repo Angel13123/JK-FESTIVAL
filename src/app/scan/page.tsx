@@ -32,7 +32,7 @@ function ResultCard({ result }: { result: ValidationResult }) {
         return null;
     }
 
-    const baseClasses = "mt-8 text-center p-6 border-l-4 rounded-r-lg";
+    const baseClasses = "mt-8 text-center p-6 border-l-4 rounded-r-lg w-full max-w-md";
     const statusConfig = {
         valid: {
             icon: <CheckCircle className="h-12 w-12 text-green-500" />,
@@ -78,7 +78,7 @@ function ResultCard({ result }: { result: ValidationResult }) {
                          </div>
                          <div className="flex items-center gap-3">
                             <Calendar className="h-4 w-4 text-muted-foreground"/>
-                            <span><strong>Comprado:</strong> {format(new Date(result.ticket.createdAt), "d 'de' MMMM, yyyy 'a las' HH:mm", { locale: es })}</span>
+                            <span><strong>Comprado:</strong> {result.ticket.createdAt ? format(new Date(result.ticket.createdAt), "d 'de' MMMM, yyyy 'a las' HH:mm", { locale: es }) : 'N/A'}</span>
                          </div>
                     </div>
                 )}
@@ -116,7 +116,7 @@ export default function ScanPage() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-start min-h-[calc(100vh-theme(spacing.32))] pt-10">
+    <div className="flex flex-col items-center justify-start min-h-[calc(100vh-theme(spacing.32))] pt-10 px-4">
       <div className="w-full max-w-md text-center">
         <h1 className="text-3xl font-bold font-headline">Validación de Entradas</h1>
         <p className="text-muted-foreground mt-2">Introduce el código para validar la entrada de un asistente.</p>
@@ -157,3 +157,4 @@ export default function ScanPage() {
     </div>
   );
 }
+
