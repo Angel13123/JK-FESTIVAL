@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Ticket, DollarSign, Users, Eye } from "lucide-react";
-import { getOrders, getTicketsByOrderId } from "@/lib/orders-service";
+import { getOrders, getTicketsByOrderId, getStats } from "@/lib/orders-service";
 import type { Order, Ticket as TicketType, OrderStats } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
