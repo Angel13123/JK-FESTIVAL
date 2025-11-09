@@ -10,7 +10,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Loader2, Ticket, CheckCircle, XCircle, AlertCircle } from "lucide-radix";
+import { Loader2, Ticket, CheckCircle, XCircle, AlertCircle } from "lucide-react";
 import { Music } from "lucide-react";
 
 const formSchema = z.object({

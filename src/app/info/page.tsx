@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MapPin, Car, Bus, Clock, Wheelchair } from "lucide-radix";
+import { MapPin, Car, Bus, Clock, Wheelchair } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 export default function InfoPage() {

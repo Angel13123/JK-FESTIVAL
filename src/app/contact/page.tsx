@@ -10,7 +10,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Twitter, Instagram, Facebook } from "lucide-radix";
+import { Loader2, Twitter, Instagram, Facebook } from "lucide-react";
 import Link from "next/link";
 
 const formSchema = z.object({
