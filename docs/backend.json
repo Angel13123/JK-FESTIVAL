@@ -1,0 +1,145 @@
+{
+  "entities": {
+    "Order": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Order",
+      "type": "object",
+      "description": "Represents an order placed for JK Festival tickets.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the order entity."
+        },
+        "customerName": {
+          "type": "string",
+          "description": "Name of the customer who placed the order."
+        },
+        "customerEmail": {
+          "type": "string",
+          "description": "Email of the customer who placed the order.",
+          "format": "email"
+        },
+        "totalAmount": {
+          "type": "number",
+          "description": "Total amount of the order."
+        },
+        "ticketItems": {
+          "type": "array",
+          "description": "Array of ticket items in the order.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp of when the order was created.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "customerName",
+        "customerEmail",
+        "totalAmount",
+        "ticketItems",
+        "createdAt"
+      ]
+    },
+    "Ticket": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Ticket",
+      "type": "object",
+      "description": "Represents a ticket for the JK Festival.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the ticket entity."
+        },
+        "orderId": {
+          "type": "string",
+          "description": "Reference to Order. (Relationship: Order 1:N Ticket)"
+        },
+        "customerName": {
+          "type": "string",
+          "description": "Name of the customer who owns the ticket."
+        },
+        "customerEmail": {
+          "type": "string",
+          "description": "Email of the customer who owns the ticket.",
+          "format": "email"
+        },
+        "ticketType": {
+          "type": "string",
+          "description": "Type of the ticket (e.g., General, VIP)."
+        },
+        "status": {
+          "type": "string",
+          "description": "Status of the ticket (valid or used).",
+          "format": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp of when the ticket was created.",
+          "format": "date-time"
+        },
+        "code": {
+          "type": "string",
+          "description": "Unique code for the ticket."
+        }
+      },
+      "required": [
+        "id",
+        "orderId",
+        "customerName",
+        "customerEmail",
+        "ticketType",
+        "status",
+        "createdAt",
+        "code"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "orders/{orderId}",
+        "definition": {
+          "entityName": "Order",
+          "schema": {
+            "$ref": "#/backend/entities/Order"
+          },
+          "description": "Stores order information. Uses orderId as document ID.",
+          "params": [
+            {
+              "name": "orderId",
+              "description": "The unique identifier for the order document."
+            }
+          ]
+        }
+      },
+      {
+        "path": "tickets/{ticketId}",
+        "definition": {
+          "entityName": "Ticket",
+          "schema": {
+            "$ref": "#/backend/entities/Ticket"
+          },
+          "description": "Stores ticket information. Includes denormalized 'customerName' and 'customerEmail' for authorization independence. Uses ticketId as document ID.",
+          "params": [
+            {
+              "name": "ticketId",
+              "description": "The unique identifier for the ticket document."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore database structure is designed to manage orders and tickets for the JK Festival. It uses two collections: `orders` and `tickets`. The `tickets` collection includes the `orderId` to establish a relationship with the `orders` collection. To maintain Authorization Independence, particularly for listing tickets related to a specific order, the `customerName` and `customerEmail` are duplicated in the `tickets` collection, avoiding the need for security rules to fetch the parent order document. The `id` field is used as the document id.\n\nThis structure supports the required QAPs:\n\n1.  **Secure `list` operations for tickets by order:** By including `orderId` and the relevant customer information on each ticket, security rules can efficiently validate access to tickets belonging to a specific order without requiring `get()` operations on the parent `order` document. This avoids hierarchical authorization and ensures atomic operations.\n2.  **Data integrity:** Timestamps (`createdAt`) are included in both `orders` and `tickets` to track creation times. The explicit `status` field in the `tickets` collection (`valid` or `used`) maintains clear state management for tickets.\n3. **Clarity of Intent**: The document structures are named semantically."
+  }
+}

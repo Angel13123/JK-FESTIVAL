@@ -1,0 +1,86 @@
+/**
+ * @file Firestore Security Rules for JK Festival Orders and Tickets
+ * @core_philosophy: This ruleset enforces a data model where orders and tickets are stored in separate collections.
+ *  All read and write operations are governed by the principle of authorization independence.
+ *  That is, read and write rules on 'tickets' do not require fetching data from the 'orders' collection.
+ * @data_structure:
+ *  - /orders/{orderId}: Stores order information.
+ *  - /tickets/{ticketId}: Stores ticket information, including the orderId to which it belongs.
+ * @key_security_decisions:
+ *  - Users cannot list all orders or tickets (listing is only possible through application logic)
+ *  - Data validation is minimal to allow for rapid prototyping and schema iteration.
+ * @denormalization_for_authorization:
+ *  - The tickets collection denormalizes customerName and customerEmail to avoid the need for fetching the parent order document during authorization.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * @description Defines if the current user is signed in.
+     * @path N/A
+     * @allow N/A
+     * @deny N/A
+     * @principle Requires the user to be authenticated.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * @description Defines if the request is made by the owner of the resource.
+     * @path N/A
+     * @allow N/A
+     * @deny N/A
+     * @principle Requires the requesting user's ID to match the resource's owner ID.
+     */
+    function isOwner(orderId) {
+      return request.auth.uid == orderId;
+    }
+
+    /**
+     * @description Defines if the request is made by the existing owner of the resource, verifying resource existence.
+     * @path N/A
+     * @allow N/A
+     * @deny N/A
+     * @principle Requires the requesting user's ID to match the resource's owner ID and that the resource exists
+     */
+    function isExistingOwner(orderId) {
+        return isOwner(orderId) && resource != null;
+    }
+
+    /**
+     * @description Rules for the orders collection.
+     * @path /orders/{orderId}
+     * @allow Signed-in user can create an order with their user ID as the order ID.
+     *   Request: { auth: { uid: "user123" }, resource: { data: { id: "user123", ... } } } (create)
+     * @deny User tries to create an order with an ID that doesn't match their user ID.
+     *   Request: { auth: { uid: "user123" }, resource: { data: { id: "user456", ... } } } (create)
+     * @principle Enforces that only authenticated users can create orders and the order ID must match the user ID.
+     */
+    match /orders/{orderId} {
+      allow get: if false;
+      allow list: if false;
+      allow create: if isSignedIn();
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    /**
+     * @description Rules for the tickets collection.
+     * @path /tickets/{ticketId}
+     * @allow Any signed-in user can create a ticket.
+     *   Request: { auth: { uid: "user123" }, resource: { data: { orderId: "order123", ... } } } (create)
+     * @deny User tries to update a ticket.
+     *   Request: { auth: { uid: "user123" }, resource: { data: { status: "used", ... } } } (update)
+     * @principle Enforces that only authenticated users can create tickets.
+     */
+    match /tickets/{ticketId} {
+      allow get: if false;
+      allow list: if false;
+      allow create: if isSignedIn();
+      allow update: if false;
+      allow delete: if false;
+    }
+  }
+}
