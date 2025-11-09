@@ -1,0 +1,48 @@
+import Link from "next/link";
+import Image from "next/image";
+import { artists } from "@/lib/data";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { ArrowRight } from "lucide-react";
+
+export function LineupPreview() {
+  const featuredArtists = artists.slice(0, 4);
+
+  return (
+    <section className="py-16 md:py-24 bg-card">
+      <div className="container mx-auto max-w-screen-xl px-4 text-center">
+        <h2 className="text-3xl md:text-4xl font-bold font-headline mb-4">Cartel de Artistas</h2>
+        <p className="max-w-2xl mx-auto text-muted-foreground mb-10">
+          Algunos de los talentos que harán vibrar Martil.
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          {featuredArtists.map((artist) => (
+            <Card key={artist.id} className="overflow-hidden group">
+              <CardContent className="p-0">
+                <div className="relative aspect-square">
+                  <Image
+                    src={artist.imageUrl}
+                    alt={`Foto de ${artist.name}`}
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    data-ai-hint="artist portrait"
+                  />
+                </div>
+                <div className="p-4">
+                  <h3 className="text-lg font-bold font-headline">{artist.name}</h3>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        <div className="mt-12">
+          <Button asChild variant="outline" size="lg">
+            <Link href="/lineup">
+              Ver cartel completo <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+}

@@ -1,3 +1,64 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero",
+      "description": "Festival crowd at night",
+      "imageUrl": "https://images.unsplash.com/photo-1695229738524-fb6d87f86831?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxmZXN0aXZhbCUyMGNyb3dkfGVufDB8fHx8MTc2MjU1MTc2OXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "festival crowd"
+    },
+    {
+      "id": "artist1",
+      "description": "Male trap artist performing on stage",
+      "imageUrl": "https://images.unsplash.com/photo-1675099348165-1c9056e5e492?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxtYWxlJTIwc2luZ2VyfGVufDB8fHx8MTc2MjY1NzI3NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "male singer"
+    },
+    {
+      "id": "artist2",
+      "description": "Male rapper with a microphone",
+      "imageUrl": "https://images.unsplash.com/photo-1704253799096-fb690914d610?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxtYWxlJTIwcmFwcGVyfGVufDB8fHx8MTc2MjY1NzI3NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "male rapper"
+    },
+    {
+      "id": "artist3",
+      "description": "Female DJ at a console",
+      "imageUrl": "https://images.unsplash.com/photo-1686242586493-c77dd071e1e8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8ZmVtYWxlJTIwZGp8ZW58MHx8fHwxNzYyNjU3Mjc2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "female dj"
+    },
+    {
+      "id": "artist4",
+      "description": "Female pop singer on stage",
+      "imageUrl": "https://images.unsplash.com/photo-1675099346949-e7863851803a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8ZmVtYWxlJTIwc2luZ2VyfGVufDB8fHx8MTc2MjY1NzI3NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "female singer"
+    },
+    {
+      "id": "sponsor1",
+      "description": "Fictional sponsor logo 1",
+      "imageUrl": "https://images.unsplash.com/photo-1760037028517-e5cc6e3ebd3e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxsb2dvJTIwYnJhbmR8ZW58MHx8fHwxNzYyNjIwNjQ1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "logo brand"
+    },
+    {
+      "id": "sponsor2",
+      "description": "Fictional sponsor logo 2",
+      "imageUrl": "https://images.unsplash.com/photo-1684977269247-5d79a7a3f245?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxsb2dvJTIwdGV4dHxlbnwwfHx8fDE3NjI2NTcyNzZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "logo text"
+    },
+    {
+      "id": "sponsor3",
+      "description": "Fictional sponsor logo 3",
+      "imageUrl": "https://images.unsplash.com/photo-1747862712521-e4a37b12a039?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxhYnN0cmFjdCUyMGxvZ298ZW58MHx8fHwxNzYyNjIxNDE0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "abstract logo"
+    },
+    {
+      "id": "sponsor4",
+      "description": "Fictional sponsor logo 4",
+      "imageUrl": "https://images.unsplash.com/photo-1610340804490-e9d7b22aee1d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxtaW5pbWFsaXN0JTIwbG9nb3xlbnwwfHx8fDE3NjI2NTE2MTN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "minimalist logo"
+    },
+    {
+      "id": "map",
+      "description": "Map of the festival venue",
+      "imageUrl": "https://images.unsplash.com/photo-1570576858775-d7ffb4b30355?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHx2ZW51ZSUyMG1hcHxlbnwwfHx8fDE3NjI2NTcyNzZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "venue map"
+    }
+  ]
 }
