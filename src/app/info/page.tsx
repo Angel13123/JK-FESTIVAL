@@ -1,15 +1,11 @@
-import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin, Car, Bus, Clock, Accessibility } from "lucide-react";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 export default function InfoPage() {
-    const mapImage = PlaceHolderImages.find(p => p.id === 'map');
-
   return (
     <div className="bg-background">
       <div className="container mx-auto max-w-screen-lg px-4 py-16">
-        <div className="text-center mb-12">
+        <div className="text-center mb-12 animate-fade-in-down">
           <h1 className="text-4xl md:text-5xl font-bold font-headline tracking-tight">Información Práctica</h1>
           <p className="mt-4 text-lg text-muted-foreground">
             Todo lo que necesitas saber para disfrutar del JK Festival sin preocupaciones.
@@ -17,7 +13,7 @@ export default function InfoPage() {
         </div>
 
         <div className="space-y-12">
-          <Card>
+          <Card className="transition-shadow duration-300 hover:shadow-lg">
             <CardHeader>
               <CardTitle className="flex items-center gap-2"><MapPin className="h-5 w-5 text-primary" />Ubicación</CardTitle>
             </CardHeader>
@@ -25,24 +21,23 @@ export default function InfoPage() {
               <p className="text-muted-foreground">
                 El festival se celebra en la espectacular costa de <strong>Martil, Marruecos</strong>. Una localización única junto al mar para una experiencia inolvidable.
               </p>
-              <div className="mt-4 rounded-lg overflow-hidden border">
-                {mapImage && (
-                     <Image
-                        src={mapImage.imageUrl}
-                        alt={mapImage.description}
-                        width={1200}
-                        height={800}
-                        className="w-full h-auto object-cover"
-                        data-ai-hint={mapImage.imageHint}
-                    />
-                )}
+              <div className="mt-4 rounded-lg overflow-hidden border aspect-video">
+                 <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12973.833333333334!2d-5.276388888888889!3d35.6175!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd746162383a759%3A0x8445a4b3a451e0c3!2sMartil%2C%20Marruecos!5e0!3m2!1ses!2ses!4v1626262626262" 
+                    width="100%" 
+                    height="100%" 
+                    style={{ border: 0 }} 
+                    allowFullScreen={true}
+                    loading="lazy" 
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="Mapa del Festival"
+                ></iframe>
               </div>
-               <p className="text-xs text-center text-muted-foreground mt-2">// TODO: Reemplazar con un mapa interactivo embebido (Google Maps, etc.).</p>
             </CardContent>
           </Card>
 
           <div className="grid md:grid-cols-2 gap-8">
-            <Card>
+            <Card className="transition-all duration-300 ease-out hover:shadow-xl hover:-translate-y-1 transform">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2"><Clock className="h-5 w-5 text-primary" />Horarios</CardTitle>
               </CardHeader>
@@ -53,7 +48,7 @@ export default function InfoPage() {
                 <p><strong>Cierre del recinto:</strong> 03:00</p>
               </CardContent>
             </Card>
-             <Card>
+             <Card className="transition-all duration-300 ease-out hover:shadow-xl hover:-translate-y-1 transform">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2"><Accessibility className="h-5 w-5 text-primary" />Accesibilidad</CardTitle>
               </CardHeader>
@@ -63,7 +58,7 @@ export default function InfoPage() {
             </Card>
           </div>
 
-          <Card>
+          <Card className="transition-shadow duration-300 hover:shadow-lg">
             <CardHeader>
               <CardTitle className="flex items-center gap-2"><Bus className="h-5 w-5 text-primary" />Cómo Llegar</CardTitle>
             </CardHeader>
