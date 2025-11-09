@@ -9,6 +9,7 @@ import {
   updateDoc,
   serverTimestamp,
   orderBy,
+  Timestamp,
 } from 'firebase/firestore';
 import { db } from '@/firebase/client'; // Assuming db is your Firestore instance
 import type { Order, Ticket, CartItem, OrderStats } from './types';
@@ -41,13 +42,12 @@ export async function createOrderAndTickets(payload: CreateOrderPayload): Promis
   const orderRef = doc(ordersCollection);
   const orderId = orderRef.id;
 
-  const newOrder: Order = {
+  const newOrder: Omit<Order, 'createdAt'> = {
     id: orderId,
     customerName: payload.customerName,
     customerEmail: payload.customerEmail,
     customerCountry: payload.customerCountry,
     totalAmount: payload.totalAmount,
-    createdAt: new Date().toISOString(), // This will be replaced by serverTimestamp, but good for local object
     ticketItems: payload.cartItems.map(item => {
         const ticketType = ticketTypes.find(tt => tt.id === item.ticketTypeId);
         return {
@@ -71,7 +71,7 @@ export async function createOrderAndTickets(payload: CreateOrderPayload): Promis
             // Generate a unique ticket code using the Gemini flow
             const uniqueCode = await generateTicketCode();
             
-            const ticket: Ticket = {
+            const newTicket: Omit<Ticket, 'createdAt'> = {
                 id: ticketRef.id,
                 orderId: orderId,
                 ticketTypeId: item.ticketTypeId,
@@ -79,9 +79,8 @@ export async function createOrderAndTickets(payload: CreateOrderPayload): Promis
                 ownerName: payload.customerName,
                 status: 'valid',
                 code: uniqueCode.toUpperCase(),
-                createdAt: new Date().toISOString(), // Again, for local object consistency
             };
-            batch.set(ticketRef, { ...ticket, createdAt: serverTimestamp() });
+            batch.set(ticketRef, { ...newTicket, createdAt: serverTimestamp() });
         }
     }
   }
@@ -100,8 +99,8 @@ export async function createOrderAndTickets(payload: CreateOrderPayload): Promis
     // Re-throw the original error to be caught by the caller
     throw error;
   });
-
-  return newOrder;
+  
+  return { ...newOrder, id: orderId, createdAt: new Date().toISOString() };
 }
 
 export async function getOrders(): Promise<Order[]> {
@@ -161,17 +160,17 @@ export async function validateTicket(code: string): Promise<ValidationResponse> 
     const ticket = ticketDoc.data() as Ticket;
 
     if (ticket.status === 'used') {
-        return { status: 'used', message: `Entrada ya utilizada. Propietario: ${ticket.ownerName}.`, ticket };
+        return { status: 'used', message: `Esta entrada ya fue utilizada.`, ticket };
     }
 
-    return { status: 'valid', message: `Entrada válida. Propietario: ${ticket.ownerName}.`, ticket };
+    return { status: 'valid', message: `Entrada válida y lista para activar.`, ticket };
 }
 
 export async function markTicketAsUsed(ticketId: string): Promise<void> {
     const ticketRef = doc(ticketsCollection, ticketId);
     
     // Do not await, chain .catch for non-blocking error handling
-    updateDoc(ticketRef, { status: 'used' })
+    await updateDoc(ticketRef, { status: 'used' })
         .catch(error => {
             const permissionError = new FirestorePermissionError({
               path: ticketRef.path,

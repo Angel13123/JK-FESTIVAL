@@ -9,25 +9,26 @@ import type { Ticket as TicketType } from "@/lib/types";
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Timestamp } from "firebase/firestore";
+import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Ticket, CheckCircle, XCircle, AlertCircle, User, Calendar, QrCode } from "lucide-react";
+import { Loader2, Ticket, CheckCircle, XCircle, AlertCircle, User, Calendar, QrCode, ArrowLeft } from "lucide-react";
 
 const formSchema = z.object({
   ticketCode: z.string().min(5, "El código de entrada es demasiado corto."),
 });
 
-type ValidationStatus = "idle" | "valid" | "used" | "not_found";
+type ValidationStatus = "idle" | "valid" | "used" | "not_found" | "activated";
 interface ValidationResult {
     status: ValidationStatus;
     message: string;
     ticket?: TicketType;
 }
 
-function ResultCard({ result }: { result: ValidationResult }) {
+function ResultCard({ result, onActivate }: { result: ValidationResult, onActivate: () => void }) {
     if (result.status === 'idle') {
         return null;
     }
@@ -37,6 +38,11 @@ function ResultCard({ result }: { result: ValidationResult }) {
         valid: {
             icon: <CheckCircle className="h-12 w-12 text-green-500" />,
             title: "Entrada Válida",
+            cardClass: "bg-green-50/50 border-green-500",
+        },
+        activated: {
+            icon: <CheckCircle className="h-12 w-12 text-green-500" />,
+            title: "Entrada Activada",
             cardClass: "bg-green-50/50 border-green-500",
         },
         used: {
@@ -56,7 +62,7 @@ function ResultCard({ result }: { result: ValidationResult }) {
         }
     };
 
-    const { icon, title, cardClass } = statusConfig[result.status];
+    const config = statusConfig[result.status];
 
     const getJsDateFromTimestamp = (timestamp: any): Date | null => {
         if (timestamp instanceof Timestamp) {
@@ -68,16 +74,19 @@ function ResultCard({ result }: { result: ValidationResult }) {
                 return date;
             }
         }
+         if(timestamp && typeof timestamp.seconds === 'number') {
+            return new Timestamp(timestamp.seconds, timestamp.nanoseconds).toDate();
+        }
         return null;
     }
-
+    
     const purchaseDate = result.ticket?.createdAt ? getJsDateFromTimestamp(result.ticket.createdAt) : null;
 
     return (
-        <Card className={`${baseClasses} ${cardClass} animate-fade-in-up`}>
+        <Card className={`${baseClasses} ${config.cardClass} animate-fade-in-up`}>
             <CardHeader className="items-center space-y-4">
-                {icon}
-                <CardTitle className="text-2xl font-bold">{title}</CardTitle>
+                {config.icon}
+                <CardTitle className="text-2xl font-bold">{config.title}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
                 <p className="text-muted-foreground">{result.message}</p>
@@ -93,9 +102,14 @@ function ResultCard({ result }: { result: ValidationResult }) {
                          </div>
                          <div className="flex items-center gap-3">
                             <Calendar className="h-4 w-4 text-muted-foreground"/>
-                            <span><strong>Comprado:</strong> {purchaseDate ? format(purchaseDate, "d 'de' MMMM, yyyy 'a las' HH:mm", { locale: es }) : 'N/A'}</span>
+                             <span><strong>Comprado:</strong> {purchaseDate ? format(purchaseDate, "d 'de' MMMM, yyyy 'a las' HH:mm", { locale: es }) : 'N/A'}</span>
                          </div>
                     </div>
+                )}
+                 {result.status === 'valid' && (
+                    <Button onClick={onActivate} size="lg" className="w-full mt-4">
+                       <CheckCircle className="mr-2 h-5 w-5"/> Activar entrada
+                    </Button>
                 )}
             </CardContent>
         </Card>
@@ -119,16 +133,23 @@ export default function ScanPage() {
     const code = values.ticketCode.toUpperCase();
     const validationResponse = await validateTicket(code);
 
-    if (validationResponse.status === 'valid' && validationResponse.ticket) {
-      await markTicketAsUsed(validationResponse.ticket.id);
-      // We show the ticket as valid, but it has now been marked as used in the backend
-      setResult({ ...validationResponse, status: 'valid' }); 
-    } else {
-      setResult(validationResponse);
-    }
-
+    setResult(validationResponse);
     setIsLoading(false);
-    form.reset();
+    // No reseteamos el formulario para que el código siga visible
+  }
+
+  const handleActivate = async () => {
+    if (result.ticket && result.status === 'valid') {
+        setIsLoading(true);
+        await markTicketAsUsed(result.ticket.id);
+        setResult({
+            status: 'activated',
+            message: `El ticket con código ${result.ticket.code} ha sido activado y marcado como usado.`,
+            ticket: { ...result.ticket, status: 'used' }
+        });
+        setIsLoading(false);
+        form.reset();
+    }
   }
 
   return (
@@ -169,7 +190,16 @@ export default function ScanPage() {
         </CardContent>
       </Card>
       
-      {result.status !== 'idle' && <ResultCard result={result} />}
+      {result.status !== 'idle' && <ResultCard result={result} onActivate={handleActivate} />}
+
+      <div className="mt-8">
+        <Button variant="outline" asChild>
+          <Link href="/admin">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Volver al Admin
+          </Link>
+        </Button>
+      </div>
     </div>
   );
 }
