@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MapPin, Car, Bus, Clock, Wheelchair } from "lucide-react";
+import { MapPin, Car, Bus, Clock, Accessibility } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 export default function InfoPage() {
@@ -55,7 +55,7 @@ export default function InfoPage() {
             </Card>
              <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2"><Wheelchair className="h-5 w-5 text-primary" />Accesibilidad</CardTitle>
+                <CardTitle className="flex items-center gap-2"><Accessibility className="h-5 w-5 text-primary" />Accesibilidad</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">El recinto está adaptado para personas con movilidad reducida, incluyendo rampas de acceso y zonas reservadas con buena visibilidad.</p>
