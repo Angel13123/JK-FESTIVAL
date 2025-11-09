@@ -20,7 +20,7 @@ import { useToast } from "@/hooks/use-toast";
 const formSchema = z.object({
   fullName: z.string().min(2, "El nombre completo es obligatorio."),
   email: z.string().email("Por favor, introduce un email válido."),
-  country: z.string().optional(),
+  country: z.string().min(2, "El país es obligatorio."),
   city: z.string().optional(),
 });
 
@@ -56,6 +56,7 @@ export default function CheckoutPage() {
         const newOrder = await createOrderAndTickets({
             customerName: values.fullName,
             customerEmail: values.email,
+            customerCountry: values.country,
             totalAmount: total,
             cartItems: cartItems
         });
@@ -140,7 +141,7 @@ export default function CheckoutPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <FormField control={form.control} name="country" render={({ field }) => (
                           <FormItem>
-                            <FormLabel>País (Opcional)</FormLabel>
+                            <FormLabel>País</FormLabel>
                             <FormControl><Input placeholder="Marruecos" {...field} /></FormControl>
                             <FormMessage />
                           </FormItem>

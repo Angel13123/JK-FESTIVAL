@@ -7,32 +7,14 @@ import {
   getDocs,
   where,
   updateDoc,
+  serverTimestamp,
+  orderBy,
 } from 'firebase/firestore';
 import { db } from '@/firebase/client'; // Assuming db is your Firestore instance
 import type { Order, Ticket, CartItem, OrderStats } from './types';
 import { ticketTypes } from './data';
 import { FirestorePermissionError, errorEmitter } from '@/firebase';
-
-// --- Ticket Code Generation ---
-
-/**
- * Generates a unique alphanumeric ticket code.
- *
- * TODO: Replace this function with a call to the Gemini API
- * to generate unique, 10-character alphanumeric codes.
- *
- * @returns A unique ticket code string.
- */
-export function generateRandomTicketCode(length: number = 10): string {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let result = '';
-  for (let i = 0; i < length; i++) {
-    const index = Math.floor(Math.random() * chars.length);
-    result += chars[index];
-  }
-  return result;
-}
-
+import { generateTicketCode } from '@/ai/flows/ticket-code-flow';
 
 // --- Firestore Data Service ---
 
@@ -42,13 +24,14 @@ const ticketsCollection = collection(db, 'tickets');
 interface CreateOrderPayload {
     customerName: string;
     customerEmail: string;
+    customerCountry: string;
     totalAmount: number;
     cartItems: CartItem[];
 }
 
 /**
  * Creates an order and its associated tickets in Firestore.
- * For this specific test, it uses a fixed ticket code.
+ * It uses a Gemini flow to generate a unique ticket code.
  * @param payload - The data for the new order.
  * @returns The newly created order.
  */
@@ -62,8 +45,9 @@ export async function createOrderAndTickets(payload: CreateOrderPayload): Promis
     id: orderId,
     customerName: payload.customerName,
     customerEmail: payload.customerEmail,
+    customerCountry: payload.customerCountry,
     totalAmount: payload.totalAmount,
-    createdAt: new Date().toISOString(),
+    createdAt: new Date().toISOString(), // This will be replaced by serverTimestamp, but good for local object
     ticketItems: payload.cartItems.map(item => {
         const ticketType = ticketTypes.find(tt => tt.id === item.ticketTypeId);
         return {
@@ -74,7 +58,8 @@ export async function createOrderAndTickets(payload: CreateOrderPayload): Promis
     })
   };
 
-  batch.set(orderRef, newOrder);
+  // Add server-side timestamp to the data being sent to Firestore
+  batch.set(orderRef, { ...newOrder, createdAt: serverTimestamp() });
 
   // Generate individual tickets for the order
   for (const item of payload.cartItems) {
@@ -82,6 +67,10 @@ export async function createOrderAndTickets(payload: CreateOrderPayload): Promis
     if (ticketType) {
         for (let i = 0; i < item.quantity; i++) {
             const ticketRef = doc(ticketsCollection);
+            
+            // Generate a unique ticket code using the Gemini flow
+            const uniqueCode = await generateTicketCode();
+            
             const ticket: Ticket = {
                 id: ticketRef.id,
                 orderId: orderId,
@@ -89,17 +78,16 @@ export async function createOrderAndTickets(payload: CreateOrderPayload): Promis
                 ticketTypeName: ticketType.name,
                 ownerName: payload.customerName,
                 status: 'valid',
-                // Use the fixed code for this test
-                code: 'An93lPru3b4',
-                createdAt: new Date().toISOString(),
+                code: uniqueCode.toUpperCase(),
+                createdAt: new Date().toISOString(), // Again, for local object consistency
             };
-            batch.set(ticketRef, ticket);
+            batch.set(ticketRef, { ...ticket, createdAt: serverTimestamp() });
         }
     }
   }
 
   // Chain a .catch() to handle potential permission errors from the batch commit.
-  batch.commit().catch(error => {
+  await batch.commit().catch(error => {
     // We assume the error is from creating the order, as it's a common entry point.
     // A more granular approach might be needed if rules are complex.
     const permissionError = new FirestorePermissionError({
@@ -109,14 +97,16 @@ export async function createOrderAndTickets(payload: CreateOrderPayload): Promis
     });
     // Emit the contextual error globally.
     errorEmitter.emit('permission-error', permissionError);
+    // Re-throw the original error to be caught by the caller
+    throw error;
   });
 
   return newOrder;
 }
 
 export async function getOrders(): Promise<Order[]> {
-  const snapshot = await getDocs(query(ordersCollection));
-  return snapshot.docs.map(doc => doc.data() as Order).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  const snapshot = await getDocs(query(ordersCollection, orderBy("createdAt", "desc")));
+  return snapshot.docs.map(doc => doc.data() as Order);
 }
 
 export async function getTicketsByOrderId(orderId: string): Promise<Ticket[]> {
@@ -132,18 +122,21 @@ export async function getAllTickets(): Promise<Ticket[]> {
 
 
 export async function getStats(): Promise<OrderStats> {
-    const [ordersSnapshot, ticketsSnapshot] = await Promise.all([
-        getDocs(query(ordersCollection)),
-        getDocs(query(ticketsCollection))
-    ]);
-
+    const ordersSnapshot = await getDocs(query(ordersCollection));
+    
     const totalRevenue = ordersSnapshot.docs.reduce((sum, doc) => sum + (doc.data() as Order).totalAmount, 0);
-    const totalTicketsSold = ticketsSnapshot.size;
+    const totalOrders = ordersSnapshot.size;
+
+    // To get total tickets, we sum the quantities from each order's ticketItems
+    const totalTicketsSold = ordersSnapshot.docs.reduce((sum, doc) => {
+        const order = doc.data() as Order;
+        return sum + (order.ticketItems?.reduce((itemSum, item) => itemSum + item.quantity, 0) || 0);
+    }, 0);
     
     return {
         totalRevenue,
         totalTicketsSold,
-        totalOrders: ordersSnapshot.size
+        totalOrders
     }
 }
 
@@ -186,5 +179,6 @@ export async function markTicketAsUsed(ticketId: string): Promise<void> {
               requestResourceData: { status: 'used' },
             });
             errorEmitter.emit('permission-error', permissionError);
+            throw error; // Re-throw to let the caller know
         });
 }

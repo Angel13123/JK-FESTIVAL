@@ -39,6 +39,7 @@ export type Order = {
     id: string;
     customerName: string;
     customerEmail: string;
+    customerCountry: string;
     totalAmount: number;
     createdAt: string; // ISO 8601 date string
     ticketItems: {
