@@ -4,7 +4,7 @@ import { ticketTypes } from "@/lib/data";
 import { useCart } from "@/context/CartContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Check, Minus, Plus } from "lucide-react";
+import { Check, Minus, Plus, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -13,12 +13,11 @@ export default function TicketsPage() {
   const router = useRouter();
 
   const handleContinue = () => {
-    // TODO: Later, this would redirect to a real payment provider
-    // For now, it just goes to our mock checkout page
     router.push('/checkout');
   };
 
   const total = getCartTotal(ticketTypes);
+  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <div className="bg-card">
@@ -30,15 +29,15 @@ export default function TicketsPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-          <div className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
+          <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8">
             {ticketTypes.filter(t => t.isAvailable).map((ticket, index) => {
               const cartItem = cartItems.find(item => item.ticketTypeId === ticket.id);
               const quantity = cartItem ? cartItem.quantity : 0;
               return (
                 <Card 
                   key={ticket.id} 
-                  className={`transition-all duration-300 hover:shadow-lg hover:-translate-y-1 animate-fade-in-up ${quantity > 0 ? 'border-primary ring-2 ring-primary' : ''}`}
+                  className={`transition-all duration-300 ease-out hover:shadow-xl transform hover:-translate-y-1 animate-fade-in-up ${quantity > 0 ? 'border-primary ring-2 ring-primary' : ''}`}
                   style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'both' }}
                 >
                   <CardHeader>
@@ -55,14 +54,14 @@ export default function TicketsPage() {
                       ))}
                     </ul>
                   </CardContent>
-                  <CardFooter className="flex justify-between items-center">
-                    <p className="text-sm text-muted-foreground">Cantidad:</p>
+                  <CardFooter className="flex justify-between items-center bg-muted/50 p-4">
+                    <p className="text-sm text-muted-foreground font-semibold">Cantidad:</p>
                     <div className="flex items-center gap-2">
-                      <Button variant="outline" size="icon" onClick={() => updateQuantity(ticket.id, Math.max(0, quantity - 1))}>
+                      <Button variant="outline" size="icon" onClick={() => updateQuantity(ticket.id, Math.max(0, quantity - 1))} className="bg-background">
                         <Minus className="h-4 w-4" />
                       </Button>
                       <span className="font-bold text-lg w-8 text-center">{quantity}</span>
-                      <Button variant="outline" size="icon" onClick={() => updateQuantity(ticket.id, quantity + 1)}>
+                      <Button variant="outline" size="icon" onClick={() => updateQuantity(ticket.id, quantity + 1)} className="bg-background">
                         <Plus className="h-4 w-4" />
                       </Button>
                     </div>
@@ -71,7 +70,7 @@ export default function TicketsPage() {
               );
             })}
              {ticketTypes.filter(t => !t.isAvailable).map(ticket => (
-                <Card key={ticket.id} className="opacity-50">
+                <Card key={ticket.id} className="opacity-60 bg-muted">
                    <CardHeader>
                     <CardTitle className="font-headline text-2xl flex justify-between">
                         {ticket.name}
@@ -93,14 +92,17 @@ export default function TicketsPage() {
              ))}
           </div>
 
-          <div className="sticky top-24 animate-fade-in">
-            <Card className="bg-background">
+          <div className="sticky top-24 animate-fade-in lg:col-span-1">
+            <Card className="bg-background shadow-lg">
               <CardHeader>
-                <CardTitle className="font-headline text-2xl">Resumen del pedido</CardTitle>
+                <CardTitle className="font-headline text-2xl flex items-center gap-2">
+                    <ShoppingCart className="h-6 w-6 text-primary"/>
+                    Resumen del pedido
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 {cartItems.length === 0 ? (
-                  <p className="text-muted-foreground">Aún no has seleccionado ninguna entrada.</p>
+                  <p className="text-muted-foreground text-center py-8">Aún no has seleccionado ninguna entrada.</p>
                 ) : (
                   <div className="space-y-4">
                     {cartItems.map(item => {
@@ -116,16 +118,16 @@ export default function TicketsPage() {
                         </div>
                       )
                     })}
-                    <hr className="my-4" />
+                    <hr className="my-4 border-dashed" />
                     <div className="flex justify-between items-center text-xl font-bold">
-                      <p>Total</p>
+                      <p>Total ({totalItems} {totalItems === 1 ? 'entrada' : 'entradas'})</p>
                       <p>{total.toFixed(2)} EUR</p>
                     </div>
                   </div>
                 )}
               </CardContent>
               <CardFooter>
-                <Button className="w-full" size="lg" disabled={cartItems.length === 0} onClick={handleContinue}>
+                <Button className="w-full transition-transform duration-300 hover:scale-105" size="lg" disabled={cartItems.length === 0} onClick={handleContinue}>
                   Continuar con la compra
                 </Button>
               </CardFooter>

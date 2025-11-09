@@ -8,18 +8,18 @@ export function Hero() {
   const heroImage = PlaceHolderImages.find((p) => p.id === 'hero');
 
   return (
-    <section className="relative w-full h-[80vh] min-h-[600px] flex items-center justify-center text-center text-white overflow-hidden">
+    <section className="relative w-full h-[90vh] min-h-[700px] flex items-center justify-center text-center text-white overflow-hidden">
       {heroImage && (
         <Image
           src={heroImage.imageUrl}
           alt={heroImage.description}
           fill
-          className="object-cover"
+          className="object-cover animate-zoom-in-out"
           priority
           data-ai-hint={heroImage.imageHint}
         />
       )}
-      <div className="absolute inset-0 bg-black/60" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent" />
       <div className="relative z-10 flex flex-col items-center gap-6 p-4">
         <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold font-headline tracking-tighter drop-shadow-lg animate-fade-in-down">
           JK Festival
@@ -36,7 +36,7 @@ export function Hero() {
         </div>
         
         <div className="mt-4 animate-fade-in-up delay-700">
-          <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8 py-6 rounded-full shadow-lg transition-transform duration-300 hover:scale-105">
+          <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8 py-6 rounded-full shadow-lg transition-transform duration-300 hover:scale-105 transform hover:-translate-y-1">
             <Link href="/tickets">Comprar entradas</Link>
           </Button>
         </div>

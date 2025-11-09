@@ -10,23 +10,26 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 
 function ArtistCard({ artist }: { artist: Artist }) {
   return (
-    <Card className="overflow-hidden group transition-all duration-300 hover:shadow-primary/20 hover:shadow-lg hover:-translate-y-1">
+    <Card className="overflow-hidden group transition-all duration-300 ease-out hover:shadow-xl hover:shadow-primary/20 hover:-translate-y-2 transform will-change-transform">
       <CardContent className="p-0">
         <div className="relative aspect-square">
           <Image
             src={artist.imageUrl}
             alt={`Foto de ${artist.name}`}
             fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
             data-ai-hint="artist portrait"
           />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div className="absolute bottom-0 left-0 p-4 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 ease-out">
+             <div className="text-xs font-semibold bg-primary/80 backdrop-blur-sm px-2 py-1 rounded-full">
+                {artist.stage} - {artist.time}
+            </div>
+          </div>
         </div>
         <div className="p-4 border-t">
           <h3 className="text-xl font-bold font-headline">{artist.name}</h3>
-          <p className="text-sm text-muted-foreground mt-1">{artist.description}</p>
-          <div className="text-xs text-primary font-semibold mt-2">
-            {artist.stage} - {artist.time}
-          </div>
+          <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{artist.description}</p>
         </div>
       </CardContent>
     </Card>
@@ -47,10 +50,10 @@ export default function LineupPage() {
   return (
     <div className="bg-background">
       <div className="container mx-auto max-w-screen-xl px-4 py-16">
-        <div className="text-center mb-12">
+        <div className="text-center mb-12 animate-fade-in-down">
           <h1 className="text-4xl md:text-5xl font-bold font-headline tracking-tight">Lineup & Horarios</h1>
           <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
-            Descubre los artistas que harán historia en el JK Festival. Filtra por escenario para planificar tu experiencia.
+            Descubre los talentos de Golden Epiphany que harán historia. Filtra por escenario para planificar tu experiencia.
           </p>
         </div>
 
@@ -72,28 +75,30 @@ export default function LineupPage() {
                 </Tabs>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {filteredArtists.map(artist => (
-                <ArtistCard key={artist.id} artist={artist} />
+              {filteredArtists.map((artist, index) => (
+                <div key={artist.id} className="animate-fade-in-up" style={{ animationDelay: `${index * 50}ms`}}>
+                    <ArtistCard artist={artist} />
+                </div>
               ))}
             </div>
           </TabsContent>
           
           <TabsContent value="schedule">
             <Card>
-              <CardContent className="p-0">
+              <CardContent className="p-0 md:p-4">
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="w-[100px]">Hora</TableHead>
+                      <TableHead className="w-[100px] font-bold">Hora</TableHead>
                       {stages.map(stage => (
-                        <TableHead key={stage}>{stage}</TableHead>
+                        <TableHead key={stage} className="font-bold">{stage}</TableHead>
                       ))}
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {Array.from(new Set(artists.map(a => a.time))).sort().map(time => (
-                      <TableRow key={time}>
-                        <TableCell className="font-medium">{time}</TableCell>
+                      <TableRow key={time} className="transition-colors hover:bg-muted/50">
+                        <TableCell className="font-medium text-primary">{time}</TableCell>
                         {stages.map(stage => {
                           const artist = artists.find(a => a.time === time && a.stage === stage);
                           return (

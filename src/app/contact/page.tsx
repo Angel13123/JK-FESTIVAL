@@ -47,10 +47,10 @@ export default function ContactPage() {
   if (isSuccess) {
     return (
         <div className="container mx-auto max-w-screen-md px-4 py-16 flex items-center justify-center min-h-[60vh]">
-            <div className="text-center">
+            <div className="text-center animate-fade-in-down">
                 <h1 className="text-3xl font-bold font-headline">¡Mensaje enviado!</h1>
                 <p className="mt-4 text-muted-foreground">Gracias por contactarnos. Te responderemos lo antes posible.</p>
-                <Button onClick={() => { setIsSuccess(false); form.reset(); }} className="mt-8">Enviar otro mensaje</Button>
+                <Button onClick={() => { setIsSuccess(false); form.reset(); }} className="mt-8 transition-transform duration-300 hover:scale-105">Enviar otro mensaje</Button>
             </div>
         </div>
     );
@@ -59,7 +59,7 @@ export default function ContactPage() {
   return (
     <div className="bg-card">
       <div className="container mx-auto max-w-screen-lg px-4 py-16">
-        <div className="text-center mb-12">
+        <div className="text-center mb-12 animate-fade-in-down">
           <h1 className="text-4xl md:text-5xl font-bold font-headline tracking-tight">Contacto</h1>
           <p className="mt-4 text-lg text-muted-foreground">
             ¿Preguntas, sugerencias o propuestas? Estamos aquí para escucharte.
@@ -67,7 +67,7 @@ export default function ContactPage() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-12">
-            <Card>
+            <Card className="transition-shadow duration-300 hover:shadow-xl">
                 <CardHeader>
                     <CardTitle>Envíanos un mensaje</CardTitle>
                     <CardDescription>Rellena el formulario y nos pondremos en contacto contigo.</CardDescription>
@@ -103,7 +103,7 @@ export default function ContactPage() {
                                 <FormMessage />
                             </FormItem>
                         )}/>
-                        <Button type="submit" disabled={isLoading} className="w-full">
+                        <Button type="submit" disabled={isLoading} className="w-full transition-transform duration-300 hover:scale-105">
                            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                            Enviar mensaje
                         </Button>
@@ -111,24 +111,24 @@ export default function ContactPage() {
                     </Form>
                 </CardContent>
             </Card>
-            <div className="space-y-8">
+            <div className="space-y-8 flex flex-col justify-center">
                 <div>
                     <h3 className="text-xl font-semibold font-headline">Información General</h3>
                     <p className="text-muted-foreground mt-2">Para dudas sobre entradas, horarios o el festival en general.</p>
-                    <a href="mailto:info@jkfestival.com" className="text-primary font-semibold">info@jkfestival.com</a>
+                    <a href="mailto:info@jkfestival.com" className="text-primary font-semibold hover:underline">info@jkfestival.com</a>
                 </div>
                 <div>
                     <h3 className="text-xl font-semibold font-headline">Prensa y Medios</h3>
                     <p className="text-muted-foreground mt-2">Para acreditaciones y material de prensa.</p>
-                    <a href="mailto:prensa@jkfestival.com" className="text-primary font-semibold">prensa@jkfestival.com</a>
+                    <a href="mailto:prensa@jkfestival.com" className="text-primary font-semibold hover:underline">prensa@jkfestival.com</a>
                 </div>
                  <div>
                     <h3 className="text-xl font-semibold font-headline">Síguenos en Redes</h3>
                     <p className="text-muted-foreground mt-2">No te pierdas ninguna novedad.</p>
                     <div className="flex items-center gap-4 mt-4">
-                        <Link href="#" aria-label="Twitter"><Twitter className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" /></Link>
-                        <Link href="#" aria-label="Instagram"><Instagram className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" /></Link>
-                        <Link href="#" aria-label="Facebook"><Facebook className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" /></Link>
+                        <Link href="#" aria-label="Twitter"><Twitter className="h-6 w-6 text-muted-foreground hover:text-primary transition-all duration-300 hover:scale-125" /></Link>
+                        <Link href="#" aria-label="Instagram"><Instagram className="h-6 w-6 text-muted-foreground hover:text-primary transition-all duration-300 hover:scale-125" /></Link>
+                        <Link href="#" aria-label="Facebook"><Facebook className="h-6 w-6 text-muted-foreground hover:text-primary transition-all duration-300 hover:scale-125" /></Link>
                     </div>
                 </div>
             </div>

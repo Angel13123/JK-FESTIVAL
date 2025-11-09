@@ -25,8 +25,8 @@ export default function AdminDashboard() {
         <p className="text-muted-foreground">Un resumen del estado del festival.</p>
       </div>
       
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <Card className="transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Entradas Vendidas</CardTitle>
             <Ticket className="h-4 w-4 text-muted-foreground" />
@@ -36,7 +36,7 @@ export default function AdminDashboard() {
             <p className="text-xs text-muted-foreground">+20.1% desde la última semana</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Ingresos Totales</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
@@ -46,7 +46,7 @@ export default function AdminDashboard() {
             <p className="text-xs text-muted-foreground">+15.2% desde la última semana</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Asistentes Registrados</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
@@ -58,7 +58,7 @@ export default function AdminDashboard() {
         </Card>
       </div>
 
-      <Card>
+      <Card className="transition-shadow duration-300 hover:shadow-lg">
         <CardHeader>
           <CardTitle>Últimos Pedidos</CardTitle>
         </CardHeader>
@@ -74,7 +74,7 @@ export default function AdminDashboard() {
             </TableHeader>
             <TableBody>
               {mockOrders.map((order) => (
-                <TableRow key={order.id}>
+                <TableRow key={order.id} className="transition-colors hover:bg-muted/50">
                   <TableCell className="font-medium">{order.id}</TableCell>
                   <TableCell>{order.email}</TableCell>
                   <TableCell>{order.tickets}</TableCell>

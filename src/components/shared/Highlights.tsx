@@ -32,7 +32,7 @@ export function Highlights() {
           {highlights.map((highlight, index) => (
             <Card 
               key={index} 
-              className="text-center bg-card hover:shadow-lg transition-all duration-300 hover:-translate-y-1 animate-fade-in-up"
+              className="text-center bg-card transition-all duration-300 ease-out hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-2 animate-fade-in-up"
               style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'both' }}
             >
               <CardHeader className="items-center">
