@@ -174,19 +174,17 @@ export async function validateTicket(code: string): Promise<ValidationResponse> 
     return { status: 'valid', message: `Entrada válida. Propietario: ${ticket.ownerName}.`, ticket };
 }
 
-export async function markTicketAsUsed(ticketId: string): Promise<boolean> {
+export async function markTicketAsUsed(ticketId: string): Promise<void> {
     const ticketRef = doc(ticketsCollection, ticketId);
-    try {
-        await updateDoc(ticketRef, { status: 'used' });
-        return true;
-    } catch (error) {
-        console.error("Error marking ticket as used:", error);
-        const permissionError = new FirestorePermissionError({
-          path: ticketRef.path,
-          operation: 'update',
-          requestResourceData: { status: 'used' },
+    
+    // Do not await, chain .catch for non-blocking error handling
+    updateDoc(ticketRef, { status: 'used' })
+        .catch(error => {
+            const permissionError = new FirestorePermissionError({
+              path: ticketRef.path,
+              operation: 'update',
+              requestResourceData: { status: 'used' },
+            });
+            errorEmitter.emit('permission-error', permissionError);
         });
-        errorEmitter.emit('permission-error', permissionError);
-        return false;
-    }
 }
