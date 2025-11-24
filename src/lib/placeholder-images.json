@@ -2,8 +2,8 @@
   "placeholderImages": [
     {
       "id": "hero",
-      "description": "Festival crowd at night with stage lights",
-      "imageUrl": "https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxmZXN0aXZhbCUyMGNyb3dkJTIwbmlnaHR8ZW58MHx8fHwxNzYyODk3NjI0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "description": "Festival crowd at night with purple stage lights",
+      "imageUrl": "https://i.imgur.com/QkIu9hY.jpeg",
       "imageHint": "festival crowd"
     },
     {
@@ -45,7 +45,7 @@
     {
       "id": "sponsor3",
       "description": "Fictional sponsor logo 3",
-      "imageUrl": "https://images.unsplash.com/photo-1747862712521-e4a37b12a039?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxhYnN0cmFjdCUyMGxvZ298ZW58MHx8fHwxNzYyNjIxNDE0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1747862712521-e4a37b12a039?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxhYnN0cmFjdCUyMGxvZ298ZW58MHx8fHwxNzYyNjIxNDE0fDA&ixlibrb-4.1.0&q=80&w=1080",
       "imageHint": "abstract logo"
     },
     {
