@@ -8,16 +8,16 @@ export function Hero() {
 
   return (
     <section className="relative w-full h-screen min-h-[700px] flex items-center justify-center text-center text-white overflow-hidden">
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 z-0">
           {heroImage && (
              <div
               style={{ backgroundImage: `url(${heroImage.imageUrl})` }}
-              className="absolute inset-0 w-full h-full bg-cover bg-center animate-ken-burns"
+              className="w-full h-full bg-cover bg-center animate-ken-burns"
               data-ai-hint={heroImage.imageHint}
             />
           )}
-          <div className="absolute inset-0 bg-black/70 animate-noise"></div>
       </div>
+      <div className="absolute inset-0 bg-black/70 animate-noise z-0"></div>
       
       <div className="relative z-10 flex flex-col items-center gap-6 p-4">
         <h1 className="text-6xl md:text-8xl lg:text-9xl font-extrabold uppercase font-headline tracking-tighter drop-shadow-lg animate-neon-flicker">
