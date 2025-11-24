@@ -5,17 +5,16 @@ import { Countdown } from "@/components/shared/Countdown";
 
 export function Hero() {
   const heroImage = PlaceHolderImages.find((p) => p.id === 'hero');
+  const heroImageUrl = "https://i.imgur.com/QkIu9hY.jpeg";
 
   return (
     <section className="relative w-full h-screen min-h-[700px] flex items-center justify-center text-center text-white overflow-hidden">
       <div className="absolute inset-0 z-0">
-          {heroImage && (
-             <div
-              style={{ backgroundImage: `url(${heroImage.imageUrl})` }}
-              className="w-full h-full bg-cover bg-center animate-ken-burns"
-              data-ai-hint={heroImage.imageHint}
-            />
-          )}
+          <div
+            style={{ backgroundImage: `url(${heroImageUrl})` }}
+            className="w-full h-full bg-cover bg-center animate-ken-burns"
+            data-ai-hint={heroImage?.imageHint || 'festival crowd'}
+          />
       </div>
       <div className="absolute inset-0 bg-black/70 animate-noise z-0"></div>
       
