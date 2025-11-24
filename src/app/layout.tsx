@@ -1,3 +1,6 @@
+
+"use client";
+
 import type { Metadata } from 'next';
 import { Poppins, PT_Sans } from 'next/font/google';
 import './globals.css';
@@ -7,18 +10,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
 import { AudioPlayer } from '@/components/shared/AudioPlayer';
 import { LiveSalesNotification } from '@/components/shared/LiveSalesNotification';
-
-export const metadata: Metadata = {
-  title: 'JK Festival',
-  description: 'La web oficial del JK Festival de música urbana en Martil, Marruecos.',
-  manifest: '/manifest.json',
-  themeColor: '#000000',
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: 'black-translucent',
-    title: 'JK Festival Admin',
-  },
-};
+import { usePathname } from 'next/navigation';
 
 const fontHeadline = Poppins({
   subsets: ['latin'],
@@ -32,15 +24,27 @@ const fontBody = PT_Sans({
   variable: '--font-body',
 });
 
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pathname = usePathname();
+  const isAdminRoute = pathname.startsWith('/admin') || pathname === '/scan';
+
   return (
     <html lang="es" className="dark" suppressHydrationWarning>
-       <head>
+      <head>
+        {/* The 'metadata' object is preferred for metadata, but for fonts,
+            direct link tags are often used as shown. You could also explore
+            next/font for a more integrated approach. */}
+        <title>JK Festival</title>
+        <meta name="description" content="La web oficial del JK Festival de música urbana en Martil, Marruecos." />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#000000" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="JK Festival Admin" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
@@ -56,8 +60,12 @@ export default function RootLayout({
           <CartProvider>
             {children}
             <Toaster />
-            <AudioPlayer />
-            <LiveSalesNotification />
+            {!isAdminRoute && (
+              <>
+                <AudioPlayer />
+                <LiveSalesNotification />
+              </>
+            )}
           </CartProvider>
         </FirebaseClientProvider>
       </body>
