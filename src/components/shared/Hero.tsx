@@ -1,29 +1,24 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Countdown } from "@/components/shared/Countdown";
 
 export function Hero() {
-  const heroImageUrl = "https://i.imgur.com/QkIu9hY.jpeg";
+  const heroImageUrl = "https://images.unsplash.com/photo-1459749411177-2a296581dca1?q=80&w=1470&auto=format&fit=crop";
 
   return (
-    <section className="relative w-full h-screen min-h-[700px] overflow-hidden">
-      {/* CAPA 0: Imagen de fondo */}
-      <Image
-        src={heroImageUrl}
-        alt="Festival crowd at night"
-        fill
-        className="object-cover animate-ken-burns z-0"
-        priority
-        unoptimized
-        data-ai-hint={'festival crowd'}
-      />
-
+    <section 
+      className="relative w-full h-screen min-h-[700px] overflow-hidden"
+      style={{
+        backgroundImage: `url('${heroImageUrl}')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
       {/* CAPA 1: Superposición oscura y efecto de ruido */}
-      <div className="absolute inset-0 bg-black/60 animate-noise z-10"></div>
+      <div className="absolute inset-0 bg-black/50 animate-noise"></div>
       
       {/* CAPA 2: Contenido centrado */}
-      <div className="relative z-20 h-full flex flex-col items-center justify-center gap-6 p-4 text-center text-white">
+      <div className="relative z-10 h-full flex flex-col items-center justify-center gap-6 p-4 text-center text-white">
         <h1 className="text-6xl md:text-8xl lg:text-9xl font-extrabold uppercase font-headline tracking-tighter drop-shadow-lg animate-neon-flicker">
           JK Festival
         </h1>
