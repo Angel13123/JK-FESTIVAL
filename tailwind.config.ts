@@ -183,6 +183,10 @@ export default {
         'shimmer': {
           '0%': { backgroundPosition: '-500px 0' },
           '100%': { backgroundPosition: '500px 0' },
+        },
+        'marquee': {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-50%)' },
         }
       },
       animation: {
@@ -199,6 +203,7 @@ export default {
         'neon-flicker': 'neon-flicker 4s linear infinite',
         'digital-glitch': 'digital-glitch 5s ease-in-out infinite alternate',
         'shimmer': 'shimmer 2s linear infinite',
+        'marquee': 'marquee 15s linear infinite',
       },
     },
   },

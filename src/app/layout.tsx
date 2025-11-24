@@ -5,6 +5,8 @@ import { cn } from '@/lib/utils';
 import { CartProvider } from '@/context/CartContext';
 import { Toaster } from '@/components/ui/toaster';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
+import { AudioPlayer } from '@/components/shared/AudioPlayer';
+import { LiveSalesNotification } from '@/components/shared/LiveSalesNotification';
 
 export const metadata: Metadata = {
   title: 'JK Festival',
@@ -54,6 +56,8 @@ export default function RootLayout({
           <CartProvider>
             {children}
             <Toaster />
+            <AudioPlayer />
+            <LiveSalesNotification />
           </CartProvider>
         </FirebaseClientProvider>
       </body>

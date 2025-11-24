@@ -70,11 +70,13 @@ export default function TicketsPage() {
               );
             })}
              {ticketTypes.filter(t => !t.isAvailable).map(ticket => (
-                <Card key={ticket.id} className="opacity-60 bg-muted">
+                <Card key={ticket.id} className="relative overflow-hidden opacity-80 bg-muted/50 transition-all duration-300 ease-out hover:shadow-xl transform hover:-translate-y-1 animate-fade-in-up">
+                    <div className="absolute top-8 -right-12 transform rotate-45 bg-red-600/80 backdrop-blur-sm text-center text-white font-bold py-1 w-48 shadow-lg z-10 neon-glow-destructive">
+                      AGOTADO
+                    </div>
                    <CardHeader>
-                    <CardTitle className="font-headline text-2xl flex justify-between">
+                    <CardTitle className="font-headline text-2xl flex justify-between text-muted-foreground">
                         {ticket.name}
-                        <span className="text-destructive text-sm font-body font-bold">AGOTADO</span>
                     </CardTitle>
                     <CardDescription className="text-3xl font-bold text-muted-foreground">{ticket.price} EUR</CardDescription>
                   </CardHeader>
@@ -88,6 +90,18 @@ export default function TicketsPage() {
                       ))}
                     </ul>
                   </CardContent>
+                   <CardFooter className="flex justify-between items-center bg-muted/30 p-4">
+                    <p className="text-sm text-muted-foreground font-semibold">Cantidad:</p>
+                    <div className="flex items-center gap-2">
+                      <Button variant="outline" size="icon" disabled className="bg-background/50">
+                        <Minus className="h-4 w-4" />
+                      </Button>
+                      <span className="font-bold text-lg w-8 text-center">0</span>
+                      <Button variant="outline" size="icon" disabled className="bg-background/50">
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </CardFooter>
                 </Card>
              ))}
           </div>
