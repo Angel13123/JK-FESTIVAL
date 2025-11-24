@@ -5,7 +5,7 @@ import { Countdown } from "@/components/shared/Countdown";
 export function Hero() {
   return (
     <section 
-      className="relative w-full h-[calc(100vh-3.5rem)] min-h-[600px] overflow-hidden flex items-center justify-center"
+      className="relative w-full h-[calc(100vh-3.5rem)] min-h-[600px] overflow-hidden"
       style={{
         background: 'radial-gradient(ellipse at center, #1a001a 0%, #000000 70%)'
       }}
