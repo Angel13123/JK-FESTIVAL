@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Countdown } from "@/components/shared/Countdown";
 
@@ -7,15 +8,19 @@ export function Hero() {
 
   return (
     <section className="relative w-full h-screen min-h-[700px] flex items-center justify-center text-center text-white overflow-hidden">
-      {/* Background container for image, overlay, and animation */}
-      <div 
-        className="absolute inset-0 z-0 bg-cover bg-center animate-ken-burns"
-        style={{ backgroundImage: `url(${heroImageUrl})` }}
+      {/* Background Image using Next/Image */}
+      <Image
+        src={heroImageUrl}
+        alt="Festival crowd at night"
+        fill
+        className="object-cover animate-ken-burns z-0"
+        priority
+        unoptimized
         data-ai-hint={'festival crowd'}
-      >
-        {/* Overlay for darkening and noise effect */}
-        <div className="absolute inset-0 bg-black/60 animate-noise"></div>
-      </div>
+      />
+
+      {/* Overlay for darkening and noise effect */}
+      <div className="absolute inset-0 bg-black/60 animate-noise z-1"></div>
       
       {/* Content Layer */}
       <div className="relative z-10 flex flex-col items-center gap-6 p-4">
