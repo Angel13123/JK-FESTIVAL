@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -10,6 +10,7 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Timestamp } from "firebase/firestore";
 import Link from "next/link";
+import { QrScanner } from "@/components/admin/QrScanner";
 
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -118,6 +119,7 @@ function ResultCard({ result, onActivate }: { result: ValidationResult, onActiva
 
 export default function ScanPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const [isScannerActive, setIsScannerActive] = useState(false);
   const [result, setResult] = useState<ValidationResult>({ status: 'idle', message: '' });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -125,6 +127,11 @@ export default function ScanPage() {
     defaultValues: { ticketCode: "" },
   });
 
+  const handleScanSuccess = (decodedText: string) => {
+    form.setValue('ticketCode', decodedText);
+    onSubmit({ ticketCode: decodedText });
+  };
+  
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     setResult({ status: 'idle', message: '' });
@@ -162,31 +169,38 @@ export default function ScanPage() {
       <Card className="w-full max-w-md mt-8">
         <CardHeader className="text-center items-center">
           <QrCode className="h-8 w-8 text-primary" />
-          <CardTitle className="font-headline text-2xl">Escanear Código</CardTitle>
-          <CardDescription>Introduce el código manualmente.</CardDescription>
+          <CardTitle className="font-headline text-2xl">Validar Código</CardTitle>
         </CardHeader>
         <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <FormField
-                control={form.control}
-                name="ticketCode"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Código de Entrada</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Ej: JK24FEST9B" {...field} autoFocus className="font-mono text-center text-lg tracking-widest" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit" className="w-full transition-transform hover:scale-105" size="lg" disabled={isLoading}>
-                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Ticket className="mr-2 h-4 w-4" />}
-                Validar entrada
-              </Button>
-            </form>
-          </Form>
+            <div className='space-y-4'>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    <FormField
+                        control={form.control}
+                        name="ticketCode"
+                        render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Código de Entrada</FormLabel>
+                            <FormControl>
+                            <Input placeholder="Ej: JK24FEST9B" {...field} autoFocus className="font-mono text-center text-lg tracking-widest" />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                        )}
+                    />
+                    <Button type="submit" className="w-full transition-transform hover:scale-105" size="lg" disabled={isLoading}>
+                        {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Ticket className="mr-2 h-4 w-4" />}
+                        Validar manualmente
+                    </Button>
+                    </form>
+                </Form>
+                <div className="relative flex py-2 items-center">
+                    <div className="flex-grow border-t border-muted"></div>
+                    <span className="flex-shrink mx-4 text-muted-foreground text-xs uppercase">O</span>
+                    <div className="flex-grow border-t border-muted"></div>
+                </div>
+                <QrScanner onScanSuccess={handleScanSuccess} isScannerActive={isScannerActive} setIsScannerActive={setIsScannerActive} />
+            </div>
         </CardContent>
       </Card>
       

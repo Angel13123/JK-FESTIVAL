@@ -12,10 +12,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import QRCode from "qrcode.react";
 
 function OrderTicketsDialog({ order, tickets }: { order: Order; tickets: TicketType[] }) {
     return (
-        <DialogContent className="sm:max-w-3xl">
+        <DialogContent className="sm:max-w-4xl">
             <DialogHeader>
                 <DialogTitle>Tickets del Pedido</DialogTitle>
                 <DialogDescription>
@@ -29,6 +30,7 @@ function OrderTicketsDialog({ order, tickets }: { order: Order; tickets: TicketT
                             <TableHead>Ticket ID</TableHead>
                             <TableHead>Tipo</TableHead>
                             <TableHead>Código</TableHead>
+                            <TableHead>QR</TableHead>
                             <TableHead>Estado</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -38,6 +40,9 @@ function OrderTicketsDialog({ order, tickets }: { order: Order; tickets: TicketT
                                 <TableCell className="font-mono text-xs">{ticket.id}</TableCell>
                                 <TableCell>{ticket.ticketTypeName}</TableCell>
                                 <TableCell className="font-mono font-bold">{ticket.code}</TableCell>
+                                <TableCell>
+                                    <QRCode value={ticket.code} size={64} />
+                                </TableCell>
                                 <TableCell>
                                     <Badge variant={ticket.status === 'valid' ? 'default' : ticket.status === 'used' ? 'secondary' : 'destructive'}>
                                         {ticket.status}

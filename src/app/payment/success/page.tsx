@@ -8,6 +8,7 @@ import { CheckCircle, Ticket, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { getTicketsByOrderId } from '@/lib/orders-service';
 import type { Ticket as TicketType } from '@/lib/types';
+import QRCode from 'qrcode.react';
 
 function SuccessContent() {
   const searchParams = useSearchParams();
@@ -54,19 +55,27 @@ function SuccessContent() {
                     </div>
                 ) : tickets.length > 0 ? (
                     <div className="mt-6 bg-muted p-4 rounded-lg border border-dashed text-left">
-                        <h3 className="font-bold text-lg text-center mb-3">Tus códigos de entrada:</h3>
-                        <div className="space-y-2 max-h-40 overflow-y-auto">
+                        <h3 className="font-bold text-lg text-center mb-3">Tus entradas:</h3>
+                        <div className="space-y-4 max-h-60 overflow-y-auto p-2">
                         {tickets.map(ticket => (
-                            <div key={ticket.id} className="flex items-center justify-center gap-2">
-                                <Ticket className="h-5 w-5 text-primary"/>
-                                <p className="font-mono text-xl font-bold tracking-widest text-primary">
-                                    {ticket.code}
-                                </p>
+                            <div key={ticket.id} className="flex items-center justify-between gap-4 bg-background p-3 rounded-md">
+                                <div className='flex items-center gap-4'>
+                                    <Ticket className="h-6 w-6 text-primary flex-shrink-0"/>
+                                    <div>
+                                        <p className="font-mono text-lg font-bold tracking-widest text-primary">
+                                            {ticket.code}
+                                        </p>
+                                        <p className="text-xs text-muted-foreground">{ticket.ticketTypeName}</p>
+                                    </div>
+                                </div>
+                                <div className="p-1 bg-white rounded-md">
+                                    <QRCode value={ticket.code} size={64} />
+                                </div>
                             </div>
                         ))}
                         </div>
                          <p className="text-xs text-muted-foreground mt-3 text-center">
-                           Cada una de tus entradas tiene un código único.
+                           Presenta el código QR en la entrada del festival.
                         </p>
                     </div>
                 ) : (
