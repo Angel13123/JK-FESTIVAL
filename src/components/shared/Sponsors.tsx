@@ -13,7 +13,7 @@ export function Sponsors() {
             <div 
               key={sponsor.id} 
               className="relative h-12 w-32 grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300 ease-out hover:scale-110 animate-fade-in-up"
-              style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'both' }}
+              style={{ animationDelay: `${100 + index * 100}ms` }}
             >
               <Image
                 src={sponsor.logoUrl}

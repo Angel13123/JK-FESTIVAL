@@ -13,7 +13,7 @@ export default function InfoPage() {
         </div>
 
         <div className="space-y-12">
-          <Card id="location" className="transition-shadow duration-300 hover:shadow-lg scroll-mt-20">
+          <Card id="location" className="transition-shadow duration-300 hover:shadow-lg scroll-mt-20 animate-fade-in-up">
             <CardHeader>
               <CardTitle className="flex items-center gap-2"><MapPin className="h-5 w-5 text-primary" />Ubicación</CardTitle>
             </CardHeader>
@@ -37,28 +37,32 @@ export default function InfoPage() {
           </Card>
 
           <div className="grid md:grid-cols-2 gap-8">
-            <Card className="transition-all duration-300 ease-out hover:shadow-xl hover:-translate-y-1 transform">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2"><Clock className="h-5 w-5 text-primary" />Horarios</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2 text-muted-foreground">
-                <p><strong>Apertura de puertas:</strong> 16:00</p>
-                <p><strong>Inicio de conciertos:</strong> 17:00</p>
-                <p><strong>Fin de conciertos:</strong> 02:00</p>
-                <p><strong>Cierre del recinto:</strong> 03:00</p>
-              </CardContent>
-            </Card>
-             <Card className="transition-all duration-300 ease-out hover:shadow-xl hover:-translate-y-1 transform">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2"><Accessibility className="h-5 w-5 text-primary" />Accesibilidad</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">El recinto está adaptado para personas con movilidad reducida, incluyendo rampas de acceso y zonas reservadas con buena visibilidad.</p>
-              </CardContent>
-            </Card>
+            <div className="animate-fade-in-up" style={{ animationDelay: '100ms'}}>
+              <Card className="transition-all duration-300 ease-out hover:shadow-xl hover:-translate-y-1 transform h-full">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2"><Clock className="h-5 w-5 text-primary" />Horarios</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2 text-muted-foreground">
+                  <p><strong>Apertura de puertas:</strong> 16:00</p>
+                  <p><strong>Inicio de conciertos:</strong> 17:00</p>
+                  <p><strong>Fin de conciertos:</strong> 02:00</p>
+                  <p><strong>Cierre del recinto:</strong> 03:00</p>
+                </CardContent>
+              </Card>
+            </div>
+            <div className="animate-fade-in-up" style={{ animationDelay: '200ms'}}>
+               <Card className="transition-all duration-300 ease-out hover:shadow-xl hover:-translate-y-1 transform h-full">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2"><Accessibility className="h-5 w-5 text-primary" />Accesibilidad</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">El recinto está adaptado para personas con movilidad reducida, incluyendo rampas de acceso y zonas reservadas con buena visibilidad.</p>
+                </CardContent>
+              </Card>
+            </div>
           </div>
 
-          <Card id="how-to-get-there" className="transition-shadow duration-300 hover:shadow-lg scroll-mt-20">
+          <Card id="how-to-get-there" className="transition-shadow duration-300 hover:shadow-lg scroll-mt-20 animate-fade-in-up" style={{ animationDelay: '300ms'}}>
             <CardHeader>
               <CardTitle className="flex items-center gap-2"><Bus className="h-5 w-5 text-primary" />Cómo Llegar</CardTitle>
             </CardHeader>
