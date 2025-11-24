@@ -7,8 +7,8 @@ export function Hero() {
   const heroImageUrl = "https://i.imgur.com/QkIu9hY.jpeg";
 
   return (
-    <section className="relative w-full h-screen min-h-[700px] flex items-center justify-center text-center text-white overflow-hidden">
-      {/* Background Image using Next/Image - z-index: 0 */}
+    <section className="relative w-full h-screen min-h-[700px] overflow-hidden">
+      {/* CAPA 0: Imagen de fondo */}
       <Image
         src={heroImageUrl}
         alt="Festival crowd at night"
@@ -19,11 +19,11 @@ export function Hero() {
         data-ai-hint={'festival crowd'}
       />
 
-      {/* Overlay for darkening and noise effect - z-index: 1 */}
-      <div className="absolute inset-0 bg-black/60 animate-noise z-1"></div>
+      {/* CAPA 1: Superposición oscura y efecto de ruido */}
+      <div className="absolute inset-0 bg-black/60 animate-noise z-10"></div>
       
-      {/* Content Layer - z-index: 10 to ensure it's on top */}
-      <div className="relative z-10 flex flex-col items-center gap-6 p-4">
+      {/* CAPA 2: Contenido centrado */}
+      <div className="relative z-20 h-full flex flex-col items-center justify-center gap-6 p-4 text-center text-white">
         <h1 className="text-6xl md:text-8xl lg:text-9xl font-extrabold uppercase font-headline tracking-tighter drop-shadow-lg animate-neon-flicker">
           JK Festival
         </h1>
