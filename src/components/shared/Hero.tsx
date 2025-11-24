@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Countdown } from "@/components/shared/Countdown";
+import Image from "next/image";
 
 export function Hero() {
   const heroImageUrl = "https://images.unsplash.com/photo-1459749411177-2a296581dca1?q=80&w=1470&auto=format&fit=crop";
@@ -8,14 +9,18 @@ export function Hero() {
   return (
     <section 
       className="relative w-full h-screen min-h-[700px] overflow-hidden"
-      style={{
-        backgroundImage: `url('${heroImageUrl}')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
     >
+      {/* CAPA 0: Imagen de Fondo */}
+      <Image
+        alt="Festival crowd"
+        src={heroImageUrl}
+        fill
+        className="object-cover animate-ken-burns"
+        data-ai-hint="festival crowd"
+      />
+      
       {/* CAPA 1: Superposición oscura y efecto de ruido */}
-      <div className="absolute inset-0 bg-black/50 animate-noise"></div>
+      <div className="absolute inset-0 bg-black/50 animate-noise z-[1]"></div>
       
       {/* CAPA 2: Contenido centrado */}
       <div className="relative z-10 h-full flex flex-col items-center justify-center gap-6 p-4 text-center text-white">
