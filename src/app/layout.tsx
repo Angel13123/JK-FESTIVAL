@@ -9,6 +9,13 @@ import { FirebaseClientProvider } from '@/firebase/client-provider';
 export const metadata: Metadata = {
   title: 'JK Festival',
   description: 'La web oficial del JK Festival de música urbana en Martil, Marruecos.',
+  manifest: '/manifest.json',
+  themeColor: '#be185d',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'JK Festival Admin',
+  },
 };
 
 const fontHeadline = Poppins({

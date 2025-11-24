@@ -1,0 +1,21 @@
+{
+  "name": "JK Festival Admin",
+  "short_name": "JK Admin",
+  "description": "Panel de administración y validación de entradas para el JK Festival.",
+  "start_url": "/admin",
+  "display": "standalone",
+  "background_color": "#111827",
+  "theme_color": "#be185d",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
