@@ -20,8 +20,7 @@ export default function Home() {
         <Location />
         <Sponsors />
         <section 
-          className="relative py-16 md:py-24 bg-cover bg-center"
-          style={{ backgroundImage: `url(${heroImage?.imageUrl})` }}
+          className="relative py-16 md:py-24 bg-black"
         >
           <div className="absolute inset-0 bg-black/70"></div>
           <div className="relative container mx-auto max-w-screen-md px-4 text-center">
