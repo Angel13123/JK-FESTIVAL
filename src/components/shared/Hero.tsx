@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Countdown } from "@/components/shared/Countdown";
@@ -11,12 +10,9 @@ export function Hero() {
     <section className="relative w-full h-screen min-h-[700px] flex items-center justify-center text-center text-white overflow-hidden">
       <div className="absolute inset-0">
           {heroImage && (
-            <Image
-              src={heroImage.imageUrl}
-              alt={heroImage.description}
-              fill
-              className="object-cover animate-ken-burns"
-              priority
+             <div
+              style={{ backgroundImage: `url(${heroImage.imageUrl})` }}
+              className="absolute inset-0 w-full h-full bg-cover bg-center animate-ken-burns"
               data-ai-hint={heroImage.imageHint}
             />
           )}
