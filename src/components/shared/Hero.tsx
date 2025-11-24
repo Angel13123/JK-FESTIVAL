@@ -7,15 +7,17 @@ export function Hero() {
 
   return (
     <section className="relative w-full h-screen min-h-[700px] flex items-center justify-center text-center text-white overflow-hidden">
-      <div className="absolute inset-0 z-0">
-          <div
-            style={{ backgroundImage: `url(${heroImageUrl})` }}
-            className="w-full h-full bg-cover bg-center animate-ken-burns"
-            data-ai-hint={'festival crowd'}
-          />
+      {/* Background container for image, overlay, and animation */}
+      <div 
+        className="absolute inset-0 z-0 bg-cover bg-center animate-ken-burns"
+        style={{ backgroundImage: `url(${heroImageUrl})` }}
+        data-ai-hint={'festival crowd'}
+      >
+        {/* Overlay for darkening and noise effect */}
+        <div className="absolute inset-0 bg-black/60 animate-noise"></div>
       </div>
-      <div className="absolute inset-0 bg-black/70 animate-noise z-0"></div>
       
+      {/* Content Layer */}
       <div className="relative z-10 flex flex-col items-center gap-6 p-4">
         <h1 className="text-6xl md:text-8xl lg:text-9xl font-extrabold uppercase font-headline tracking-tighter drop-shadow-lg animate-neon-flicker">
           JK Festival
