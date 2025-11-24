@@ -144,9 +144,11 @@ export default {
          'ken-burns': {
           '0%': {
             transform: 'scale(1) translate(0, 0)',
+            transformOrigin: 'center center'
           },
           '100%': {
             transform: 'scale(1.15) translate(-2%, 2%)',
+            transformOrigin: 'center center'
           },
         },
         'noise': {
