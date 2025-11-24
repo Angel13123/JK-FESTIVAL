@@ -1,14 +1,16 @@
+
 "use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Mic, Ticket, Music, QrCode } from "lucide-react";
+import { Home, Mic, Ticket, Music, QrCode, ShoppingCart } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
 const adminNavLinks = [
   { href: "/admin", label: "Dashboard", icon: Home },
+  { href: "/admin/sales", label: "Ventas", icon: ShoppingCart },
   { href: "/admin/lineup", label: "Lineup", icon: Mic },
   { href: "/admin/tickets-types", label: "Tipos de Entradas", icon: Ticket },
   { href: "/scan", label: "Validar Entradas", icon: QrCode },
@@ -31,7 +33,7 @@ export function AdminSidebar() {
             <li key={link.href}>
               <Button
                 asChild
-                variant={pathname === link.href ? "secondary" : "ghost"}
+                variant={pathname.startsWith(link.href) && (link.href !== '/admin' || pathname === '/admin') ? "secondary" : "ghost"}
                 className="w-full justify-start transition-transform hover:translate-x-1"
               >
                 <Link href={link.href}>

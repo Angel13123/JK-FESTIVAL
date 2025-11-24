@@ -5,9 +5,9 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Ticket, DollarSign, Users, Eye } from "lucide-react";
-import { getOrders, getTicketsByOrderId, getStats } from "@/lib/orders-service";
-import type { Order, Ticket as TicketType, OrderStats } from "@/lib/types";
+import { Eye, Ticket } from "lucide-react";
+import { getOrders, getTicketsByOrderId } from "@/lib/orders-service";
+import type { Order, Ticket as TicketType } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { format } from 'date-fns';
@@ -57,18 +57,14 @@ function OrderTicketsDialog({ order, tickets }: { order: Order; tickets: TicketT
     )
 }
 
-export default function AdminDashboard() {
-  const [stats, setStats] = useState<OrderStats>({ totalRevenue: 0, totalTicketsSold: 0, totalOrders: 0 });
+export default function SalesPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [selectedOrderTickets, setSelectedOrderTickets] = useState<TicketType[]>([]);
-  const [isTicketsLoading, setIsTicketsLoading] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
-      const fetchedStats = await getStats();
-      const fetchedOrders = await getOrders(10);
-      setStats(fetchedStats);
+      const fetchedOrders = await getOrders();
       setOrders(fetchedOrders);
     }
     fetchData();
@@ -76,57 +72,26 @@ export default function AdminDashboard() {
   
   const handleViewTickets = async (order: Order) => {
     setSelectedOrder(order);
-    setIsTicketsLoading(true);
     const tickets = await getTicketsByOrderId(order.id);
     setSelectedOrderTickets(tickets);
-    setIsTicketsLoading(false);
+  }
+  
+  const getTotalTicketsForOrder = (order: Order) => {
+      return order.ticketItems.reduce((acc, item) => acc + item.quantity, 0);
   }
 
   return (
     <div className="space-y-8 animate-fade-in-up">
       <div>
-        <h1 className="text-3xl font-bold font-headline">Dashboard</h1>
-        <p className="text-muted-foreground">Un resumen del estado del festival basado en datos de Firestore.</p>
+        <h1 className="text-3xl font-bold font-headline">Ventas Totales</h1>
+        <p className="text-muted-foreground">Un historial completo de todos los pedidos realizados.</p>
       </div>
       
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <Card className="transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Ingresos Totales</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.totalRevenue.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</div>
-            <p className="text-xs text-muted-foreground">Ingresos de todas las ventas</p>
-          </CardContent>
-        </Card>
-        <Card className="transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Entradas Vendidas</CardTitle>
-            <Ticket className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.totalTicketsSold.toLocaleString()}</div>
-             <p className="text-xs text-muted-foreground">{stats.totalOrders} pedidos en total</p>
-          </CardContent>
-        </Card>
-        <Card className="transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pedidos Totales</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.totalOrders.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">Pedidos procesados con éxito</p>
-          </CardContent>
-        </Card>
-      </div>
-
       <Dialog>
         <Card className="transition-shadow duration-300 hover:shadow-lg">
           <CardHeader>
-            <CardTitle>Pedidos Recientes</CardTitle>
-            <CardDescription>Aquí están los últimos 10 pedidos realizados.</CardDescription>
+            <CardTitle>Todos los Pedidos</CardTitle>
+            <CardDescription>Aquí están todos los pedidos realizados en la plataforma.</CardDescription>
           </CardHeader>
           <CardContent>
             <Table>
@@ -134,6 +99,7 @@ export default function AdminDashboard() {
                     <TableRow>
                         <TableHead>Cliente</TableHead>
                         <TableHead>País</TableHead>
+                        <TableHead># Tickets</TableHead>
                         <TableHead className="hidden md:table-cell">Fecha</TableHead>
                         <TableHead className="text-right">Total</TableHead>
                         <TableHead className="text-right">Acciones</TableHead>
@@ -147,6 +113,12 @@ export default function AdminDashboard() {
                                 <div className="text-sm text-muted-foreground">{order.customerEmail}</div>
                             </TableCell>
                             <TableCell>{order.customerCountry}</TableCell>
+                            <TableCell>
+                               <Badge variant="secondary" className="flex items-center gap-1.5">
+                                 <Ticket className="h-3 w-3"/>
+                                 {getTotalTicketsForOrder(order)}
+                               </Badge>
+                            </TableCell>
                             <TableCell className="hidden md:table-cell">
                                 {order.createdAt ? format(new Date(order.createdAt.seconds * 1000), "d MMM yyyy, HH:mm", { locale: es }) : 'N/A'}
                             </TableCell>

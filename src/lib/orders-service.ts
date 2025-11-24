@@ -1,3 +1,4 @@
+
 'use client';
 import {
   collection,
@@ -10,6 +11,7 @@ import {
   serverTimestamp,
   orderBy,
   Timestamp,
+  limit,
 } from 'firebase/firestore';
 import { db } from '@/firebase/client'; // Assuming db is your Firestore instance
 import type { Order, Ticket, CartItem, OrderStats } from './types';
@@ -103,8 +105,11 @@ export async function createOrderAndTickets(payload: CreateOrderPayload): Promis
   return { ...newOrder, id: orderId, createdAt: new Date().toISOString() };
 }
 
-export async function getOrders(): Promise<Order[]> {
-  const snapshot = await getDocs(query(ordersCollection, orderBy("createdAt", "desc")));
+export async function getOrders(count?: number): Promise<Order[]> {
+  const q = count
+    ? query(ordersCollection, orderBy("createdAt", "desc"), limit(count))
+    : query(ordersCollection, orderBy("createdAt", "desc"));
+  const snapshot = await getDocs(q);
   return snapshot.docs.map(doc => doc.data() as Order);
 }
 
