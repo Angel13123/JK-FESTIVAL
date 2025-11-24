@@ -125,11 +125,21 @@ export default {
         },
         'zoom-in-out': {
           '0%, 100%': { transform: 'scale(1)' },
-          '50%': { transform: 'scale(1.05)' },
+          '50%': { transform: 'scale(1.1)' },
         },
         'breathing': {
-          '0%, 100%': { transform: 'scale(1)', filter: 'brightness(100%)' },
-          '50%': { transform: 'scale(1.02)', filter: 'brightness(105%)' },
+          '0%, 100%': { transform: 'scale(1)', boxShadow: '0 0 10px transparent' },
+          '50%': { transform: 'scale(1.02)', boxShadow: '0 0 20px hsl(var(--primary) / 0.3)' },
+        },
+        'neon-pulse': {
+          '0%, 100%': {
+            borderColor: 'hsl(var(--primary) / 0.4)',
+            boxShadow: '0 0 5px hsl(var(--primary) / 0.2), inset 0 0 5px hsl(var(--primary) / 0.2)',
+          },
+          '50%': {
+            borderColor: 'hsl(var(--primary) / 1)',
+            boxShadow: '0 0 15px hsl(var(--primary) / 0.6), inset 0 0 10px hsl(var(--primary) / 0.4)',
+          }
         }
       },
       animation: {
@@ -138,8 +148,9 @@ export default {
         'fade-in-down': 'fade-in-down 0.5s ease-out forwards',
         'fade-in-up': 'fade-in-up 0.5s ease-out forwards',
         'fade-in': 'fade-in 0.5s ease-in-out forwards',
-        'zoom-in-out': 'zoom-in-out 20s ease-in-out infinite',
-        'breathing': 'breathing 5s ease-in-out infinite',
+        'zoom-in-out': 'zoom-in-out 30s ease-in-out infinite',
+        'breathing': 'breathing 4s ease-in-out infinite',
+        'neon-pulse': 'neon-pulse 3s ease-in-out infinite',
       },
     },
   },

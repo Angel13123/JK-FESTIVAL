@@ -2,8 +2,8 @@
   "placeholderImages": [
     {
       "id": "hero",
-      "description": "Festival crowd at night",
-      "imageUrl": "https://images.unsplash.com/photo-1695229738524-fb6d87f86831?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxmZXN0aXZhbCUyMGNyb3dkfGVufDB8fHx8MTc2MjU1MTc2OXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "description": "Festival crowd at night with stage lights",
+      "imageUrl": "https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxmZXN0aXZhbCUyMGNyb3dkJTIwbmlnaHR8ZW58MHx8fHwxNzYyODk3NjI0fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "festival crowd"
     },
     {

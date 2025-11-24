@@ -10,10 +10,10 @@ export const metadata: Metadata = {
   title: 'JK Festival',
   description: 'La web oficial del JK Festival de música urbana en Martil, Marruecos.',
   manifest: '/manifest.json',
-  themeColor: '#be185d',
+  themeColor: '#000000',
   appleWebApp: {
     capable: true,
-    statusBarStyle: 'default',
+    statusBarStyle: 'black-translucent',
     title: 'JK Festival Admin',
   },
 };
@@ -37,7 +37,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" suppressHydrationWarning>
+    <html lang="es" className="dark" suppressHydrationWarning>
        <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

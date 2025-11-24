@@ -28,20 +28,23 @@ export function Highlights() {
   return (
     <section className="py-16 md:py-24 bg-background">
       <div className="container mx-auto max-w-screen-xl px-4">
+        <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold uppercase font-headline mb-4 neon-glow-accent">Puntos Clave</h2>
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
           {highlights.map((highlight, index) => (
             <Card 
               key={index} 
-              className="text-center bg-card transition-all duration-300 ease-out hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-2 animate-fade-in-up"
-              style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'both' }}
+              className="text-center bg-black/20 backdrop-blur-sm border border-accent/20 transition-all duration-300 ease-out hover:border-accent/80 hover:shadow-2xl hover:shadow-accent/20 hover:-translate-y-2 animate-breathing"
+              style={{ animationDelay: `${index * 100}ms` }}
             >
               <CardHeader className="items-center">
-                <div className="bg-primary/10 p-4 rounded-full">
+                <div className="bg-accent/10 p-4 rounded-full border border-accent/20">
                   {highlight.icon}
                 </div>
               </CardHeader>
               <CardContent>
-                <CardTitle className="text-xl font-headline mb-2">{highlight.title}</CardTitle>
+                <CardTitle className="text-xl uppercase font-headline mb-2 text-white">{highlight.title}</CardTitle>
                 <p className="text-muted-foreground text-sm">{highlight.description}</p>
               </CardContent>
             </Card>
