@@ -1,14 +1,16 @@
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
-import { ConcertBanner } from "@/components/shared/ConcertBanner";
 import { Hero } from "@/components/shared/Hero";
 import { LineupPreview } from "@/components/shared/LineupPreview";
 import { Location } from "@/components/shared/Location";
 import { Sponsors } from "@/components/shared/Sponsors";
 import { Button } from "@/components/ui/button";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
 import Link from "next/link";
 
 export default function Home() {
+  const heroImage = PlaceHolderImages.find(p => p.id === 'hero');
+
   return (
     <>
       <Navbar />
@@ -17,9 +19,13 @@ export default function Home() {
         <LineupPreview />
         <Location />
         <Sponsors />
-        <section className="py-16 md:py-24 bg-black">
-          <div className="container mx-auto max-w-screen-md px-4 text-center">
-              <h2 className="text-3xl md:text-4xl font-bold font-headline mb-4 text-white animate-pulse" style={{ textShadow: '0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff' }}>¿Listo para la experiencia?</h2>
+        <section 
+          className="relative py-16 md:py-24 bg-cover bg-center"
+          style={{ backgroundImage: `url(${heroImage?.imageUrl})` }}
+        >
+          <div className="absolute inset-0 bg-black/70"></div>
+          <div className="relative container mx-auto max-w-screen-md px-4 text-center">
+              <h2 className="text-3xl md:text-4xl font-bold font-headline mb-4 text-accent neon-glow-accent">¿Listo para la experiencia?</h2>
               <p className="text-muted-foreground mb-8">
                 No te quedes fuera del evento de música urbana más esperado. Asegura tu lugar ahora.
               </p>
