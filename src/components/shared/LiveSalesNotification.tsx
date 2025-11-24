@@ -37,10 +37,10 @@ export function LiveSalesNotification() {
     };
 
     // Initial notification
-    const initialTimeout = setTimeout(showNotification, 5000);
+    const initialTimeout = setTimeout(showNotification, 8000);
 
-    // Subsequent notifications
-    const interval = setInterval(showNotification, 12000);
+    // Subsequent notifications every 20 seconds
+    const interval = setInterval(showNotification, 20000);
 
     return () => {
       clearTimeout(initialTimeout);
@@ -54,9 +54,9 @@ export function LiveSalesNotification() {
     <div 
       className={`fixed bottom-24 left-4 md:bottom-28 md:left-6 z-50 transition-all duration-500 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}
     >
-      <div className="flex items-center gap-3 bg-black/60 backdrop-blur-md border border-green-400/30 rounded-lg p-3 pr-4 shadow-lg">
-        <div className="bg-green-500/20 text-green-400 p-2 rounded-full">
-            <Ticket className="h-5 w-5" />
+      <div className="flex items-center gap-2 bg-black/60 backdrop-blur-md border border-green-400/30 rounded-lg p-2 pr-3 shadow-lg">
+        <div className="bg-green-500/20 text-green-400 p-1.5 rounded-full">
+            <Ticket className="h-4 w-4" />
         </div>
         <p className="text-xs font-medium text-white">{notification}</p>
       </div>
