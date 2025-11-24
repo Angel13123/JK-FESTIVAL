@@ -3,6 +3,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Hero } from "@/components/shared/Hero";
 import { Highlights } from "@/components/shared/Highlights";
 import { LineupPreview } from "@/components/shared/LineupPreview";
+import { Location } from "@/components/shared/Location";
 import { Sponsors } from "@/components/shared/Sponsors";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -15,6 +16,7 @@ export default function Home() {
         <Hero />
         <Highlights />
         <LineupPreview />
+        <Location />
         <Sponsors />
         <section className="py-16 md:py-24 bg-card">
           <div className="container mx-auto max-w-screen-md px-4 text-center">

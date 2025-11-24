@@ -13,7 +13,7 @@ export default function InfoPage() {
         </div>
 
         <div className="space-y-12">
-          <Card className="transition-shadow duration-300 hover:shadow-lg">
+          <Card id="location" className="transition-shadow duration-300 hover:shadow-lg scroll-mt-20">
             <CardHeader>
               <CardTitle className="flex items-center gap-2"><MapPin className="h-5 w-5 text-primary" />Ubicación</CardTitle>
             </CardHeader>
@@ -58,7 +58,7 @@ export default function InfoPage() {
             </Card>
           </div>
 
-          <Card className="transition-shadow duration-300 hover:shadow-lg">
+          <Card id="how-to-get-there" className="transition-shadow duration-300 hover:shadow-lg scroll-mt-20">
             <CardHeader>
               <CardTitle className="flex items-center gap-2"><Bus className="h-5 w-5 text-primary" />Cómo Llegar</CardTitle>
             </CardHeader>
