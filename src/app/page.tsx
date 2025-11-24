@@ -1,7 +1,7 @@
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import { Hero } from "@/components/shared/Hero";
-import { Highlights } from "@/components/shared/Highlights";
+import { ConcertBanner } from "@/components/shared/ConcertBanner";
 import { LineupPreview } from "@/components/shared/LineupPreview";
 import { Location } from "@/components/shared/Location";
 import { Sponsors } from "@/components/shared/Sponsors";
@@ -14,7 +14,7 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
-        <Highlights />
+        <ConcertBanner />
         <LineupPreview />
         <Location />
         <Sponsors />
