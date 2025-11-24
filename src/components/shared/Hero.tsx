@@ -14,7 +14,7 @@ export function Hero() {
       <div className="absolute inset-0 animate-noise z-[1]"></div>
       
       {/* CAPA 2: Contenido centrado */}
-      <div className="relative z-10 h-full flex flex-col items-center justify-center gap-4 p-4 text-center text-white">
+      <div className="relative z-10 h-full flex flex-col items-center justify-start pt-20 gap-4 p-4 text-center text-white">
         <h1 className="text-6xl md:text-8xl lg:text-9xl font-extrabold uppercase font-headline tracking-tighter drop-shadow-lg animate-neon-flicker">
           JK Festival
         </h1>
