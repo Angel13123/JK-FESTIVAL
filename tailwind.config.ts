@@ -140,6 +140,47 @@ export default {
             borderColor: 'hsl(var(--primary) / 1)',
             boxShadow: '0 0 15px hsl(var(--primary) / 0.6), inset 0 0 10px hsl(var(--primary) / 0.4)',
           }
+        },
+         'ken-burns': {
+          '0%': {
+            transform: 'scale(1) translate(0, 0)',
+          },
+          '100%': {
+            transform: 'scale(1.15) translate(-2%, 2%)',
+          },
+        },
+        'noise': {
+          '0%, 100%': { backgroundPosition: '0 0' },
+          '10%': { backgroundPosition: '-5% -10%' },
+          '20%': { backgroundPosition: '15% 5%' },
+          '30%': { backgroundPosition: '7% -25%' },
+          '40%': { backgroundPosition: '20% 25%' },
+          '50%': { backgroundPosition: '-25% 10%' },
+          '60%': { backgroundPosition: '15% 5%' },
+          '70%': { backgroundPosition: '0% 15%' },
+          '80%': { backgroundPosition: '25% 35%' },
+          '90%': { backgroundPosition: '-10% 10%' },
+        },
+        'neon-flicker': {
+          '0%, 19.9%, 22%, 62.9%, 64%, 64.9%, 70%, 100%': {
+            textShadow: 
+              '0 0 5px hsl(var(--primary)), 0 0 10px hsl(var(--primary)), 0 0 20px hsl(var(--primary)), 0 0 40px hsl(var(--primary)), 0 0 80px hsl(var(--secondary))',
+            color: 'hsl(var(--primary-foreground))',
+          },
+          '20%, 21.9%, 63%, 63.9%, 65%, 69.9%': {
+            textShadow: 'none',
+            color: 'transparent',
+          }
+        },
+        'digital-glitch': {
+            '0%, 100%': { transform: 'translate(0, 0)', opacity: '1' },
+            '5%': { transform: 'translate(-2px, 2px)', opacity: '0.8' },
+            '10%': { transform: 'translate(2px, -2px)', opacity: '0.9' },
+            '15%': { transform: 'translate(0, 0)', opacity: '1' },
+        },
+        'shimmer': {
+          '0%': { backgroundPosition: '-500px 0' },
+          '100%': { backgroundPosition: '500px 0' },
         }
       },
       animation: {
@@ -151,6 +192,11 @@ export default {
         'zoom-in-out': 'zoom-in-out 30s ease-in-out infinite',
         'breathing': 'breathing 4s ease-in-out infinite',
         'neon-pulse': 'neon-pulse 3s ease-in-out infinite',
+        'ken-burns': 'ken-burns 30s ease-out forwards infinite alternate',
+        'noise': 'noise 2s steps(8, end) infinite both',
+        'neon-flicker': 'neon-flicker 4s linear infinite',
+        'digital-glitch': 'digital-glitch 5s ease-in-out infinite alternate',
+        'shimmer': 'shimmer 2s linear infinite',
       },
     },
   },

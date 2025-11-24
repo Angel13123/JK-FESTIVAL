@@ -51,8 +51,8 @@ export function Countdown() {
   return (
     <div className="flex justify-center gap-4 md:gap-8">
       {timeUnits.map((unit, index) => (
-        <div key={index} className="flex flex-col items-center text-center w-20 p-2 bg-black/20 backdrop-blur-sm rounded-lg border border-primary/20">
-          <div className="text-3xl md:text-5xl font-bold font-mono text-primary-foreground tabular-nums neon-glow-primary" style={{ textShadow: '0 0 4px hsl(var(--primary)), 0 0 8px hsl(var(--primary))' }}>
+        <div key={index} className="flex flex-col items-center text-center w-20 p-2 bg-black/20 backdrop-blur-sm rounded-lg border border-primary/20 animate-neon-pulse">
+          <div className="text-3xl md:text-5xl font-bold font-mono text-primary-foreground tabular-nums neon-glow-primary animate-digital-glitch" style={{ animationDelay: `${index * 250}ms` }}>
             {formatValue(unit.value)}
           </div>
           <div className="text-xs md:text-sm font-semibold uppercase tracking-wider text-primary-foreground/70">
