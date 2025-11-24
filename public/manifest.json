@@ -1,7 +1,7 @@
 {
   "name": "JK Festival Admin",
   "short_name": "JK Admin",
-  "description": "Panel de administración y validación de entradas para el JK Festival.",
+  "description": "Panel de administración para el JK Festival.",
   "start_url": "/admin",
   "display": "standalone",
   "background_color": "#111827",
