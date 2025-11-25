@@ -43,7 +43,7 @@ export type Order = {
     customerEmail: string;
     customerCountry: string;
     totalAmount: number;
-    createdAt: Timestamp | string; // ISO 8601 date string or Firestore Timestamp
+    createdAt: Timestamp;
     ticketItems: {
         ticketTypeId: string;
         quantity: number;
@@ -57,9 +57,10 @@ export type Ticket = {
     ticketTypeId: string;
     ticketTypeName: string;
     ownerName: string;
+    customerEmail: string;
     status: 'valid' | 'used' | 'revoked';
     code: string; // The "Gemini" generated code
-    createdAt: Timestamp | string; // ISO 8601 date string or Firestore Timestamp
+    createdAt: Timestamp;
 };
 
 export type OrderStats = {
