@@ -24,12 +24,11 @@ export function Hero() {
       )}
       {/* CAPA 1: Superposición de efecto de ruido y gradiente */}
       <div 
-        className="absolute inset-0 z-1" 
+        className="absolute inset-0 z-10" 
         style={{
           background: 'radial-gradient(ellipse at center, rgba(26, 0, 26, 0.4) 0%, rgba(0, 0, 0, 0.8) 70%)'
         }}
       />
-      <div className="absolute inset-0 animate-noise z-[2]"></div>
       
       {/* CAPA 2: Contenido centrado */}
       <div className="relative z-10 h-full flex flex-col items-center justify-start pt-20 gap-4 p-4 text-center text-white">
