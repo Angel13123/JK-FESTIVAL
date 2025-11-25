@@ -46,13 +46,21 @@ function SuccessContent() {
 
     setDownloading(ticket.id);
     try {
-      const dataUrl = await toPng(ticketNode, { cacheBust: true, pixelRatio: 2 });
-      const link = document.createElement('a');
-      link.download = `JK-Festival-Ticket-${ticket.code}.png`;
-      link.href = dataUrl;
-      link.click();
+        const fontURL = "https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=PT+Sans:wght@400;700&display=swap";
+        const response = await fetch(fontURL);
+        const cssText = await response.text();
+
+        const dataUrl = await toPng(ticketNode, { 
+            cacheBust: true, 
+            pixelRatio: 2,
+            fontEmbedCSS: cssText
+        });
+        const link = document.createElement('a');
+        link.download = `JK-Festival-Ticket-${ticket.code}.png`;
+        link.href = dataUrl;
+        link.click();
     } catch (err) {
-      console.error('oops, something went wrong!', err);
+        console.error('oops, something went wrong!', err);
     } finally {
         setDownloading(null);
     }
