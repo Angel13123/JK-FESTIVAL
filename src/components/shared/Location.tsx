@@ -1,6 +1,9 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { MapPin } from "lucide-react";
+import { Download, MapPin } from "lucide-react";
+import { PwaInstallButton } from "./PwaInstallButton";
 
 export function Location() {
     return (
@@ -34,6 +37,16 @@ export function Location() {
                             Cómo llegar
                         </Link>
                     </Button>
+                </div>
+                 <div className="mt-10 animate-fade-in-up border-t border-dashed border-border pt-8" style={{ animationDelay: '400ms' }}>
+                    <h3 className="text-lg font-semibold text-foreground">Lleva el festival en tu bolsillo</h3>
+                    <p className="text-muted-foreground mt-2 mb-4 max-w-xl mx-auto">
+                        Instala nuestra aplicación web para un acceso rápido a tus entradas, horarios y mapa del sitio, ¡incluso sin conexión!
+                    </p>
+                    <PwaInstallButton variant="default" size="lg">
+                        <Download className="mr-2 h-4 w-4" />
+                        Instalar aplicación
+                    </PwaInstallButton>
                 </div>
             </div>
         </section>

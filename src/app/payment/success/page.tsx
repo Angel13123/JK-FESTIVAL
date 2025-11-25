@@ -10,6 +10,7 @@ import Link from "next/link";
 import { getTicketsByOrderId } from '@/lib/orders-service';
 import type { Ticket as TicketType } from '@/lib/types';
 import { TicketVisual } from '@/components/shared/TicketVisual';
+import { PwaInstallButton } from '@/components/shared/PwaInstallButton';
 
 function SuccessContent() {
   const searchParams = useSearchParams();
@@ -106,13 +107,17 @@ function SuccessContent() {
                 ) : (
                     <div className="mt-6 text-muted-foreground">No se encontraron los códigos de tus entradas.</div>
                 )}
-                <div className="mt-8 flex justify-center gap-4">
+                <div className="mt-8 flex flex-wrap justify-center gap-4">
                     <Button asChild>
                         <Link href="/">Volver al inicio</Link>
                     </Button>
                     <Button asChild variant="outline">
                         <Link href="/admin">Ir al panel de admin</Link>
                     </Button>
+                    <PwaInstallButton variant="outline">
+                      <Download className="mr-2 h-4"/>
+                      Instalar App
+                    </PwaInstallButton>
                 </div>
             </CardContent>
         </Card>

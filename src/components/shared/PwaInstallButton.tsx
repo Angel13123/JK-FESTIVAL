@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonProps } from "@/components/ui/button";
 import { Download } from "lucide-react";
 
 // This interface is needed to extend the Window object with our prompt property.
@@ -20,7 +20,7 @@ interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
 }
 
-export function PwaInstallButton() {
+export function PwaInstallButton({ children, ...props }: ButtonProps) {
   const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
 
   useEffect(() => {
@@ -61,12 +61,15 @@ export function PwaInstallButton() {
 
   return (
     <Button 
-      variant="outline"
       onClick={handleInstallClick}
-      className="hidden sm:inline-flex transition-transform hover:scale-105 hover:bg-primary/10 hover:text-primary border-primary/50 text-primary"
+      {...props}
     >
-      <Download className="mr-2 h-4 w-4" />
-      Instalar App
+      {children || (
+        <>
+          <Download className="mr-2 h-4 w-4" />
+          Instalar App
+        </>
+      )}
     </Button>
   );
 }
