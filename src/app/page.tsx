@@ -5,11 +5,9 @@ import { LineupPreview } from "@/components/shared/LineupPreview";
 import { Location } from "@/components/shared/Location";
 import { Sponsors } from "@/components/shared/Sponsors";
 import { Button } from "@/components/ui/button";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import Link from "next/link";
 
 export default function Home() {
-  const heroImage = PlaceHolderImages.find(p => p.id === 'hero');
 
   return (
     <>
