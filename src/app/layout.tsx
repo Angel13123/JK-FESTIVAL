@@ -35,9 +35,6 @@ export default function RootLayout({
   return (
     <html lang="es" className="dark" suppressHydrationWarning>
       <head>
-        {/* The 'metadata' object is preferred for metadata, but for fonts,
-            direct link tags are often used as shown. You could also explore
-            next/font for a more integrated approach. */}
         <title>JK Festival</title>
         <meta name="description" content="La web oficial del JK Festival de música urbana en Martil, Marruecos." />
         <link rel="manifest" href="/manifest.json" />
@@ -45,9 +42,6 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="JK Festival Admin" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
       </head>
       <body
         className={cn(
