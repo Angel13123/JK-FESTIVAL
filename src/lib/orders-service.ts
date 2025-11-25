@@ -81,7 +81,7 @@ export async function createOrderAndTickets(payload: CreateOrderPayload): Promis
                 ownerName: payload.customerName,
                 status: 'valid',
             };
-            batch.set(ticketRef, { ...newTicket, code: uniqueCode.toUpperCase(), createdAt: serverTimestamp() });
+            batch.set(ticketRef, { ...newTicket, code: uniqueCode.toUpperCase(), customerEmail: payload.customerEmail, createdAt: serverTimestamp() });
         }
     }
   }
@@ -186,4 +186,29 @@ export async function markTicketAsUsed(ticketId: string): Promise<void> {
             errorEmitter.emit('permission-error', permissionError);
             throw error; // Re-throw to let the caller know
         });
+}
+
+export async function deleteAllData(): Promise<{deletedOrders: number, deletedTickets: number}> {
+    const batch = writeBatch(db);
+    
+    const ordersSnapshot = await getDocs(ordersCollection);
+    ordersSnapshot.docs.forEach(doc => batch.delete(doc.ref));
+    
+    const ticketsSnapshot = await getDocs(ticketsCollection);
+    ticketsSnapshot.docs.forEach(doc => batch.delete(doc.ref));
+
+    await batch.commit().catch(error => {
+      // Create a generic error for the batch operation
+      const permissionError = new FirestorePermissionError({
+          path: '/', // Path is generic as it affects multiple collections
+          operation: 'delete',
+      });
+      errorEmitter.emit('permission-error', permissionError);
+      throw error;
+    });
+
+    return {
+      deletedOrders: ordersSnapshot.size,
+      deletedTickets: ticketsSnapshot.size,
+    };
 }

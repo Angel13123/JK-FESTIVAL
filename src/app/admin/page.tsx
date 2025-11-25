@@ -5,14 +5,26 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Ticket, DollarSign, Users, Eye } from "lucide-react";
-import { getOrders, getTicketsByOrderId, getStats } from "@/lib/orders-service";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { Ticket, DollarSign, Users, Eye, Trash2, Loader2 } from "lucide-react";
+import { getOrders, getTicketsByOrderId, getStats, deleteAllData } from "@/lib/orders-service";
 import type { Order, Ticket as TicketType, OrderStats } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import QRCode from "qrcode.react";
+import { useToast } from "@/hooks/use-toast";
 
 function OrderTicketsDialog({ order, tickets }: { order: Order; tickets: TicketType[] }) {
     return (
@@ -58,35 +70,88 @@ function OrderTicketsDialog({ order, tickets }: { order: Order; tickets: TicketT
 }
 
 export default function AdminDashboard() {
+  const { toast } = useToast();
   const [stats, setStats] = useState<OrderStats>({ totalRevenue: 0, totalTicketsSold: 0, totalOrders: 0 });
   const [orders, setOrders] = useState<Order[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [selectedOrderTickets, setSelectedOrderTickets] = useState<TicketType[]>([]);
-  const [isTicketsLoading, setIsTicketsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const fetchData = async () => {
+    setIsLoading(true);
+    const fetchedStats = await getStats();
+    const fetchedOrders = await getOrders(10);
+    setStats(fetchedStats);
+    setOrders(fetchedOrders);
+    setIsLoading(false);
+  }
 
   useEffect(() => {
-    async function fetchData() {
-      const fetchedStats = await getStats();
-      const fetchedOrders = await getOrders(10);
-      setStats(fetchedStats);
-      setOrders(fetchedOrders);
-    }
     fetchData();
   }, []);
   
   const handleViewTickets = async (order: Order) => {
     setSelectedOrder(order);
-    setIsTicketsLoading(true);
     const tickets = await getTicketsByOrderId(order.id);
     setSelectedOrderTickets(tickets);
-    setIsTicketsLoading(false);
+  }
+
+  const handleDeleteAllData = async () => {
+    setIsLoading(true);
+    try {
+      const { deletedOrders, deletedTickets } = await deleteAllData();
+      toast({
+        title: "Datos eliminados",
+        description: `Se eliminaron ${deletedOrders} pedidos y ${deletedTickets} boletos.`,
+      });
+      // Refresh data on screen
+      fetchData();
+    } catch (error) {
+       console.error(error);
+       // The global error handler will show a specific permission toast.
+       // We only show a generic one if it's not a known Firebase error.
+       if ((error as any).name !== 'FirebaseError') {
+          toast({
+            variant: "destructive",
+            title: "Error al eliminar los datos",
+            description: "No se pudieron borrar los datos. Revisa los permisos de la base de datos.",
+          });
+       }
+    } finally {
+        setIsLoading(false);
+    }
   }
 
   return (
     <div className="space-y-8 animate-fade-in-up">
-      <div>
-        <h1 className="text-3xl font-bold font-headline">Dashboard</h1>
-        <p className="text-muted-foreground">Un resumen del estado del festival basado en datos de Firestore.</p>
+      <div className="flex justify-between items-center">
+        <div>
+            <h1 className="text-3xl font-bold font-headline">Dashboard</h1>
+            <p className="text-muted-foreground">Un resumen del estado del festival basado en datos de Firestore.</p>
+        </div>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+              <Button variant="destructive" disabled={isLoading}>
+                <Trash2 className="mr-2 h-4 w-4" />
+                Borrar Datos
+              </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>¿Estás absolutamente seguro?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Esta acción es irreversible. Se eliminarán permanentemente todos los pedidos y boletos de la base de datos.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDeleteAllData} disabled={isLoading}>
+                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin"/>}
+                Sí, borrar todo
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
       
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -163,7 +228,9 @@ export default function AdminDashboard() {
                     ))}
                 </TableBody>
             </Table>
-            {orders.length === 0 && (
+            {isLoading ? (
+                <div className="text-center p-8"><Loader2 className="mx-auto h-8 w-8 animate-spin text-primary" /></div>
+            ) : orders.length === 0 && (
                 <div className="text-center p-8 text-muted-foreground">No hay pedidos todavía.</div>
             )}
           </CardContent>
