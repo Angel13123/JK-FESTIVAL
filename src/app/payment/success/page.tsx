@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Suspense, useEffect, useState, useRef, useCallback } from 'react';
@@ -5,7 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { toPng } from 'html-to-image';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle, Loader2, Download } from "lucide-react";
+import { CheckCircle, Loader2, Download, Smartphone } from "lucide-react";
 import Link from "next/link";
 import { getTicketsByOrderId } from '@/lib/orders-service';
 import type { Ticket as TicketType } from '@/lib/types';
@@ -119,8 +120,11 @@ function SuccessContent() {
                     <Button asChild>
                         <Link href="/">Volver al inicio</Link>
                     </Button>
-                    <Button asChild variant="outline">
-                        <Link href="/admin">Ir al panel de admin</Link>
+                     <Button asChild variant="secondary">
+                        <Link href="/app">
+                           <Smartphone className="mr-2 h-4 w-4"/>
+                           Probar la App
+                        </Link>
                     </Button>
                     <PwaInstallButton variant="outline">
                       <Download className="mr-2 h-4"/>
