@@ -8,6 +8,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import { PwaInstallButton } from "@/components/shared/PwaInstallButton";
 
 const navLinks = [
   { href: "/", label: "Inicio" },
@@ -51,6 +52,7 @@ export function Navbar() {
           </nav>
 
           <div className="flex items-center gap-2">
+            <PwaInstallButton />
             <Button asChild className="hidden sm:inline-flex">
                 <Link href="/tickets">Comprar entradas</Link>
               </Button>
