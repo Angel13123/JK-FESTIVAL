@@ -16,12 +16,14 @@ const fontHeadline = Poppins({
   subsets: ['latin'],
   weight: ['600', '700', '800'],
   variable: '--font-headline',
+  display: 'swap',
 });
 
 const fontBody = PT_Sans({
   subsets: ['latin'],
   weight: ['400', '700'],
   variable: '--font-body',
+  display: 'swap',
 });
 
 export default function RootLayout({

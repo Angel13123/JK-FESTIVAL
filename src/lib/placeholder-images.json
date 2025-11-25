@@ -3,7 +3,7 @@
     {
       "id": "hero",
       "description": "Festival crowd at night with purple stage lights",
-      "imageUrl": "https://i.imgur.com/QkIu9hY.jpeg",
+      "imageUrl": "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxmZXN0aXZhbCUyMGNyb3dkfGVufDB8fHx8MTc2MjY1NzI3Nnww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "festival crowd"
     },
     {
@@ -31,6 +31,18 @@
       "imageHint": "female singer"
     },
     {
+      "id": "artist5",
+      "description": "Male artist with glasses",
+      "imageUrl": "https://images.unsplash.com/photo-1704253802963-2bfdf37a27ff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxtYWxlJTIwYXJ0aXN0fGVufDB8fHx8MTc2NDA1NTE4OHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "male artist"
+    },
+    {
+      "id": "artist6",
+      "description": "DJ with headphones",
+      "imageUrl": "https://images.unsplash.com/photo-1709734745517-6d9d61b03368?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxkaiUyMGhlYWRwaG9uZXN8ZW58MHx8fHwxNzY0MDg5NDM5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "dj headphones"
+    },
+    {
       "id": "sponsor1",
       "description": "Fictional sponsor logo 1",
       "imageUrl": "https://images.unsplash.com/photo-1760037028517-e5cc6e3ebd3e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxsb2dvJTIwYnJhbmR8ZW58MHx8fHwxNzYyNjIwNjQ1fDA&ixlib=rb-4.1.0&q=80&w=1080",
@@ -45,7 +57,7 @@
     {
       "id": "sponsor3",
       "description": "Fictional sponsor logo 3",
-      "imageUrl": "https://images.unsplash.com/photo-1747862712521-e4a37b12a039?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxhYnN0cmFjdCUyMGxvZ298ZW58MHx8fHwxNzYyNjIxNDE0fDA&ixlibrb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1747862712521-e4a37b12a039?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxhYnN0cmFjdCUyMGxvZ298ZW58MHx8fHwxNzYyNjIxNDE0fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "abstract logo"
     },
     {

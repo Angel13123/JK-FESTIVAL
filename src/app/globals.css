@@ -64,7 +64,6 @@
   }
   body {
     @apply bg-background text-foreground;
-    background-color: #000;
   }
   .neon-glow-primary {
     text-shadow: 0 0 5px hsl(var(--primary)),
