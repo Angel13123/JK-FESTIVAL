@@ -1,4 +1,5 @@
 
+
 export function MysteryArtist() {
   return (
     <section className="py-16 md:py-24 bg-transparent">
@@ -39,7 +40,9 @@ export function MysteryArtist() {
               color: '#00FFFF',
               WebkitTextStroke: '3px black',
               textShadow: '5px 5px 0px #000000',
-              animationDuration: '6s'
+              animationDuration: '6s',
+              maskImage: 'linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%)',
+              WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%)',
             }}
           >
             SHHHHH...
