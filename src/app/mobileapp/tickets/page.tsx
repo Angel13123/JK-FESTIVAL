@@ -6,7 +6,7 @@ import { useApp } from '@/context/AppContext';
 import { collection, query, where, getDocs, getFirestore } from 'firebase/firestore';
 import type { Ticket } from '@/lib/types';
 import { initializeFirebase } from '@/firebase';
-import { TicketVisual } from '@/components/shared/TicketVisual';
+import { MobileTicketVisual } from '@/components/mobileapp/MobileTicketVisual';
 import { Loader2, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -72,7 +72,7 @@ export default function MyTicketsPage() {
             <h1 className="text-3xl font-bold text-yellow-400 mb-8 text-center">Mis Boletos</h1>
             {tickets.map(ticket => (
                 <div key={ticket.id} className="flex justify-center">
-                    <TicketVisual ticket={ticket} />
+                    <MobileTicketVisual ticket={ticket} />
                 </div>
             ))}
         </div>
