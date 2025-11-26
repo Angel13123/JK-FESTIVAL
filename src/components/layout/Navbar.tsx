@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -42,7 +43,7 @@ export function Navbar() {
         <div className="container flex h-20 max-w-screen-2xl items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <Music className="h-10 w-10 text-black" />
-            <span className="text-4xl -webkit-text-stroke-2-black font-headline text-primary">JK Festival</span>
+            <span className="text-4xl font-headline text-primary" style={{ WebkitTextStroke: '2px black', textShadow: '4px 4px 0px #000000' }}>JK Festival</span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-6">
@@ -70,7 +71,7 @@ export function Navbar() {
                   <div className="flex items-center justify-between border-b-4 border-black p-4 h-20">
                      <Link href="/" className="flex items-center gap-2">
                       <Music className="h-8 w-8 text-black" />
-                      <span className="text-3xl font-headline text-primary">JK Festival</span>
+                      <span className="text-3xl font-headline text-primary" style={{ WebkitTextStroke: '2px black', textShadow: '3px 3px 0px #000000' }}>JK Festival</span>
                     </Link>
                   </div>
                   <nav className="flex flex-col gap-6 p-4">
