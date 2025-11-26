@@ -31,7 +31,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const pathname = usePathname();
-  const isAdminOrAppRoute = pathname.startsWith('/admin') || pathname.startsWith('/app') || pathname === '/scan';
+  const isAdminRoute = pathname.startsWith('/admin') || pathname === '/scan';
 
   return (
     <html lang="es" className="dark" suppressHydrationWarning>
@@ -55,7 +55,7 @@ export default function RootLayout({
           <CartProvider>
             {children}
             <Toaster />
-            {!isAdminOrAppRoute && (
+            {!isAdminRoute && (
               <>
                 {/* <AudioPlayer />
                 <LiveSalesNotification /> */}

@@ -2,107 +2,112 @@
 "use client";
 
 import { useState } from 'react';
+import Link from 'next/link';
+import { useCart } from '@/context/CartContext';
+import { ticketTypes } from '@/lib/data';
+import type { TicketType } from '@/lib/types';
 import { Button } from '@/components/ui/button';
-import { Download, Share2 } from 'lucide-react';
-import { TicketVisual } from '@/components/shared/TicketVisual';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Minus, Plus, ShoppingCart, Ticket } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
-// Mock ticket data for demonstration
-const mockTicket = {
-    id: "TICKET_12345",
-    orderId: "ORDER_67890",
-    ticketTypeId: "vip",
-    ticketTypeName: "Entrada VIP",
-    ownerName: "Angel",
-    customerEmail: "angel@test.com",
-    status: 'valid' as 'valid' | 'used' | 'revoked',
-    code: "A1B2-C3D4-E5F6-G7H8",
-    createdAt: new Date(),
-};
-
-
-export default function MyTicketPage() {
-    const [isFlipped, setIsFlipped] = useState(false);
-
-    // This would eventually be replaced by a call to a service to get the user's tickets
-    const tickets = [mockTicket];
-
-    if (!tickets || tickets.length === 0) {
-        return (
-            <div className="flex flex-col items-center justify-center h-full text-center p-4">
-                <h2 className="text-2xl font-bold mb-2">No tienes entradas</h2>
-                <p className="text-muted-foreground mb-4">Parece que aún no has comprado ninguna entrada. </p>
-                <Button asChild>
-                    <a href="/tickets">Comprar Entradas</a>
-                </Button>
+function TicketCard({ type, onAddToCart, onQuantityChange, quantity }: { type: TicketType, onAddToCart: () => void, onQuantityChange: (q: number) => void, quantity: number }) {
+  return (
+    <Card className="flex flex-col bg-card text-card-foreground transition-all duration-300 ease-out hover:shadow-xl hover:-translate-y-1 transform animate-fade-in-up">
+      <CardHeader>
+        <CardTitle>{type.name}</CardTitle>
+        <CardDescription className="text-3xl font-bold text-primary">{type.price} EUR</CardDescription>
+      </CardHeader>
+      <CardContent className="flex-grow">
+        <ul className="space-y-2 text-sm text-muted-foreground">
+          {type.benefits.map((benefit, index) => (
+            <li key={index} className="flex items-center gap-2">
+              <Ticket className="h-4 w-4 text-primary" />
+              <span>{benefit}</span>
+            </li>
+          ))}
+        </ul>
+      </CardContent>
+      <div className="p-6 pt-0">
+        {quantity > 0 ? (
+          <div className="flex items-center justify-between gap-2">
+            <div className='flex items-center gap-2'>
+              <Button variant="outline" size="icon" onClick={() => onQuantityChange(quantity - 1)}><Minus className="h-4 w-4" /></Button>
+              <span className="font-bold text-lg w-8 text-center">{quantity}</span>
+              <Button variant="outline" size="icon" onClick={() => onQuantityChange(quantity + 1)}><Plus className="h-4 w-4" /></Button>
             </div>
-        )
-    }
+            <p className="font-semibold">{(type.price * quantity).toFixed(2)} EUR</p>
+          </div>
+        ) : (
+          <Button onClick={onAddToCart} className="w-full" disabled={!type.isAvailable}>
+            {type.isAvailable ? 'Añadir al carrito' : 'Agotado'}
+          </Button>
+        )}
+      </div>
+    </Card>
+  );
+}
 
-    const ticket = tickets[0]; // For this example, we'll just show the first ticket.
+export default function TicketsPage() {
+  const { cartItems, updateQuantity, getCartTotal } = useCart();
+  const { toast } = useToast();
+  const total = getCartTotal(ticketTypes);
 
-    const handleShare = async () => {
-        if(navigator.share) {
-            try {
-                await navigator.share({
-                    title: 'Mi entrada para JK Festival',
-                    text: `¡No te pierdas JK Festival! Aquí está mi entrada.`,
-                    url: window.location.href,
-                })
-            } catch (error) {
-                // Catch errors silently, e.g., if the user cancels the share.
-                console.log('Share was cancelled or failed', error);
-            }
-        } else {
-            // Fallback for browsers that don't support Web Share API
-            alert("La función de compartir no está disponible en este navegador.")
-        }
-    }
+  const handleAddToCart = (ticketTypeId: string) => {
+    updateQuantity(ticketTypeId, 1);
+    toast({
+      title: "¡Entrada añadida!",
+      description: "Has añadido una entrada a tu carrito.",
+    });
+  };
 
-
-    return (
-        <div className="p-4 md:p-6 bg-gray-900 min-h-full flex flex-col items-center justify-center">
-            <h1 className="text-3xl font-bold text-center mb-6 text-white">Mi Entrada</h1>
-            
-            <div className="w-full max-w-sm mx-auto">
-                 <TicketVisual ticket={ticket} />
-            </div>
-
-            <div className="w-full max-w-sm mx-auto mt-6 grid grid-cols-2 gap-4">
-                <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                        <Button variant="secondary" className="w-full">
-                            <Download className="mr-2 h-4 w-4" />
-                            Guardar
-                        </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                        <AlertDialogHeader>
-                        <AlertDialogTitle>Función no implementada</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            Esta función para descargar la imagen de la entrada estará disponible próximamente.
-                        </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                        <AlertDialogAction>Entendido</AlertDialogAction>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
-                </AlertDialog>
-                <Button variant="secondary" onClick={handleShare} className="w-full">
-                    <Share2 className="mr-2 h-4 w-4" />
-                    Compartir
-                </Button>
-            </div>
+  const handleQuantityChange = (ticketTypeId: string, newQuantity: number) => {
+    updateQuantity(ticketTypeId, newQuantity);
+  };
+  
+  return (
+    <div className="bg-transparent">
+      <div className="container mx-auto max-w-screen-lg px-4 py-16">
+        <div className="text-center mb-12 animate-fade-in-down">
+          <h1 className="text-4xl md:text-5xl tracking-tight">Elige tus Entradas</h1>
+          <p className="mt-4 text-lg text-muted-foreground">
+            Asegura tu sitio en el evento del año. Elige el tipo de entrada que mejor se adapte a ti.
+          </p>
         </div>
-    );
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {ticketTypes.map((type, index) => {
+            const cartItem = cartItems.find(item => item.ticketTypeId === type.id);
+            return (
+              <div key={type.id} style={{ animationDelay: `${index * 100}ms`}}>
+                <TicketCard 
+                  type={type} 
+                  onAddToCart={() => handleAddToCart(type.id)}
+                  onQuantityChange={(newQuantity) => handleQuantityChange(type.id, newQuantity)}
+                  quantity={cartItem?.quantity || 0}
+                />
+              </div>
+            );
+          })}
+        </div>
+
+        {cartItems.length > 0 && (
+          <div className="fixed bottom-4 left-1/2 -translate-x-1/2 w-full max-w-md p-4 z-50 animate-fade-in-up">
+            <div className="bg-background/80 backdrop-blur-sm border rounded-xl shadow-lg p-4 flex justify-between items-center">
+              <div>
+                <p className="font-bold">Total: {total.toFixed(2)} EUR</p>
+                <p className="text-sm text-muted-foreground">{cartItems.reduce((acc, item) => acc + item.quantity, 0)} entradas</p>
+              </div>
+              <Button asChild>
+                <Link href="/checkout">
+                  <ShoppingCart className="mr-2 h-4 w-4" /> Finalizar Compra
+                </Link>
+              </Button>
+            </div>
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
 }
