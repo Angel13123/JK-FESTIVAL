@@ -47,7 +47,7 @@ export default function MyTicketsPage() {
 
     if (isLoading) {
         return (
-            <div className="flex justify-center items-center h-64">
+            <div className="flex justify-center items-center h-[70vh]">
                 <Loader2 className="h-10 w-10 text-yellow-400 animate-spin" />
             </div>
         )

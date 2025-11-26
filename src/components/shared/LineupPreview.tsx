@@ -27,6 +27,7 @@ export function LineupPreview() {
                       src={artist.imageUrl}
                       alt={`Foto de ${artist.name}`}
                       fill
+                      priority={index < 4}
                       className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
                       data-ai-hint="artist portrait"
                     />

@@ -45,12 +45,7 @@ export function PwaInstallButton({ children, ...props }: ButtonProps) {
     // Show the install prompt
     await installPrompt.prompt();
     // Wait for the user to respond to the prompt
-    const { outcome } = await installPrompt.userChoice;
-    if (outcome === "accepted") {
-      console.log("User accepted the install prompt");
-    } else {
-      console.log("User dismissed the install prompt");
-    }
+    await installPrompt.userChoice;
     // We can only use the prompt once, so clear it.
     setInstallPrompt(null);
   };

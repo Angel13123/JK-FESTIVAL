@@ -37,7 +37,6 @@ export default function ContactPage() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     // Simulate API call
-    console.log("Form submitted with values:", values);
     await new Promise(resolve => setTimeout(resolve, 1500));
     setIsLoading(false);
     setIsSuccess(true);
