@@ -11,7 +11,7 @@ export function LineupPreview() {
   return (
     <section className="py-16 md:py-24">
       <div className="container mx-auto max-w-screen-xl px-4 text-center">
-        <h2 className="text-5xl md:text-6xl mb-4">Lineup Golden Epiphany</h2>
+        <h2 className="text-5xl md:text-6xl mb-4">Lineup JK Festival</h2>
         <p className="max-w-2xl mx-auto text-black font-bold mb-10">
           Los talentos de Golden Epiphany que harán vibrar Martil.
         </p>
