@@ -3,19 +3,22 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Countdown } from "@/components/shared/Countdown";
 
-const LeftSquiggle = () => (
-    <svg width="107" height="90" viewBox="0 0 107 90" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute -left-4 md:left-0 top-1/2 -translate-y-1/2 h-20 md:h-36 w-auto text-primary">
-      <path d="M96.9231 3.39209C83.9231 29.8921 68.4231 29.8921 54.9231 43.3921C41.4231 56.8921 44.4231 79.3921 26.4231 85.3921C8.42308 91.3921 -6.57692 73.3921 3.42308 55.3921C13.4231 37.3921 28.4231 11.8921 51.9231 3.39209" stroke="black" strokeWidth="6" strokeLinecap="round"/>
-      <path d="M96.9231 3.39209C83.9231 29.8921 68.4231 29.8921 54.9231 43.3921C41.4231 56.8921 44.4231 79.3921 26.4231 85.3921C8.42308 91.3921 -6.57692 73.3921 3.42308 55.3921C13.4231 37.3921 28.4231 11.8921 51.9231 3.39209" fill="currentColor"/>
-    </svg>
-);
-
-const RightSquiggle = () => (
-    <svg width="109" height="88" viewBox="0 0 109 88" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute -right-4 md:right-0 top-1/2 -translate-y-1/2 h-20 md:h-36 w-auto text-primary">
-       <path d="M12.0769 85.0754C25.0769 58.5754 40.5769 58.5754 54.0769 45.0754C67.5769 31.5754 64.5769 9.07538 82.5769 3.07538C100.577 -2.92462 115.577 15.0754 105.577 33.0754C95.5769 51.0754 80.5769 76.5754 57.0769 85.0754" stroke="black" strokeWidth="6" strokeLinecap="round"/>
-       <path d="M12.0769 85.0754C25.0769 58.5754 40.5769 58.5754 54.0769 45.0754C67.5769 31.5754 64.5769 9.07538 82.5769 3.07538C100.577 -2.92462 115.577 15.0754 105.577 33.0754C95.5769 51.0754 80.5769 76.5754 57.0769 85.0754" fill="currentColor"/>
-    </svg>
-);
+const DoodleElements = () => (
+    <>
+      {/* Top-Left Squiggle */}
+      <svg width="150" height="100" viewBox="0 0 150 100" className="absolute top-4 left-4 md:top-8 md:left-8 w-24 h-16 md:w-36 md:h-24 opacity-80" style={{ transform: 'rotate(-15deg)'}}>
+        <path d="M5,50 C25,-10 75,110 95,50 S 135,-10 145,50" stroke="black" strokeWidth="3" fill="none" strokeLinecap="round" />
+      </svg>
+       {/* Mid-Right Squiggle */}
+      <svg width="120" height="80" viewBox="0 0 120 80" className="absolute top-1/2 right-4 md:right-8 -translate-y-1/2 w-20 h-14 md:w-28 md:h-20 opacity-70" style={{ transform: 'rotate(10deg)'}}>
+        <path d="M5,40 C25,80 75,0 95,40 S 105,80 115,40" stroke="black" strokeWidth="3" fill="none" strokeLinecap="round" />
+      </svg>
+      {/* 'X' Marks */}
+      <svg width="20" height="20" viewBox="0 0 20 20" className="absolute top-1/3 left-[15%] w-4 h-4 opacity-90"><path d="M5,5 L15,15 M15,5 L5,15" stroke="black" strokeWidth="3" fill="none" strokeLinecap="round"/></svg>
+      <svg width="20" height="20" viewBox="0 0 20 20" className="absolute bottom-1/4 right-[20%] w-5 h-5 opacity-80"><path d="M5,5 L15,15 M15,5 L5,15" stroke="black" strokeWidth="3" fill="none" strokeLinecap="round"/></svg>
+      <svg width="20" height="20" viewBox="0 0 20 20" className="absolute top-20 right-10 w-3 h-3 opacity-90"><path d="M5,5 L15,15 M15,5 L5,15" stroke="black" strokeWidth="3" fill="none" strokeLinecap="round"/></svg>
+    </>
+)
 
 
 export function Hero() {
@@ -31,14 +34,12 @@ export function Hero() {
             backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E\")",
           }}
         ></div>
+        
+        <DoodleElements />
 
       <div className="relative z-10 h-full flex flex-col items-center justify-start pt-10 md:pt-16 gap-2 text-center">
         
         <div className="relative">
-            <div className="absolute inset-0 flex items-center justify-center">
-                <LeftSquiggle />
-                <RightSquiggle />
-            </div>
              <h1 
                 className="relative text-7xl md:text-9xl lg:text-[10rem] leading-none uppercase font-headline tracking-tighter"
                 style={{
