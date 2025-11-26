@@ -6,7 +6,7 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { Timestamp } from "firebase/firestore";
 import type { Ticket } from "@/lib/types";
-import { Music, Calendar, User, Ticket as TicketIcon } from "lucide-react";
+import { Star, Zap } from "lucide-react";
 
 interface TicketVisualProps {
   ticket: Ticket;
@@ -33,36 +33,56 @@ export function TicketVisual({ ticket }: TicketVisualProps) {
   const purchaseDate = getJsDateFromTimestamp(ticket.createdAt);
 
   return (
-    <div className="w-full max-w-sm rounded-2xl bg-gradient-to-br from-indigo-600 via-purple-700 to-pink-600 font-sans shadow-2xl shadow-purple-500/30 text-white">
-        {/* Top Part */}
-        <div className="p-5 border-b-2 border-dashed border-white/20">
-            <div className="flex justify-between items-center mb-4">
-                <div className="flex items-center gap-2">
-                    <Music className="h-6 w-6" />
-                    <span className="text-xl font-extrabold tracking-tight">JK FESTIVAL</span>
-                </div>
-                <div className={`text-sm font-bold uppercase px-2 py-1 rounded ${ticket.status === 'valid' ? 'bg-green-500/80' : 'bg-yellow-500/80'}`}>
-                    {ticket.status}
-                </div>
-            </div>
-            
-            <div className="text-center">
-                <p className="text-sm opacity-80">Propietario del Boleto</p>
-                <p className="text-2xl font-bold tracking-wider">{ticket.ownerName}</p>
-                <p className="text-lg font-semibold text-yellow-300">{ticket.ticketTypeName}</p>
-            </div>
-        </div>
+    <div className="w-[750px] aspect-[2/1] bg-white text-black p-2 font-body relative overflow-hidden">
+        <div className="w-full h-full border-4 border-black flex">
+            {/* Left Part */}
+            <div className="w-2/3 flex flex-col p-6 border-r-4 border-dashed border-black relative">
+                <Star className="absolute top-4 right-4 h-8 w-8 text-black fill-yellow-400 rotate-12" strokeWidth={2}/>
+                <Zap className="absolute bottom-16 left-8 h-10 w-10 text-black fill-cyan-400 -rotate-12" strokeWidth={2}/>
 
-        {/* Bottom Part with QR */}
-        <div className="p-5 flex items-center justify-center">
-            <div className="bg-white p-2 rounded-lg">
-                <QRCode value={ticket.code} size={128} bgColor="#ffffff" fgColor="#000000" />
+                <div className="flex justify-between items-start">
+                    <div>
+                        <h1 
+                            className="text-6xl font-headline text-yellow-400"
+                            style={{ WebkitTextStroke: '3px black', textShadow: '4px 4px 0px #000' }}
+                        >
+                            JK Festival
+                        </h1>
+                        <p className="font-bold text-lg -mt-2">Grand Stade de Martil, Marruecos</p>
+                    </div>
+                     <div className={`text-center`}>
+                        <p className="font-bold text-xs">ESTADO</p>
+                        <p className={`font-mono text-sm font-bold uppercase px-2 py-0.5 rounded border-2 border-black ${ticket.status === 'valid' ? 'bg-green-400' : 'bg-yellow-400'}`}>
+                            {ticket.status}
+                        </p>
+                    </div>
+                </div>
+
+                <div className="flex-grow flex flex-col justify-center">
+                    <p className="text-sm text-gray-600 font-bold">ENTRADA A NOMBRE DE:</p>
+                    <p className="text-4xl font-extrabold tracking-tight truncate">{ticket.ownerName}</p>
+                    <p className="text-sm text-gray-600 font-bold mt-3">FECHA DE COMPRA:</p>
+                    <p className="text-lg font-bold">
+                        {purchaseDate ? format(purchaseDate, "d MMMM, yyyy 'a las' HH:mm", { locale: es }) : 'N/A'}
+                    </p>
+                </div>
+                
+                <div 
+                    className="text-2xl font-headline text-black text-center border-4 border-black bg-yellow-400 py-1"
+                    style={{textShadow: '2px 2px 0px #fff' }}
+                >
+                    {ticket.ticketTypeName}
+                </div>
             </div>
-            <div className="pl-4 border-l-2 border-dashed border-white/20 ml-4 flex flex-col justify-center">
-                 <p className="font-mono text-lg font-bold tracking-widest">{ticket.code}</p>
-                 <p className="text-xs opacity-70 mt-1">
-                    {purchaseDate ? format(purchaseDate, "d MMM yyyy, HH:mm", { locale: es }) : 'N/A'}
-                 </p>
+            {/* Right Part */}
+            <div className="w-1/3 bg-cyan-300 flex flex-col items-center justify-center p-6 gap-4">
+                <div className="bg-white p-2 border-4 border-black">
+                     <QRCode value={ticket.code} size={160} bgColor="#ffffff" fgColor="#000000" />
+                </div>
+                 <div className="text-center">
+                    <p className="text-xs font-bold text-gray-800">CÓDIGO DE ACCESO:</p>
+                    <p className="font-mono text-xl font-black break-all">{ticket.code || 'N/A'}</p>
+                </div>
             </div>
         </div>
     </div>
