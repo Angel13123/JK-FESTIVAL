@@ -38,7 +38,7 @@ export function Hero() {
             
             <div className="relative animate-fade-in-down" style={{ animationDuration: '1.2s' }}>
                  <h1 
-                    className="relative text-7xl md:text-9xl lg:text-[10rem] leading-none uppercase font-headline tracking-tighter animate-breath"
+                    className="relative text-5xl sm:text-7xl md:text-9xl lg:text-[10rem] leading-none uppercase font-headline tracking-tighter animate-breath"
                     style={{
                         color: '#F7FF00',
                         WebkitTextStroke: '4px black',
