@@ -12,6 +12,8 @@ import { AudioPlayer } from '@/components/shared/AudioPlayer';
 import { LiveSalesNotification } from '@/components/shared/LiveSalesNotification';
 import { usePathname } from 'next/navigation';
 import { AppProvider } from '@/context/AppContext';
+import { Navbar } from '@/components/layout/Navbar';
+import { Footer } from '@/components/layout/Footer';
 
 const fontHeadline = Titan_One({
   subsets: ['latin'],
@@ -35,11 +37,7 @@ export default function RootLayout({
   const pathname = usePathname();
   const isAdminRoute = pathname.startsWith('/admin') || pathname === '/scan';
   const isMobileApp = pathname.startsWith('/mobileapp');
-
-
-  const LayoutWrapper = isMobileApp ? AppProvider : React.Fragment;
-  const layoutWrapperProps = isMobileApp ? {} : { children: <CartProvider>{children}</CartProvider> };
-
+  const isHomePage = pathname === '/';
 
   return (
     <html lang="es" className="dark" suppressHydrationWarning>
@@ -66,11 +64,13 @@ export default function RootLayout({
               </AppProvider>
             ) : (
               <CartProvider>
+                {!isHomePage && <Navbar />}
                 {children}
+                {!isHomePage && <Footer />}
               </CartProvider>
             )}
             <Toaster />
-            {!isAdminRoute && !isMobileApp && (
+            {!isAdminRoute && !isMobileApp && !isHomePage && (
               <>
                 {/* <AudioPlayer />
                 <LiveSalesNotification /> */}
