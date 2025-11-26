@@ -1,5 +1,6 @@
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
+import { FlashNews } from "@/components/shared/FlashNews";
 import { Hero } from "@/components/shared/Hero";
 import { LineupPreview } from "@/components/shared/LineupPreview";
 import { Location } from "@/components/shared/Location";
@@ -14,6 +15,7 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
+        <FlashNews />
         <div className="bg-primary border-y-4 border-black">
           <LineupPreview />
         </div>
