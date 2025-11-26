@@ -33,7 +33,12 @@ export function MysteryArtist() {
         </h3>
 
         {/* Bottom Text */}
-        <div className="relative">
+        <div 
+          className="relative w-full"
+          style={{
+            background: 'radial-gradient(ellipse at center, #00FFFF 0%, rgba(0, 174, 239, 0.8) 30%, rgba(0, 174, 239, 0) 70%)',
+          }}
+        >
           <h4
             className="text-5xl md:text-7xl font-headline uppercase animate-float"
             style={{
@@ -41,16 +46,10 @@ export function MysteryArtist() {
               WebkitTextStroke: '3px black',
               textShadow: '5px 5px 0px #000000',
               animationDuration: '6s',
-              maskImage: 'linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%)',
-              WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%)',
             }}
           >
             SHHHHH...
           </h4>
-          <div 
-            className="absolute -bottom-10 left-0 right-0 h-24 bg-gradient-to-t from-transparent via-transparent/70 to-transparent"
-            aria-hidden="true"
-          />
         </div>
       </div>
     </section>
