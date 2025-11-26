@@ -5,19 +5,16 @@ import { Countdown } from "@/components/shared/Countdown";
 
 const DoodleElements = () => (
     <>
-      {/* Top-Left Squiggle */}
-      <svg width="150" height="100" viewBox="0 0 150 100" className="absolute top-4 left-4 md:top-8 md:left-8 w-24 h-16 md:w-36 md:h-24 opacity-80 animate-wiggle" style={{ transform: 'rotate(-15deg)', animationDuration: '4s' }}>
+      {/* Doodle Elements */}
+      <svg width="150" height="100" viewBox="0 0 150 100" className="absolute top-4 left-4 md:top-8 md:left-8 w-24 h-16 md:w-36 md:h-24 opacity-80 animate-float" style={{ transform: 'rotate(-15deg)', animationDuration: '4s' }}>
         <path d="M5,50 C25,-10 75,110 95,50 S 135,-10 145,50" stroke="black" strokeWidth="6" fill="none" strokeLinecap="round" />
       </svg>
-       {/* Mid-Right Squiggle */}
       <svg width="120" height="80" viewBox="0 0 120 80" className="absolute top-1/2 right-4 md:right-8 -translate-y-1/2 w-20 h-14 md:w-28 md:h-20 opacity-70 animate-float" style={{ transform: 'rotate(10deg)', animationDuration: '6s' }}>
         <path d="M5,40 C25,80 75,0 95,40 S 105,80 115,40" stroke="black" strokeWidth="6" fill="none" strokeLinecap="round" />
       </svg>
-       {/* Bottom-Left Squiggle */}
       <svg width="100" height="60" viewBox="0 0 100 60" className="absolute bottom-12 left-10 w-20 h-12 opacity-60 animate-wiggle" style={{ transform: 'rotate(5deg)', animationDuration: '5s' }}>
         <path d="M5,30 C20,0 60,60 80,30 S 95,0 95,30" stroke="black" strokeWidth="6" fill="none" strokeLinecap="round" />
       </svg>
-      {/* 'X' Marks */}
       <svg width="20" height="20" viewBox="0 0 20 20" className="absolute top-1/3 left-[15%] w-6 h-6 opacity-90 animate-float" style={{ animationDuration: '7s' }}><path d="M5,5 L15,15 M15,5 L5,15" stroke="black" strokeWidth="6" fill="none" strokeLinecap="round"/></svg>
       <svg width="20" height="20" viewBox="0 0 20 20" className="absolute bottom-1/4 right-[20%] w-7 h-7 opacity-80 animate-float" style={{ animationDuration: '8s' }}><path d="M5,5 L15,15 M15,5 L5,15" stroke="black" strokeWidth="6" fill="none" strokeLinecap="round"/></svg>
       <svg width="20" height="20" viewBox="0 0 20 20" className="absolute top-20 right-10 w-6 h-6 opacity-90 animate-wiggle" style={{ animationDuration: '3s' }}><path d="M5,5 L15,15 M15,5 L5,15" stroke="black" strokeWidth="6" fill="none" strokeLinecap="round"/></svg>
@@ -51,13 +48,14 @@ export function Hero() {
 
       <div className="relative z-10 h-full flex flex-col items-center justify-start pt-10 md:pt-16 gap-2 text-center">
         
-        <div className="relative animate-fade-in-down">
+        <div className="relative animate-fade-in-down" style={{ animationDuration: '1.2s' }}>
              <h1 
-                className="relative text-7xl md:text-9xl lg:text-[10rem] leading-none uppercase font-headline tracking-tighter"
+                className="relative text-7xl md:text-9xl lg:text-[10rem] leading-none uppercase font-headline tracking-tighter animate-breath"
                 style={{
                     color: '#F7FF00',
                     WebkitTextStroke: '4px black',
                     textShadow: '8px 8px 0px #000000',
+                    animationDuration: '5s',
                 }}
             >
               JK Festival
