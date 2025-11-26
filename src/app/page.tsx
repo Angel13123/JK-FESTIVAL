@@ -1,43 +1,72 @@
-import { Footer } from "@/components/layout/Footer";
-import { Navbar } from "@/components/layout/Navbar";
-import { FlashNews } from "@/components/shared/FlashNews";
-import { Hero } from "@/components/shared/Hero";
-import { LineupPreview } from "@/components/shared/LineupPreview";
-import { Location } from "@/components/shared/Location";
-import { MysteryArtist } from "@/components/shared/MysteryArtist";
-import { Sponsors } from "@/components/shared/Sponsors";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
-export default function Home() {
+import Image from 'next/image';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
+
+export default function V1LaunchPage() {
+  const heroImage = PlaceHolderImages.find(p => p.id === 'hero');
 
   return (
-    <div className="bg-transparent">
-      <Navbar />
-      <main>
-        <Hero />
-        <FlashNews />
-        <div className="bg-accent border-y-4 border-black">
-          <LineupPreview />
-        </div>
-        <MysteryArtist />
-        <Location />
-        <Sponsors />
-        <section 
-          className="relative py-16 md:py-24 bg-accent"
+    <div className="relative min-h-screen w-full flex flex-col items-center justify-center text-center p-4 overflow-hidden">
+      {/* Background Image */}
+      {heroImage && (
+        <Image
+          src={heroImage.imageUrl}
+          alt={heroImage.description}
+          fill
+          className="object-cover z-0"
+          priority
+          data-ai-hint={heroImage.imageHint}
+        />
+      )}
+      <div className="absolute inset-0 bg-black/60 z-10"></div>
+
+      {/* Content */}
+      <div className="relative z-20 flex flex-col items-center justify-center gap-6 animate-fade-in-down">
+        {/* Big Festival Logo */}
+        <h1
+          className="text-6xl sm:text-8xl md:text-9xl font-headline uppercase"
+          style={{
+            color: 'hsl(var(--primary))',
+            WebkitTextStroke: '3px black',
+            textShadow: '8px 8px 0px #000000',
+          }}
         >
-          <div className="relative container mx-auto max-w-screen-md px-4 text-center">
-              <h2 className="text-4xl md:text-5xl mb-4 text-primary">¿Listo para la experiencia?</h2>
-              <p className="text-black mb-8 font-bold">
-                No te quedes fuera del evento de música urbana más esperado. Asegura tu lugar ahora.
-              </p>
-              <Button asChild size="lg" className="text-lg px-8 py-6">
-                  <Link href="/tickets">Comprar entradas</Link>
-              </Button>
-          </div>
-        </section>
-      </main>
-      <Footer />
+          JK Festival
+        </h1>
+
+        {/* Main Headline */}
+        <h2
+          className="text-3xl sm:text-4xl md:text-5xl font-headline uppercase"
+          style={{
+            color: 'hsl(var(--primary))',
+            WebkitTextStroke: '2px black',
+            textShadow: '4px 4px 0px #000000',
+          }}
+        >
+          ¡EL FESTIVAL ESTÁ EN CAMINO!
+        </h2>
+
+        {/* Secondary Message */}
+        <p className="text-lg sm:text-xl md:text-2xl text-white font-bold" style={{ textShadow: '2px 2px 4px #000' }}>
+          Prepara tus sentidos. Una experiencia única se acerca.
+        </p>
+
+        {/* App Announcement */}
+        <div className="mt-8 space-y-2">
+          <p className="text-md sm:text-lg text-white font-bold" style={{ textShadow: '2px 2px 4px #000' }}>
+            La APP OFICIAL para Android & iOS está en desarrollo.
+          </p>
+          <p 
+            className="text-xl sm:text-2xl font-bold uppercase"
+            style={{
+                color: 'hsl(var(--primary))',
+                textShadow: '3px 3px 0px #000'
+            }}
+          >
+            ¡Lanzamiento muy pronto! Mantente atento.
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
