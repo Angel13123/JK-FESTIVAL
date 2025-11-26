@@ -16,7 +16,7 @@ export default function Home() {
       <main>
         <Hero />
         <FlashNews />
-        <div className="bg-primary border-y-4 border-black">
+        <div className="bg-accent border-y-4 border-black">
           <LineupPreview />
         </div>
         <Location />
