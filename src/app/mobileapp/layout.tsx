@@ -5,6 +5,8 @@ import { useApp } from "@/context/AppContext";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { AppBottomNav } from "@/components/mobileapp/AppBottomNav";
+import { AppHeader } from "@/components/mobileapp/AppHeader";
+import { Loader2 } from "lucide-react";
 
 export default function MobileAppLayout({
   children,
@@ -26,7 +28,7 @@ export default function MobileAppLayout({
     // You can return a loading spinner here
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <p className="text-white">Loading...</p>
+        <Loader2 className="h-8 w-8 text-yellow-400 animate-spin" />
       </div>
     );
   }
@@ -43,7 +45,8 @@ export default function MobileAppLayout({
 
   return (
     <div className="bg-black min-h-screen text-white">
-      <main className="pb-20">
+      <AppHeader />
+      <main className="pb-20 pt-16">
           <div className="p-4">{children}</div>
       </main>
       <AppBottomNav />
