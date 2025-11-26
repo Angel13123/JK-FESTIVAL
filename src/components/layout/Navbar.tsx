@@ -36,13 +36,6 @@ export function Navbar() {
             ? "font-headline text-primary"
             : "text-black"
         )}
-        style={
-            isActive
-            ? {
-                WebkitTextStroke: '2px black',
-                }
-            : {}
-        }
         >
         {label}
         </Link>
