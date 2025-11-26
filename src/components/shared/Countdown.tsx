@@ -3,36 +3,34 @@
 
 import { useState, useEffect } from 'react';
 
-export function Countdown() {
+// This function is now outside the component, so it can be called to initialize state.
+const calculateTimeLeft = () => {
   const festivalDate = new Date('2026-02-07T00:00:00');
-  
-  const calculateTimeLeft = () => {
-    const difference = +festivalDate - +new Date();
-    let timeLeft = {
-      days: 0,
-      hours: 0,
-      minutes: 0,
-      seconds: 0
-    };
-
-    if (difference > 0) {
-      timeLeft = {
-        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((difference / 1000 / 60) % 60),
-        seconds: Math.floor((difference / 1000) % 60)
-      };
-    }
-
-    return timeLeft;
+  const difference = +festivalDate - +new Date();
+  let timeLeft = {
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0
   };
 
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  if (difference > 0) {
+    timeLeft = {
+      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+      minutes: Math.floor((difference / 1000 / 60) % 60),
+      seconds: Math.floor((difference / 1000) % 60)
+    };
+  }
+
+  return timeLeft;
+};
+
+export function Countdown() {
+  // Initialize state with the calculated time to prevent hydration mismatch.
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
   useEffect(() => {
-    // Set initial value on client mount to avoid hydration mismatch
-    setTimeLeft(calculateTimeLeft());
-
     const timer = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
