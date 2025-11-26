@@ -11,8 +11,8 @@ export function LineupPreview() {
   return (
     <section className="py-16 md:py-24">
       <div className="container mx-auto max-w-screen-xl px-4 text-center">
-        <h2 className="text-primary text-5xl md:text-6xl mb-4">Lineup JK Festival</h2>
-        <p className="max-w-2xl mx-auto text-black font-bold mb-10">
+        <h2 className="text-primary text-6xl md:text-7xl mb-4">Lineup JK Festival</h2>
+        <p className="max-w-2xl mx-auto text-black font-bold text-lg mb-10">
           Los talentos de JK Festival que haran vibrar Martil.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
