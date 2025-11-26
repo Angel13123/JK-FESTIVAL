@@ -6,22 +6,22 @@ import { Countdown } from "@/components/shared/Countdown";
 const DoodleElements = () => (
     <>
       {/* Doodle Elements */}
-      <svg width="150" height="100" viewBox="0 0 150 100" className="absolute top-4 left-4 md:top-8 md:left-8 w-24 h-16 md:w-36 md:h-24 opacity-80 animate-float" style={{ transform: 'rotate(-15deg)', animationDuration: '4s' }}>
+      <svg width="150" height="100" viewBox="0 0 150 100" className="absolute top-4 left-4 md:top-8 md:left-8 w-24 h-16 md:w-36 md:h-24 opacity-80 animate-floatTwist" style={{ animationDuration: '4s' }}>
         <path d="M5,50 C25,-10 75,110 95,50 S 135,-10 145,50" stroke="black" strokeWidth="6" fill="none" strokeLinecap="round" />
       </svg>
-      <svg width="120" height="80" viewBox="0 0 120 80" className="absolute top-1/2 right-4 md:right-8 -translate-y-1/2 w-20 h-14 md:w-28 md:h-20 opacity-70 animate-float" style={{ transform: 'rotate(10deg)', animationDuration: '6s' }}>
+      <svg width="120" height="80" viewBox="0 0 120 80" className="absolute top-1/2 right-4 md:right-8 -translate-y-1/2 w-20 h-14 md:w-28 md:h-20 opacity-70 animate-floatTwist" style={{ animationDuration: '5s' }}>
         <path d="M5,40 C25,80 75,0 95,40 S 105,80 115,40" stroke="black" strokeWidth="6" fill="none" strokeLinecap="round" />
       </svg>
-      <svg width="100" height="60" viewBox="0 0 100 60" className="absolute bottom-12 left-10 w-20 h-12 opacity-60 animate-wiggle" style={{ transform: 'rotate(5deg)', animationDuration: '5s' }}>
+      <svg width="100" height="60" viewBox="0 0 100 60" className="absolute bottom-12 left-10 w-20 h-12 opacity-60 animate-floatTwist" style={{ animationDuration: '4.5s' }}>
         <path d="M5,30 C20,0 60,60 80,30 S 95,0 95,30" stroke="black" strokeWidth="6" fill="none" strokeLinecap="round" />
       </svg>
-      <svg width="20" height="20" viewBox="0 0 20 20" className="absolute top-1/3 left-[15%] w-6 h-6 opacity-90 animate-float" style={{ animationDuration: '7s' }}><path d="M5,5 L15,15 M15,5 L5,15" stroke="black" strokeWidth="6" fill="none" strokeLinecap="round"/></svg>
-      <svg width="20" height="20" viewBox="0 0 20 20" className="absolute bottom-1/4 right-[20%] w-7 h-7 opacity-80 animate-float" style={{ animationDuration: '8s' }}><path d="M5,5 L15,15 M15,5 L5,15" stroke="black" strokeWidth="6" fill="none" strokeLinecap="round"/></svg>
-      <svg width="20" height="20" viewBox="0 0 20 20" className="absolute top-20 right-10 w-6 h-6 opacity-90 animate-wiggle" style={{ animationDuration: '3s' }}><path d="M5,5 L15,15 M15,5 L5,15" stroke="black" strokeWidth="6" fill="none" strokeLinecap="round"/></svg>
-      <svg width="20" height="20" viewBox="0 0 20 20" className="absolute bottom-1/3 left-[25%] w-5 h-5 opacity-70 animate-float" style={{ animationDuration: '9s' }}><path d="M5,5 L15,15 M15,5 L5,15" stroke="black" strokeWidth="6" fill="none" strokeLinecap="round"/></svg>
-      <svg width="20" height="20" viewBox="0 0 20 20" className="absolute top-1/2 right-[15%] w-6 h-6 opacity-80 animate-wiggle" style={{ animationDuration: '4.5s' }}><path d="M5,5 L15,15 M15,5 L5,15" stroke="black" strokeWidth="6" fill="none" strokeLinecap="round"/></svg>
-      <svg width="20" height="20" viewBox="0 0 20 20" className="absolute top-3/4 left-[10%] w-6 h-6 opacity-80 animate-float" style={{ animationDuration: '10s' }}><path d="M5,5 L15,15 M15,5 L5,15" stroke="black" strokeWidth="6" fill="none" strokeLinecap="round"/></svg>
-      <svg width="20" height="20" viewBox="0 0 20 20" className="absolute top-1/4 right-[5%] w-5 h-5 opacity-70 animate-wiggle" style={{ animationDuration: '5.5s' }}><path d="M5,5 L15,15 M15,5 L5,15" stroke="black" strokeWidth="6" fill="none" strokeLinecap="round"/></svg>
+      <svg width="20" height="20" viewBox="0 0 20 20" className="absolute top-1/3 left-[15%] w-6 h-6 opacity-90 animate-floatTwist" style={{ animationDuration: '7s' }}><path d="M5,5 L15,15 M15,5 L5,15" stroke="black" strokeWidth="6" fill="none" strokeLinecap="round"/></svg>
+      <svg width="20" height="20" viewBox="0 0 20 20" className="absolute bottom-1/4 right-[20%] w-7 h-7 opacity-80 animate-floatTwist" style={{ animationDuration: '8s' }}><path d="M5,5 L15,15 M15,5 L5,15" stroke="black" strokeWidth="6" fill="none" strokeLinecap="round"/></svg>
+      <svg width="20" height="20" viewBox="0 0 20 20" className="absolute top-20 right-10 w-6 h-6 opacity-90 animate-floatTwist" style={{ animationDuration: '3s' }}><path d="M5,5 L15,15 M15,5 L5,15" stroke="black" strokeWidth="6" fill="none" strokeLinecap="round"/></svg>
+      <svg width="20" height="20" viewBox="0 0 20 20" className="absolute bottom-1/3 left-[25%] w-5 h-5 opacity-70 animate-floatTwist" style={{ animationDuration: '9s' }}><path d="M5,5 L15,15 M15,5 L5,15" stroke="black" strokeWidth="6" fill="none" strokeLinecap="round"/></svg>
+      <svg width="20" height="20" viewBox="0 0 20 20" className="absolute top-1/2 right-[15%] w-6 h-6 opacity-80 animate-floatTwist" style={{ animationDuration: '4.5s' }}><path d="M5,5 L15,15 M15,5 L5,15" stroke="black" strokeWidth="6" fill="none" strokeLinecap="round"/></svg>
+      <svg width="20" height="20" viewBox="0 0 20 20" className="absolute top-3/4 left-[10%] w-6 h-6 opacity-80 animate-floatTwist" style={{ animationDuration: '10s' }}><path d="M5,5 L15,15 M15,5 L5,15" stroke="black" strokeWidth="6" fill="none" strokeLinecap="round"/></svg>
+      <svg width="20" height="20" viewBox="0 0 20 20" className="absolute top-1/4 right-[5%] w-5 h-5 opacity-70 animate-floatTwist" style={{ animationDuration: '5.5s' }}><path d="M5,5 L15,15 M15,5 L5,15" stroke="black" strokeWidth="6" fill="none" strokeLinecap="round"/></svg>
     </>
 )
 
@@ -30,14 +30,8 @@ export function Hero() {
 
   return (
     <section 
-      className="relative w-full min-h-[calc(100vh-80px)] overflow-hidden flex items-center justify-center p-4"
+      className="relative w-full min-h-[calc(100vh-80px)] overflow-hidden flex items-center justify-center p-4 bg-transparent"
     >
-        <div 
-          className="absolute inset-0 opacity-10"
-          style={{
-            backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E\")",
-          }}
-        ></div>
         
         <DoodleElements />
 
