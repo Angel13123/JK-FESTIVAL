@@ -1,7 +1,7 @@
 
 "use client";
 
-import { Bangers, Montserrat } from 'next/font/google';
+import { Titan_One, Montserrat } from 'next/font/google';
 import './globals.css';
 import { cn } from '@/lib/utils';
 import { CartProvider } from '@/context/CartContext';
@@ -11,7 +11,7 @@ import { AudioPlayer } from '@/components/shared/AudioPlayer';
 import { LiveSalesNotification } from '@/components/shared/LiveSalesNotification';
 import { usePathname } from 'next/navigation';
 
-const fontHeadline = Bangers({
+const fontHeadline = Titan_One({
   subsets: ['latin'],
   weight: ['400'],
   variable: '--font-headline',
