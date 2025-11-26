@@ -31,10 +31,10 @@ export function Navbar() {
         href={href}
         onClick={() => setIsMobileMenuOpen(false)}
         className={cn(
-            "text-md font-bold transition-colors hover:text-primary",
+            "text-md font-bold transition-colors hover:text-primary text-black pb-1",
             isActive
-            ? "font-headline text-primary"
-            : "text-black"
+            ? "border-b-4 border-primary"
+            : "border-b-4 border-transparent"
         )}
         >
         {label}
