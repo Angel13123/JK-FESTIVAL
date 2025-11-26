@@ -109,7 +109,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="bg-background">
+    <div className="bg-transparent">
       <div className="container mx-auto max-w-screen-lg px-4 py-16">
         <div className="text-center mb-12 animate-fade-in-down">
           <h1 className="text-4xl md:text-5xl tracking-tight">Finalizar Compra</h1>

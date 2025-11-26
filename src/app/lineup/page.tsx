@@ -10,7 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 
 function ArtistCard({ artist }: { artist: Artist }) {
   return (
-    <Card className="overflow-hidden group transition-all duration-300 ease-out hover:shadow-xl hover:shadow-primary/20 hover:-translate-y-2 transform will-change-transform">
+    <Card className="overflow-hidden group transition-all duration-300 ease-out hover:shadow-xl hover:shadow-primary/20 hover:-translate-y-2 transform will-change-transform bg-card">
       <CardContent className="p-0">
         <div className="relative aspect-square">
           <Image
@@ -48,7 +48,7 @@ export default function LineupPage() {
   });
 
   return (
-    <div className="bg-background">
+    <div className="bg-transparent">
       <div className="container mx-auto max-w-screen-xl px-4 py-16">
         <div className="text-center mb-12 animate-fade-in-down">
           <h1 className="text-4xl md:text-5xl tracking-tight">Lineup & Horarios</h1>
@@ -84,7 +84,7 @@ export default function LineupPage() {
           </TabsContent>
           
           <TabsContent value="schedule">
-            <Card>
+            <Card className="bg-card">
               <CardContent className="p-0 md:p-4">
                 <Table>
                   <TableHeader>

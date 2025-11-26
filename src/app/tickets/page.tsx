@@ -20,7 +20,7 @@ export default function TicketsPage() {
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <div className="bg-background min-h-screen">
+    <div className="bg-transparent min-h-screen">
       <div className="container mx-auto max-w-screen-lg px-4 py-16">
         <div className="text-center mb-12">
           <h1 className="text-5xl md:text-6xl">Consigue tus entradas</h1>

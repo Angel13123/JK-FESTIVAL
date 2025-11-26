@@ -32,7 +32,6 @@ export function Hero() {
     <section 
       className="relative w-full min-h-[calc(100vh-80px)] overflow-hidden flex items-center justify-center p-4"
     >
-        <div className="absolute inset-0 bg-gradient-to-b from-[#00FFFF] to-[#DFFF00]"></div>
         <div 
           className="absolute inset-0 opacity-10"
           style={{
@@ -58,10 +57,10 @@ export function Hero() {
             </h1>
         </div>
 
-        <h2 className="text-xl md:text-3xl font-extrabold text-white uppercase tracking-wider -mt-2 animate-fade-in-down" style={{ animationDelay: '0.3s' }}>
+        <h2 className="text-xl md:text-3xl font-extrabold text-white uppercase tracking-wider -mt-2 animate-fade-in-down" style={{ animationDelay: '0.3s', WebkitTextStroke: '2px black' }}>
             GRAND STADE DE MARTIL
         </h2>
-        <h3 className="text-lg md:text-2xl font-extrabold text-white uppercase tracking-wider animate-fade-in-down" style={{ animationDelay: '0.4s' }}>
+        <h3 className="text-lg md:text-2xl font-extrabold text-white uppercase tracking-wider animate-fade-in-down" style={{ animationDelay: '0.4s', WebkitTextStroke: '2px black' }}>
             07/FEB/2026
         </h3>
         

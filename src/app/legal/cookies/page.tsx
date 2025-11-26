@@ -1,12 +1,12 @@
 export default function CookiesPage() {
   return (
-    <div className="bg-background">
+    <div className="bg-transparent">
       <div className="container mx-auto max-w-screen-md px-4 py-16">
         <div className="prose dark:prose-invert max-w-none">
           <h1 className="font-headline text-4xl">Política de Cookies</h1>
           <p className="text-muted-foreground">Última actualización: 1 de Enero de 2026</p>
 
-          <h2>1. ¿Qué son las Cookies?</h2>
+          <h2>2. ¿Qué son las Cookies?</h2>
           <p>
             Las cookies son pequeños archivos de texto que se almacenan en su dispositivo cuando visita un sitio web. Nos ayudan a mejorar su experiencia de usuario y a entender cómo se utiliza nuestro sitio.
           </p>

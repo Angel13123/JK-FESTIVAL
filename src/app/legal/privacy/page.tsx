@@ -1,6 +1,6 @@
 export default function PrivacyPage() {
   return (
-    <div className="bg-background">
+    <div className="bg-transparent">
       <div className="container mx-auto max-w-screen-md px-4 py-16">
         <div className="prose dark:prose-invert max-w-none">
           <h1 className="font-headline text-4xl">Política de Privacidad</h1>

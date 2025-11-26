@@ -11,7 +11,7 @@ import Link from "next/link";
 export default function Home() {
 
   return (
-    <div className="bg-white">
+    <div className="bg-transparent">
       <Navbar />
       <main>
         <Hero />

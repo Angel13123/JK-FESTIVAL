@@ -57,7 +57,7 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="bg-card">
+    <div className="bg-transparent">
       <div className="container mx-auto max-w-screen-lg px-4 py-16">
         <div className="text-center mb-12 animate-fade-in-down">
           <h1 className="text-4xl md:text-5xl tracking-tight">Contacto</h1>
@@ -67,7 +67,7 @@ export default function ContactPage() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-12">
-            <Card className="transition-shadow duration-300 hover:shadow-xl">
+            <Card className="transition-shadow duration-300 hover:shadow-xl bg-card">
                 <CardHeader>
                     <CardTitle>Envíanos un mensaje</CardTitle>
                     <CardDescription>Rellena el formulario y nos pondremos en contacto contigo.</CardDescription>

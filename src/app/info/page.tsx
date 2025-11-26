@@ -3,7 +3,7 @@ import { MapPin, Car, Bus, Clock, Accessibility } from "lucide-react";
 
 export default function InfoPage() {
   return (
-    <div className="bg-background">
+    <div className="bg-transparent">
       <div className="container mx-auto max-w-screen-lg px-4 py-16">
         <div className="text-center mb-12 animate-fade-in-down">
           <h1 className="text-4xl md:text-5xl tracking-tight">Información Práctica</h1>
@@ -13,7 +13,7 @@ export default function InfoPage() {
         </div>
 
         <div className="space-y-12">
-          <Card id="location" className="transition-shadow duration-300 hover:shadow-lg scroll-mt-20 animate-fade-in-up">
+          <Card id="location" className="transition-shadow duration-300 hover:shadow-lg scroll-mt-20 animate-fade-in-up bg-card">
             <CardHeader>
               <CardTitle className="flex items-center gap-2"><MapPin className="h-5 w-5 text-primary" />Ubicación</CardTitle>
             </CardHeader>
@@ -38,7 +38,7 @@ export default function InfoPage() {
 
           <div className="grid md:grid-cols-2 gap-8">
             <div className="animate-fade-in-up" style={{ animationDelay: '100ms'}}>
-              <Card className="transition-all duration-300 ease-out hover:shadow-xl hover:-translate-y-1 transform h-full">
+              <Card className="transition-all duration-300 ease-out hover:shadow-xl hover:-translate-y-1 transform h-full bg-card">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2"><Clock className="h-5 w-5 text-primary" />Horarios</CardTitle>
                 </CardHeader>
@@ -51,7 +51,7 @@ export default function InfoPage() {
               </Card>
             </div>
             <div className="animate-fade-in-up" style={{ animationDelay: '200ms'}}>
-               <Card className="transition-all duration-300 ease-out hover:shadow-xl hover:-translate-y-1 transform h-full">
+               <Card className="transition-all duration-300 ease-out hover:shadow-xl hover:-translate-y-1 transform h-full bg-card">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2"><Accessibility className="h-5 w-5 text-primary" />Accesibilidad</CardTitle>
                 </CardHeader>
@@ -62,7 +62,7 @@ export default function InfoPage() {
             </div>
           </div>
 
-          <Card id="how-to-get-there" className="transition-shadow duration-300 hover:shadow-lg scroll-mt-20 animate-fade-in-up" style={{ animationDelay: '300ms'}}>
+          <Card id="how-to-get-there" className="transition-shadow duration-300 hover:shadow-lg scroll-mt-20 animate-fade-in-up bg-card" style={{ animationDelay: '300ms'}}>
             <CardHeader>
               <CardTitle className="flex items-center gap-2"><Bus className="h-5 w-5 text-primary" />Cómo Llegar</CardTitle>
             </CardHeader>
