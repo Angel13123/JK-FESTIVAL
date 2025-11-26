@@ -19,10 +19,17 @@ const emailSchema = z.object({
   email: z.string().email("Por favor, introduce un email válido."),
 });
 
-const detailsSchema = z.object({
+// Schema for the PIN step
+const pinSchema = z.object({
+    pin: z.string().length(4, "El PIN debe tener exactamente 4 dígitos.").regex(/^\d{4}$/, "El PIN solo puede contener números."),
+});
+
+// Combined schema for registration
+const registerSchema = z.object({
   username: z.string().min(3, "El nombre de usuario debe tener al menos 3 caracteres."),
   pin: z.string().length(4, "El PIN debe tener exactamente 4 dígitos.").regex(/^\d{4}$/, "El PIN solo puede contener números."),
 });
+
 
 type Step = "email" | "pin" | "register";
 
@@ -41,10 +48,16 @@ export default function LoginPage() {
     defaultValues: { email: "" },
   });
 
-  const detailsForm = useForm<z.infer<typeof detailsSchema>>({
-    resolver: zodResolver(detailsSchema),
+  const pinForm = useForm<z.infer<typeof pinSchema>>({
+    resolver: zodResolver(pinSchema),
+    defaultValues: { pin: "" },
+  });
+
+  const registerForm = useForm<z.infer<typeof registerSchema>>({
+    resolver: zodResolver(registerSchema),
     defaultValues: { username: "", pin: "" },
   });
+
 
   const handleEmailSubmit = async ({ email }: z.infer<typeof emailSchema>) => {
     setIsLoading(true);
@@ -54,26 +67,28 @@ export default function LoginPage() {
     setEmail(email);
     if (user) {
       setExistingUser(user);
+      pinForm.reset();
       setStep("pin");
     } else {
+      registerForm.reset();
       setStep("register");
     }
   };
 
-  const handlePinSubmit = async ({ pin }: { pin: string }) => {
+  const handlePinSubmit = async ({ pin }: z.infer<typeof pinSchema>) => {
     setIsLoading(true);
-    if (existingUser && existingUser.pin === pin) {
+    if (existingUser && String(existingUser.pin) === pin) {
       login({ email: existingUser.email, username: existingUser.username });
       toast({ title: "¡Bienvenido de nuevo!", description: `Sesión iniciada como ${existingUser.username}` });
       router.push("/mobileapp");
     } else {
       toast({ variant: "destructive", title: "PIN incorrecto", description: "El PIN que has introducido no es correcto." });
-      detailsForm.setError("pin", { type: "manual", message: "PIN incorrecto." });
+      pinForm.setError("pin", { type: "manual", message: "PIN incorrecto." });
     }
     setIsLoading(false);
   };
 
-  const handleRegisterSubmit = async (values: z.infer<typeof detailsSchema>) => {
+  const handleRegisterSubmit = async (values: z.infer<typeof registerSchema>) => {
     setIsLoading(true);
     try {
       const newUser = await createAppUser(email, values.username, values.pin);
@@ -109,10 +124,10 @@ export default function LoginPage() {
         );
       case "pin":
         return (
-          <Form {...detailsForm}>
-            <form onSubmit={detailsForm.handleSubmit(d => handlePinSubmit({pin: d.pin}))} className="space-y-6">
+          <Form {...pinForm}>
+            <form onSubmit={pinForm.handleSubmit(handlePinSubmit)} className="space-y-6">
                  <p className="text-sm text-center text-gray-400">Introduce tu PIN para <span className="font-bold text-white">{email}</span></p>
-              <FormField control={detailsForm.control} name="pin" render={({ field }) => (
+              <FormField control={pinForm.control} name="pin" render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-gray-400">PIN de 4 dígitos</FormLabel>
                   <FormControl><Input type="password" maxLength={4} {...field} className="bg-gray-800 border-gray-700 text-white text-center text-2xl tracking-[1em]" /></FormControl>
@@ -129,17 +144,17 @@ export default function LoginPage() {
         );
       case "register":
         return (
-          <Form {...detailsForm}>
-            <form onSubmit={detailsForm.handleSubmit(handleRegisterSubmit)} className="space-y-6">
+          <Form {...registerForm}>
+            <form onSubmit={registerForm.handleSubmit(handleRegisterSubmit)} className="space-y-6">
                  <p className="text-sm text-center text-gray-400">Creando cuenta para <span className="font-bold text-white">{email}</span></p>
-              <FormField control={detailsForm.control} name="username" render={({ field }) => (
+              <FormField control={registerForm.control} name="username" render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-gray-400">Nombre de Usuario</FormLabel>
                   <FormControl><Input placeholder="Elige un apodo" {...field} className="bg-gray-800 border-gray-700 text-white" /></FormControl>
                   <FormMessage />
                 </FormItem>
               )}/>
-              <FormField control={detailsForm.control} name="pin" render={({ field }) => (
+              <FormField control={registerForm.control} name="pin" render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-gray-400">Crea un PIN de 4 dígitos</FormLabel>
                   <FormControl><Input type="password" maxLength={4} {...field} className="bg-gray-800 border-gray-700 text-white text-center text-2xl tracking-[1em]" /></FormControl>
