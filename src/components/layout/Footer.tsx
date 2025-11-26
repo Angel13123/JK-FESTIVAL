@@ -8,7 +8,12 @@ export function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="flex items-center gap-2">
              <Music className="h-8 w-8 text-black" />
-             <span className="text-3xl font-headline text-primary">JK Festival</span>
+             <span 
+                className="text-3xl font-headline text-primary"
+                style={{ WebkitTextStroke: '2px black', textShadow: '3px 3px 0px #000000' }}
+             >
+                JK Festival
+             </span>
           </div>
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-black font-bold">
             <Link href="/legal/terms" className="hover:text-primary transition-colors">
