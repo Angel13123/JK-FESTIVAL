@@ -33,15 +33,13 @@ export function Navbar() {
         className={cn(
             "text-md font-bold transition-colors hover:text-primary",
             isActive
-            ? "font-headline text-primary animate-breath"
+            ? "font-headline text-primary"
             : "text-black"
         )}
         style={
             isActive
             ? {
                 WebkitTextStroke: '2px black',
-                textShadow: '3px 3px 0px #000000',
-                animationDuration: '4s',
                 }
             : {}
         }
