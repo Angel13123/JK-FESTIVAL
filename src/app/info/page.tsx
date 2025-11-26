@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin, Car, Bus, Clock, Accessibility } from "lucide-react";
 
@@ -68,11 +69,11 @@ export default function InfoPage() {
             </CardHeader>
             <CardContent className="space-y-4 text-muted-foreground">
                 <div>
-                    <h3 className="font-semibold text-foreground flex items-center gap-2"><Car className="h-4 w-4"/>En Coche</h3>
+                    <h3 className="font-bold text-lg text-primary flex items-center gap-2"><Car className="h-4 w-4"/>En Coche</h3>
                     <p>Habrá un parking habilitado cerca del recinto. Se recomienda compartir coche y llegar con antelación.</p>
                 </div>
                  <div>
-                    <h3 className="font-semibold text-foreground flex items-center gap-2"><Bus className="h-4 w-4"/>Transporte Público</h3>
+                    <h3 className="font-bold text-lg text-primary flex items-center gap-2"><Bus className="h-4 w-4"/>Transporte Público</h3>
                     <p>Se reforzarán las líneas de autobús desde Tetuán y otras ciudades cercanas. Consulta los horarios especiales que se publicarán próximamente.</p>
                 </div>
             </CardContent>
