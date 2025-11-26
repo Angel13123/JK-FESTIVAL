@@ -30,7 +30,9 @@ export function Navbar() {
       onClick={() => setIsMobileMenuOpen(false)}
       className={cn(
         "text-md font-bold transition-colors hover:text-primary",
-        pathname === href ? "text-primary" : "text-black"
+        pathname === href 
+          ? "text-primary [-webkit-text-stroke:1px_black] [text-shadow:2px_2px_0px_#000000]" 
+          : "text-black"
       )}
     >
       {label}
