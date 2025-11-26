@@ -2,6 +2,9 @@ import { ImageResponse } from 'next/og'
 
 export const runtime = 'edge'
 
+// Make sure this route is statically generated
+export const dynamic = 'force-static';
+
 export const size = {
   width: 48,
   height: 48,
