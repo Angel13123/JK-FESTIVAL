@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -18,7 +19,9 @@ import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
-  fullName: z.string().min(2, "El nombre completo es obligatorio."),
+  fullName: z.string()
+    .min(3, "El nombre debe tener al menos 3 caracteres.")
+    .regex(/[a-zA-Z]/, "Por favor, ingresa un nombre válido."),
   email: z.string().email("Por favor, introduce un email válido."),
   country: z.string().min(2, "El país es obligatorio."),
   city: z.string().optional(),
@@ -40,6 +43,7 @@ export default function CheckoutPage() {
       country: "",
       city: "",
     },
+    mode: "onChange", // Validate on change to enable/disable button
   });
 
   const handleCheckout = async (values: z.infer<typeof formSchema>) => {
@@ -155,7 +159,7 @@ export default function CheckoutPage() {
                       )}/>
                   </div>
                   
-                  <Button type="submit" className="w-full transition-transform duration-300 hover:scale-105" size="lg" disabled={isLoading}>
+                  <Button type="submit" className="w-full transition-transform duration-300 hover:scale-105" size="lg" disabled={isLoading || !form.formState.isValid}>
                     {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                     {isLoading ? 'Procesando pago...' : `Pagar ahora ${total.toFixed(2)} EUR`}
                   </Button>
@@ -200,3 +204,5 @@ export default function CheckoutPage() {
     </div>
   );
 }
+
+    
