@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -36,8 +37,8 @@ export function Location() {
                         </Link>
                     </Button>
                 </div>
-                 <div className="mt-10 border-t-4 border-dashed border-black pt-10">
-                    <div className="bg-white p-8 md:p-10 rounded-xl border-4 border-black shadow-[8px_8px_0px_#000000] mb-16">
+                 <div className="mt-10 border-t-4 border-dashed border-black pt-10 mb-16">
+                    <div className="bg-white p-8 md:p-10 rounded-xl border-4 border-black shadow-[8px_8px_0px_#000000] max-w-4xl mx-auto">
                         <h3 className="text-3xl text-primary">Lleva el festival en tu bolsillo</h3>
                         <p className="text-black font-bold mt-2 mb-6 max-w-xl mx-auto text-lg">
                             Instala nuestra aplicación web para un acceso rápido a tus entradas, horarios y mapa del sitio, ¡incluso sin conexión!
