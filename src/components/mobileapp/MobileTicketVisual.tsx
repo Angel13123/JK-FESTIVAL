@@ -54,20 +54,25 @@ export function MobileTicketVisual({ ticket }: MobileTicketVisualProps) {
         </div>
 
         {/* QR Code Section */}
-        <div className="w-full max-w-[400px] aspect-square p-2 border-4 border-black bg-white rounded-lg">
-            <QRCode 
-                value={ticket.code} 
-                size="100%"
-                style={{ width: '100%', height: 'auto' }}
-                bgColor="#ffffff" 
-                fgColor="#000000" 
-            />
+        <div className="w-full p-2 border-4 border-black bg-white rounded-lg flex justify-center items-center">
+            {ticket.code ? (
+              <QRCode 
+                  value={ticket.code} 
+                  size={256}
+                  bgColor="#ffffff" 
+                  fgColor="#000000" 
+              />
+            ) : (
+              <div className="w-[256px] h-[256px] bg-gray-100 flex items-center justify-center text-center text-sm text-gray-500">
+                Código QR no disponible
+              </div>
+            )}
         </div>
 
         {/* Alphanumeric Code Section */}
         <div className="text-center">
             <p className="text-xs font-bold text-gray-600">CÓDIGO DE ACCESO:</p>
-            <p className="font-mono text-xl font-black break-all">{ticket.code}</p>
+            <p className="font-mono text-xl font-black break-all">{ticket.code || 'N/A'}</p>
         </div>
 
         {/* Footer Section */}

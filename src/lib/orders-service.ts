@@ -75,15 +75,17 @@ export async function createOrderAndTickets(payload: CreateOrderPayload): Promis
             // Generate a unique ticket code using the Gemini flow
             const uniqueCode = await generateTicketCode();
             
-            const newTicket: Omit<Ticket, 'createdAt' | 'customerEmail' | 'code'> = {
+            const newTicket: Omit<Ticket, 'createdAt' > = {
                 id: ticketRef.id,
                 orderId: orderId,
                 ticketTypeId: item.ticketTypeId,
                 ticketTypeName: ticketType.name,
                 ownerName: payload.customerName,
+                customerEmail: payload.customerEmail,
                 status: 'valid',
+                code: uniqueCode.toUpperCase(),
             };
-            batch.set(ticketRef, { ...newTicket, code: uniqueCode.toUpperCase(), customerEmail: payload.customerEmail, createdAt: serverTimestamp() });
+            batch.set(ticketRef, { ...newTicket, createdAt: serverTimestamp() });
         }
     }
   }
