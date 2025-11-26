@@ -39,6 +39,8 @@ export default function RootLayout({
   const isMobileApp = pathname.startsWith('/mobileapp');
   const isHomePage = pathname === '/';
 
+  const showPublicNav = !isAdminRoute && !isMobileApp && !isHomePage;
+
   return (
     <html lang="es" className="dark" suppressHydrationWarning>
       <head>
@@ -64,9 +66,9 @@ export default function RootLayout({
               </AppProvider>
             ) : (
               <CartProvider>
-                {!isHomePage && <Navbar />}
+                {showPublicNav && <Navbar />}
                 {children}
-                {!isHomePage && <Footer />}
+                {showPublicNav && <Footer />}
               </CartProvider>
             )}
             <Toaster />
