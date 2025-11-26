@@ -1,16 +1,19 @@
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Countdown } from "@/components/shared/Countdown";
 
 const LeftSquiggle = () => (
-    <svg width="107" height="90" viewBox="0 0 107 90" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute -left-4 md:left-0 top-1/2 -translate-y-1/2 h-20 md:h-36 w-auto">
-        <path d="M5.48511 85.2393C-6.85214 62.5973 16.2949 53.8417 26.0421 44.5385C42.8421 28.5385 19.5421 5.53852 46.5421 3.03852C65.5421 1.23852 83.5072 13.9135 90.0421 27.5385C97.5421 43.0385 108.542 61.5385 99.0421 78.5385" stroke="black" strokeWidth="6" strokeLinecap="round"/>
+    <svg width="107" height="90" viewBox="0 0 107 90" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute -left-4 md:left-0 top-1/2 -translate-y-1/2 h-20 md:h-36 w-auto text-primary">
+      <path d="M96.9231 3.39209C83.9231 29.8921 68.4231 29.8921 54.9231 43.3921C41.4231 56.8921 44.4231 79.3921 26.4231 85.3921C8.42308 91.3921 -6.57692 73.3921 3.42308 55.3921C13.4231 37.3921 28.4231 11.8921 51.9231 3.39209" stroke="black" strokeWidth="6" strokeLinecap="round"/>
+      <path d="M96.9231 3.39209C83.9231 29.8921 68.4231 29.8921 54.9231 43.3921C41.4231 56.8921 44.4231 79.3921 26.4231 85.3921C8.42308 91.3921 -6.57692 73.3921 3.42308 55.3921C13.4231 37.3921 28.4231 11.8921 51.9231 3.39209" fill="currentColor"/>
     </svg>
 );
 
 const RightSquiggle = () => (
-    <svg width="109" height="88" viewBox="0 0 109 88" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute -right-4 md:right-0 top-1/2 -translate-y-1/2 h-20 md:h-36 w-auto">
-        <path d="M103.5 3C116.5 25 92.5 34 82.5 43.5C65.5 60 90.5 83 63 85.5C43.5 87.3 25.5 75.5 19 61.5C11.5 46 0.499998 28 10 11" stroke="black" strokeWidth="6" strokeLinecap="round"/>
+    <svg width="109" height="88" viewBox="0 0 109 88" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute -right-4 md:right-0 top-1/2 -translate-y-1/2 h-20 md:h-36 w-auto text-primary">
+       <path d="M12.0769 85.0754C25.0769 58.5754 40.5769 58.5754 54.0769 45.0754C67.5769 31.5754 64.5769 9.07538 82.5769 3.07538C100.577 -2.92462 115.577 15.0754 105.577 33.0754C95.5769 51.0754 80.5769 76.5754 57.0769 85.0754" stroke="black" strokeWidth="6" strokeLinecap="round"/>
+       <path d="M12.0769 85.0754C25.0769 58.5754 40.5769 58.5754 54.0769 45.0754C67.5769 31.5754 64.5769 9.07538 82.5769 3.07538C100.577 -2.92462 115.577 15.0754 105.577 33.0754C95.5769 51.0754 80.5769 76.5754 57.0769 85.0754" fill="currentColor"/>
     </svg>
 );
 
@@ -48,10 +51,10 @@ export function Hero() {
             </h1>
         </div>
 
-        <h2 className="text-xl md:text-3xl font-extrabold text-black uppercase tracking-wider -mt-2">
+        <h2 className="text-xl md:text-3xl font-extrabold text-white uppercase tracking-wider -mt-2">
             GRAND STADE DE MARTIL
         </h2>
-        <h3 className="text-lg md:text-2xl font-extrabold text-black uppercase tracking-wider">
+        <h3 className="text-lg md:text-2xl font-extrabold text-white uppercase tracking-wider">
             07/FEB/2026
         </h3>
         
