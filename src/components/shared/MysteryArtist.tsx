@@ -45,7 +45,7 @@ export function MysteryArtist() {
             SHHHHH...
           </h4>
           <div 
-            className="absolute -bottom-10 left-0 right-0 h-24 bg-gradient-to-t from-background via-background/70 to-transparent"
+            className="absolute -bottom-10 left-0 right-0 h-24 bg-gradient-to-t from-transparent via-transparent/70 to-transparent"
             aria-hidden="true"
           />
         </div>
