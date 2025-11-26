@@ -57,7 +57,7 @@ export function Countdown() {
       {timeUnits.map((unit, index) => (
         <div key={index} className="flex flex-col items-center text-center w-16 sm:w-20 md:w-24 p-2 md:p-3 bg-black rounded-xl border-[3px] border-black hard-shadow">
           <div className="text-3xl sm:text-4xl md:text-6xl font-bold font-mono text-[#FAFF00] tabular-nums">
-            {formatValue(unit.value)}
+            {timeLeft ? formatValue(unit.value) : '00'}
           </div>
           <div className="text-[10px] sm:text-xs md:text-md font-bold uppercase tracking-wider text-[#FAFF00]">
             {unit.label}
