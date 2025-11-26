@@ -12,12 +12,14 @@ import {
   orderBy,
   Timestamp,
   limit,
+  getFirestore,
 } from 'firebase/firestore';
-import { db } from '@/firebase/client'; // Assuming db is your Firestore instance
 import type { Order, Ticket, CartItem, OrderStats } from './types';
 import { ticketTypes } from './data';
-import { FirestorePermissionError, errorEmitter } from '@/firebase';
+import { FirestorePermissionError, errorEmitter, initializeFirebase } from '@/firebase';
 import { generateTicketCode } from '@/ai/flows/ticket-code-flow';
+
+const { firestore: db } = initializeFirebase();
 
 // --- Firestore Data Service ---
 
