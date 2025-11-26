@@ -63,7 +63,7 @@ export function Hero() {
         </div>
         
         <div className="mt-10">
-          <Button asChild size="lg" className="text-lg px-8 py-6">
+          <Button asChild size="lg" className="text-lg px-8 py-6 bg-[#00FFFF] hover:bg-[#00FFFF]/90 text-black border-4 border-black">
             <Link href="/tickets">Comprar entradas</Link>
           </Button>
         </div>
