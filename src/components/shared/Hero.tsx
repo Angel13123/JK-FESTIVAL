@@ -30,44 +30,61 @@ export function Hero() {
 
   return (
     <section 
-      className="relative w-full min-h-[calc(100vh-80px)] overflow-hidden flex items-center justify-center p-4 bg-transparent"
+      className="relative w-full min-h-screen overflow-hidden flex flex-col items-center justify-center p-4 bg-transparent"
     >
         
-        <DoodleElements />
+        <div className="relative z-10 flex-grow h-full flex flex-col items-center justify-center gap-2 text-center">
+            <DoodleElements />
+            
+            <div className="relative animate-fade-in-down" style={{ animationDuration: '1.2s' }}>
+                 <h1 
+                    className="relative text-7xl md:text-9xl lg:text-[10rem] leading-none uppercase font-headline tracking-tighter animate-breath"
+                    style={{
+                        color: '#F7FF00',
+                        WebkitTextStroke: '4px black',
+                        textShadow: '8px 8px 0px #000000',
+                        animationDuration: '5s',
+                    }}
+                >
+                  JK Festival
+                </h1>
+            </div>
 
-      <div className="relative z-10 h-full flex flex-col items-center justify-start pt-10 md:pt-16 gap-2 text-center">
-        
-        <div className="relative animate-fade-in-down" style={{ animationDuration: '1.2s' }}>
-             <h1 
-                className="relative text-7xl md:text-9xl lg:text-[10rem] leading-none uppercase font-headline tracking-tighter animate-breath"
-                style={{
-                    color: '#F7FF00',
-                    WebkitTextStroke: '4px black',
-                    textShadow: '8px 8px 0px #000000',
-                    animationDuration: '5s',
-                }}
-            >
-              JK Festival
-            </h1>
+            <h2 className="text-xl md:text-3xl font-extrabold text-white uppercase tracking-wider -mt-2 animate-fade-in-down" style={{ animationDelay: '0.3s', WebkitTextStroke: '2px black' }}>
+                GRAND STADE DE MARTIL
+            </h2>
+            <h3 className="text-lg md:text-2xl font-extrabold text-white uppercase tracking-wider animate-fade-in-down" style={{ animationDelay: '0.4s', WebkitTextStroke: '2px black' }}>
+                07/FEB/2026
+            </h3>
+            
+            <div className="mt-8 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
+              <Countdown />
+            </div>
+            
+            <div className="mt-10 animate-fade-in-up" style={{ animationDelay: '0.8s' }}>
+              <Button asChild size="lg" className="text-lg px-8 py-6 bg-[#00FFFF] hover:bg-[#00FFFF]/90 text-black border-4 border-black">
+                <Link href="/tickets">Comprar entradas</Link>
+              </Button>
+            </div>
         </div>
 
-        <h2 className="text-xl md:text-3xl font-extrabold text-white uppercase tracking-wider -mt-2 animate-fade-in-down" style={{ animationDelay: '0.3s', WebkitTextStroke: '2px black' }}>
-            GRAND STADE DE MARTIL
-        </h2>
-        <h3 className="text-lg md:text-2xl font-extrabold text-white uppercase tracking-wider animate-fade-in-down" style={{ animationDelay: '0.4s', WebkitTextStroke: '2px black' }}>
-            07/FEB/2026
-        </h3>
-        
-        <div className="mt-8 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
-          <Countdown />
+        <div className="absolute bottom-0 left-0 w-full">
+            <div>
+                <svg className="waves" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink"
+                viewBox="0 24 150 28" preserveAspectRatio="none" shapeRendering="auto">
+                <defs>
+                <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+                </defs>
+                <g className="parallax">
+                <use xlinkHref="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7" />
+                <use xlinkHref="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+                <use xlinkHref="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+                <use xlinkHref="#gentle-wave" x="48" y="7" fill="#fff" />
+                </g>
+                </svg>
+            </div>
         </div>
-        
-        <div className="mt-10 animate-fade-in-up" style={{ animationDelay: '0.8s' }}>
-          <Button asChild size="lg" className="text-lg px-8 py-6 bg-[#00FFFF] hover:bg-[#00FFFF]/90 text-black border-4 border-black">
-            <Link href="/tickets">Comprar entradas</Link>
-          </Button>
-        </div>
-      </div>
+
     </section>
   );
 }
