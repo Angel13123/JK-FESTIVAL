@@ -126,7 +126,7 @@ export default function AdminDashboard() {
     <div className="space-y-8 animate-fade-in-up">
       <div className="flex justify-between items-center">
         <div>
-            <h1 className="text-3xl">Dashboard</h1>
+            <h1 className="text-3xl font-bold">Dashboard</h1>
             <p className="text-muted-foreground">Un resumen del estado del festival basado en datos de Firestore.</p>
         </div>
         <AlertDialog>
@@ -157,31 +157,31 @@ export default function AdminDashboard() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Card className="transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Ingresos Totales</CardTitle>
+            <CardTitle className="text-sm font-bold text-black">Ingresos Totales</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalRevenue.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</div>
+            <div className="text-2xl font-extrabold text-black">{stats.totalRevenue.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</div>
             <p className="text-xs text-muted-foreground">Ingresos de todas las ventas</p>
           </CardContent>
         </Card>
         <Card className="transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Entradas Vendidas</CardTitle>
+            <CardTitle className="text-sm font-bold text-black">Entradas Vendidas</CardTitle>
             <Ticket className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalTicketsSold.toLocaleString()}</div>
+            <div className="text-2xl font-extrabold text-black">{stats.totalTicketsSold.toLocaleString()}</div>
              <p className="text-xs text-muted-foreground">{stats.totalOrders} pedidos en total</p>
           </CardContent>
         </Card>
         <Card className="transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pedidos Totales</CardTitle>
+            <CardTitle className="text-sm font-bold text-black">Pedidos Totales</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalOrders.toLocaleString()}</div>
+            <div className="text-2xl font-extrabold text-black">{stats.totalOrders.toLocaleString()}</div>
             <p className="text-xs text-muted-foreground">Pedidos procesados con éxito</p>
           </CardContent>
         </Card>
@@ -190,7 +190,7 @@ export default function AdminDashboard() {
       <Dialog>
         <Card className="transition-shadow duration-300 hover:shadow-lg">
           <CardHeader>
-            <CardTitle>Pedidos Recientes</CardTitle>
+            <CardTitle className="text-xl font-bold">Pedidos Recientes</CardTitle>
             <CardDescription>Aquí están los últimos 10 pedidos realizados.</CardDescription>
           </CardHeader>
           <CardContent>

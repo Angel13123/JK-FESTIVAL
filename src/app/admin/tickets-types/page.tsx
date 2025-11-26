@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -119,7 +120,7 @@ export default function AdminTicketsPage() {
     <div className="space-y-8 animate-fade-in-up">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl">Gestionar Tipos de Entradas</h1>
+          <h1 className="text-3xl font-bold">Gestionar Tipos de Entradas</h1>
           <p className="text-muted-foreground">Añade, edita o desactiva los tipos de entradas.</p>
         </div>
          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

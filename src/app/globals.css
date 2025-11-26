@@ -93,6 +93,19 @@
   .font-headline {
      font-family: var(--font-headline), sans-serif;
   }
+  
+  .admin-panel h1,
+  .admin-panel h2,
+  .admin-panel h3,
+  .admin-panel h4,
+  .admin-panel h5,
+  .admin-panel h6,
+  .admin-panel .font-headline {
+    font-family: var(--font-body), sans-serif !important;
+    color: black !important;
+    -webkit-text-stroke: 0 !important;
+    text-shadow: none !important;
+  }
 }
 
 @layer components {

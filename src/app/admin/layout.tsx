@@ -14,7 +14,7 @@ export default function AdminLayout({
   const isScanPage = pathname === "/scan";
 
   return (
-    <div className={`flex min-h-screen ${isScanPage ? 'bg-background' : 'bg-muted/40'}`}>
+    <div className={`admin-panel flex min-h-screen ${isScanPage ? 'bg-background' : 'bg-muted/40'}`}>
       {!isScanPage && <AdminSidebar />}
       <main className="flex-1 overflow-auto">
         <div className="p-4 sm:p-6 lg:p-8">{children}</div>

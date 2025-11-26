@@ -83,14 +83,14 @@ export default function SalesPage() {
   return (
     <div className="space-y-8 animate-fade-in-up">
       <div>
-        <h1 className="text-3xl">Ventas Totales</h1>
+        <h1 className="text-3xl font-bold">Ventas Totales</h1>
         <p className="text-muted-foreground">Un historial completo de todos los pedidos realizados.</p>
       </div>
       
       <Dialog>
         <Card className="transition-shadow duration-300 hover:shadow-lg">
           <CardHeader>
-            <CardTitle>Todos los Pedidos</CardTitle>
+            <CardTitle className="text-xl font-bold">Todos los Pedidos</CardTitle>
             <CardDescription>Aquí están todos los pedidos realizados en la plataforma.</CardDescription>
           </CardHeader>
           <CardContent>

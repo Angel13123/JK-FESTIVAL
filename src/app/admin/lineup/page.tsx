@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -129,7 +130,7 @@ export default function AdminLineupPage() {
     <div className="space-y-8 animate-fade-in-up">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl">Gestionar Lineup</h1>
+          <h1 className="text-3xl font-bold">Gestionar Lineup</h1>
           <p className="text-muted-foreground">Añade o edita los artistas del festival.</p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
