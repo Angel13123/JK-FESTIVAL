@@ -68,14 +68,14 @@ export default function InfoPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2"><Bus className="h-5 w-5 text-primary" />Cómo Llegar</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4 text-muted-foreground">
+            <CardContent className="space-y-4">
                 <div>
                     <h3 className="font-bold text-lg text-black flex items-center gap-2" style={{textShadow: 'none'}}><Car className="h-4 w-4"/>En Coche</h3>
-                    <p>Habrá un parking habilitado cerca del recinto. Se recomienda compartir coche y llegar con antelación.</p>
+                    <p className="text-muted-foreground">Habrá un parking habilitado cerca del recinto. Se recomienda compartir coche y llegar con antelación.</p>
                 </div>
                  <div>
                     <h3 className="font-bold text-lg text-black flex items-center gap-2" style={{textShadow: 'none'}}><Bus className="h-4 w-4"/>Transporte Público</h3>
-                    <p>Se reforzarán las líneas de autobús desde Tetuán y otras ciudades cercanas. Consulta los horarios especiales que se publicarán próximamente.</p>
+                    <p className="text-muted-foreground">Se reforzarán las líneas de autobús desde Tetuán y otras ciudades cercanas. Consulta los horarios especiales que se publicarán próximamente.</p>
                 </div>
             </CardContent>
           </Card>
