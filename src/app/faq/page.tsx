@@ -21,7 +21,7 @@ export default function FaqPage() {
           {faqItems.map((item, index) => (
              <div key={item.id} className="animate-fade-in-up" style={{ animationDelay: `${index * 100}ms`}}>
                 <AccordionItem value={item.id} className="bg-card rounded-lg px-6 transition-shadow duration-300 hover:shadow-lg">
-                  <AccordionTrigger className="text-left font-semibold text-lg hover:no-underline">
+                  <AccordionTrigger className="text-left font-bold text-lg hover:no-underline text-black" style={{textShadow: 'none'}}>
                     {item.question}
                   </AccordionTrigger>
                   <AccordionContent className="text-base text-muted-foreground pt-2">
