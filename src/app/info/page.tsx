@@ -19,11 +19,11 @@ export default function InfoPage() {
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
-                El festival se celebra en la espectacular costa de <strong>Martil, Marruecos</strong>. Una localización única junto al mar para una experiencia inolvidable.
+                El festival se celebra en la espectacular costa de <strong>Martil, Marruecos</strong>, en el icónico <strong>Grand Stade de Martil</strong>. Una localización única junto al mar para una experiencia inolvidable.
               </p>
               <div className="mt-4 rounded-lg overflow-hidden border aspect-video">
                  <iframe 
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12973.833333333334!2d-5.276388888888889!3d35.6175!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd746162383a759%3A0x8445a4b3a451e0c3!2sMartil%2C%20Marruecos!5e0!3m2!1ses!2ses!4v1626262626262" 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3243.511364491758!2d-5.281898188849419!3d35.61499583406323!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd7461b17316e6ab%3A0x82a5b0b461c94543!2sStade%20de%20Martil!5e0!3m2!1ses!2ses!4v1700000000000"
                     width="100%" 
                     height="100%" 
                     style={{ border: 0 }} 
