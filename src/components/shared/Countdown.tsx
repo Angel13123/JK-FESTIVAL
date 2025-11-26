@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -49,13 +50,13 @@ export function Countdown() {
   const formatValue = (value: number) => value.toString().padStart(2, '0');
 
   return (
-    <div className="flex justify-center gap-4 md:gap-8">
+    <div className="flex justify-center gap-2 md:gap-8">
       {timeUnits.map((unit, index) => (
-        <div key={index} className="flex flex-col items-center text-center w-24 p-3 bg-black rounded-xl border-[3px] border-black hard-shadow">
+        <div key={index} className="flex flex-col items-center text-center w-20 md:w-24 p-2 md:p-3 bg-black rounded-xl border-[3px] border-black hard-shadow">
           <div className="text-4xl md:text-6xl font-bold font-mono text-[#FAFF00] tabular-nums">
             {formatValue(unit.value)}
           </div>
-          <div className="text-sm md:text-md font-bold uppercase tracking-wider text-[#FAFF00]">
+          <div className="text-xs md:text-md font-bold uppercase tracking-wider text-[#FAFF00]">
             {unit.label}
           </div>
         </div>
