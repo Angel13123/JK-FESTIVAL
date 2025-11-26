@@ -53,7 +53,7 @@ export default function LineupPage() {
         <div className="text-center mb-12 animate-fade-in-down">
           <h1 className="text-4xl md:text-5xl tracking-tight">Lineup & Horarios</h1>
           <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
-            Descubre los talentos de Golden Epiphany que harán historia. Filtra por escenario para planificar tu experiencia.
+            Descubre los talentos de JK Festival que harán historia. Filtra por escenario para planificar tu experiencia.
           </p>
         </div>
 
