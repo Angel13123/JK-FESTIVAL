@@ -4,65 +4,65 @@
 
 @layer base {
   :root {
-    --background: 180 100% 50%; /* Electric Cyan - Fallback */
-    --foreground: 0 0% 0%; /* Black */
+    --background: 336 84% 94%;
+    --foreground: 0 0% 0%;
 
-    --card: 60 100% 100%; /* White */
-    --card-foreground: 0 0% 0%; /* Black */
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 0%;
 
-    --popover: 60 100% 100%; /* White */
-    --popover-foreground: 0 0% 0%; /* Black */
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
 
-    --primary: 65 100% 50%; /* Neon Yellow */
-    --primary-foreground: 0 0% 0%; /* Black */
+    --primary: 300 100% 50%;
+    --primary-foreground: 0 0% 0%;
 
-    --secondary: 60 100% 100%; /* White */
-    --secondary-foreground: 0 0% 0%; /* Black */
+    --secondary: 0 0% 100%;
+    --secondary-foreground: 0 0% 0%;
 
-    --muted: 0 0% 90%; /* Light Gray */
-    --muted-foreground: 0 0% 40%; /* Darker Gray */
+    --muted: 0 0% 90%;
+    --muted-foreground: 0 0% 40%;
 
-    --accent: 180 100% 50%; /* Electric Cyan */
-    --accent-foreground: 0 0% 0%; /* Black */
+    --accent: 180 100% 50%;
+    --accent-foreground: 0 0% 0%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 0%; /* Black */
-    --input: 0 0% 100%; /* White */
-    --ring: 0 0% 0%; /* Black */
+    --border: 0 0% 0%;
+    --input: 0 0% 100%;
+    --ring: 0 0% 0%;
     
     --radius: 12px;
   }
 
   .dark {
-    --background: 180 100% 50%; /* Electric Cyan - Fallback */
-    --foreground: 0 0% 0%; /* Black */
+    --background: 336 84% 94%;
+    --foreground: 0 0% 0%;
 
-    --card: 60 100% 100%; /* White */
-    --card-foreground: 0 0% 0%; /* Black */
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 0%;
 
-    --popover: 60 100% 100%; /* White */
-    --popover-foreground: 0 0% 0%; /* Black */
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
 
-    --primary: 65 100% 50%; /* Neon Yellow */
-    --primary-foreground: 0 0% 0%; /* Black */
+    --primary: 300 100% 50%;
+    --primary-foreground: 0 0% 0%;
 
-    --secondary: 60 100% 100%; /* White */
-    --secondary-foreground: 0 0% 0%; /* Black */
+    --secondary: 0 0% 100%;
+    --secondary-foreground: 0 0% 0%;
 
-    --muted: 0 0% 90%; /* Light Gray */
-    --muted-foreground: 0 0% 40%; /* Darker Gray */
+    --muted: 0 0% 90%;
+    --muted-foreground: 0 0% 40%;
 
-    --accent: 180 100% 50%; /* Electric Cyan */
-    --accent-foreground: 0 0% 0%; /* Black */
+    --accent: 180 100% 50%;
+    --accent-foreground: 0 0% 0%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 0%; /* Black */
-    --input: 0 0% 100%; /* White */
-    --ring: 0 0% 0%; /* Black */
+    --border: 0 0% 0%;
+    --input: 0 0% 100%;
+    --ring: 0 0% 0%;
   }
 }
 
@@ -96,4 +96,20 @@
         transform: translateY(4px) translateX(4px);
         box-shadow: 2px 2px 0px 0px #000000;
     }
+}
+
+@keyframes ken-burns {
+  0% { transform: scale(1) translate(0, 0); }
+  50% { transform: scale(1.05) translate(1%, -1%); }
+  100% { transform: scale(1) translate(0, 0); }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
