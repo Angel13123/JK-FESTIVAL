@@ -83,7 +83,7 @@ export default function SalesPage() {
   return (
     <div className="space-y-8 animate-fade-in-up">
       <div>
-        <h1 className="text-3xl font-bold font-headline">Ventas Totales</h1>
+        <h1 className="text-3xl">Ventas Totales</h1>
         <p className="text-muted-foreground">Un historial completo de todos los pedidos realizados.</p>
       </div>
       

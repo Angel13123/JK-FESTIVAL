@@ -28,7 +28,7 @@ function ArtistCard({ artist }: { artist: Artist }) {
           </div>
         </div>
         <div className="p-4 border-t">
-          <h3 className="text-xl font-bold font-headline">{artist.name}</h3>
+          <h3 className="text-xl">{artist.name}</h3>
           <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{artist.description}</p>
         </div>
       </CardContent>
@@ -51,7 +51,7 @@ export default function LineupPage() {
     <div className="bg-background">
       <div className="container mx-auto max-w-screen-xl px-4 py-16">
         <div className="text-center mb-12 animate-fade-in-down">
-          <h1 className="text-4xl md:text-5xl font-bold font-headline tracking-tight">Lineup & Horarios</h1>
+          <h1 className="text-4xl md:text-5xl tracking-tight">Lineup & Horarios</h1>
           <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
             Descubre los talentos de Golden Epiphany que harán historia. Filtra por escenario para planificar tu experiencia.
           </p>

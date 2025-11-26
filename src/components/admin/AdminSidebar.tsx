@@ -22,7 +22,7 @@ export function AdminSidebar() {
   return (
     <aside className="w-64 flex-shrink-0 border-r bg-background flex-col hidden md:flex">
       <div className="h-16 border-b flex items-center px-6">
-        <Link href="/admin" className="flex items-center gap-2 font-bold text-lg font-headline">
+        <Link href="/admin" className="flex items-center gap-2 font-bold text-lg">
           <Music className="h-6 w-6 text-primary" />
           <span>JK Admin</span>
         </Link>

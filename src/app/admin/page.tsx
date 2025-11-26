@@ -126,7 +126,7 @@ export default function AdminDashboard() {
     <div className="space-y-8 animate-fade-in-up">
       <div className="flex justify-between items-center">
         <div>
-            <h1 className="text-3xl font-bold font-headline">Dashboard</h1>
+            <h1 className="text-3xl">Dashboard</h1>
             <p className="text-muted-foreground">Un resumen del estado del festival basado en datos de Firestore.</p>
         </div>
         <AlertDialog>

@@ -162,14 +162,14 @@ export default function ScanPage() {
   return (
     <div className="flex flex-col items-center justify-start min-h-[calc(100vh-theme(spacing.32))] pt-10 px-4">
       <div className="w-full max-w-md text-center">
-        <h1 className="text-3xl font-bold font-headline">Validación de Entradas</h1>
+        <h1 className="text-3xl">Validación de Entradas</h1>
         <p className="text-muted-foreground mt-2">Introduce el código para validar la entrada de un asistente.</p>
       </div>
 
       <Card className="w-full max-w-md mt-8">
         <CardHeader className="text-center items-center">
           <QrCode className="h-8 w-8 text-primary" />
-          <CardTitle className="font-headline text-2xl">Validar Código</CardTitle>
+          <CardTitle className="text-2xl">Validar Código</CardTitle>
         </CardHeader>
         <CardContent>
             <div className='space-y-4'>

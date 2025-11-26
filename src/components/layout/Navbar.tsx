@@ -42,7 +42,7 @@ export function Navbar() {
         <div className="container flex h-20 max-w-screen-2xl items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <Music className="h-10 w-10 text-black" />
-            <span className="text-4xl font-headline text-primary -webkit-text-stroke-2-black">JK Festival</span>
+            <span className="text-4xl -webkit-text-stroke-2-black font-headline text-primary">JK Festival</span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-6">

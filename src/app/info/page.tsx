@@ -6,7 +6,7 @@ export default function InfoPage() {
     <div className="bg-background">
       <div className="container mx-auto max-w-screen-lg px-4 py-16">
         <div className="text-center mb-12 animate-fade-in-down">
-          <h1 className="text-4xl md:text-5xl font-bold font-headline tracking-tight">Información Práctica</h1>
+          <h1 className="text-4xl md:text-5xl tracking-tight">Información Práctica</h1>
           <p className="mt-4 text-lg text-muted-foreground">
             Todo lo que necesitas saber para disfrutar del JK Festival sin preocupaciones.
           </p>

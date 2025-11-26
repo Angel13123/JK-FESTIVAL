@@ -99,7 +99,7 @@ export default function CheckoutPage() {
   if (cartItems.length === 0 && !isLoading) {
      return (
       <div className="container mx-auto max-w-screen-md px-4 py-16 text-center animate-fade-in-down">
-        <h1 className="text-3xl font-bold font-headline">Tu carrito está vacío</h1>
+        <h1 className="text-3xl">Tu carrito está vacío</h1>
         <p className="mt-4 text-muted-foreground">Parece que no has añadido ninguna entrada. Vuelve a la página de entradas para empezar.</p>
         <Button asChild className="mt-8 transition-transform duration-300 hover:scale-105">
           <Link href="/tickets">Ver entradas</Link>
@@ -112,7 +112,7 @@ export default function CheckoutPage() {
     <div className="bg-background">
       <div className="container mx-auto max-w-screen-lg px-4 py-16">
         <div className="text-center mb-12 animate-fade-in-down">
-          <h1 className="text-4xl md:text-5xl font-bold font-headline tracking-tight">Finalizar Compra</h1>
+          <h1 className="text-4xl md:text-5xl tracking-tight">Finalizar Compra</h1>
           <p className="mt-4 text-lg text-muted-foreground">Ya casi has terminado. Completa tus datos para recibir tus entradas.</p>
         </div>
 

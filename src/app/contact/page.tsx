@@ -48,7 +48,7 @@ export default function ContactPage() {
     return (
         <div className="container mx-auto max-w-screen-md px-4 py-16 flex items-center justify-center min-h-[60vh]">
             <div className="text-center animate-fade-in-down">
-                <h1 className="text-3xl font-bold font-headline">¡Mensaje enviado!</h1>
+                <h1 className="text-3xl">¡Mensaje enviado!</h1>
                 <p className="mt-4 text-muted-foreground">Gracias por contactarnos. Te responderemos lo antes posible.</p>
                 <Button onClick={() => { setIsSuccess(false); form.reset(); }} className="mt-8 transition-transform duration-300 hover:scale-105">Enviar otro mensaje</Button>
             </div>
@@ -60,7 +60,7 @@ export default function ContactPage() {
     <div className="bg-card">
       <div className="container mx-auto max-w-screen-lg px-4 py-16">
         <div className="text-center mb-12 animate-fade-in-down">
-          <h1 className="text-4xl md:text-5xl font-bold font-headline tracking-tight">Contacto</h1>
+          <h1 className="text-4xl md:text-5xl tracking-tight">Contacto</h1>
           <p className="mt-4 text-lg text-muted-foreground">
             ¿Preguntas, sugerencias o propuestas? Estamos aquí para escucharte.
           </p>

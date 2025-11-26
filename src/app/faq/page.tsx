@@ -11,7 +11,7 @@ export default function FaqPage() {
     <div className="bg-background">
       <div className="container mx-auto max-w-screen-md px-4 py-16">
         <div className="text-center mb-12 animate-fade-in-down">
-          <h1 className="text-4xl md:text-5xl font-bold font-headline tracking-tight">Preguntas Frecuentes</h1>
+          <h1 className="text-4xl md:text-5xl tracking-tight">Preguntas Frecuentes</h1>
           <p className="mt-4 text-lg text-muted-foreground">
             ¿Tienes dudas? Aquí encontrarás las respuestas a las preguntas más comunes.
           </p>
