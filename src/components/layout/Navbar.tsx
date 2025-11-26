@@ -24,20 +24,32 @@ export function Navbar() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const NavLink = ({ href, label }: { href: string; label: string }) => (
-    <Link
-      href={href}
-      onClick={() => setIsMobileMenuOpen(false)}
-      className={cn(
-        "text-md font-bold transition-colors hover:text-primary",
-        pathname === href 
-          ? "text-primary [-webkit-text-stroke:1px_black] [text-shadow:2px_2px_0px_#000000]" 
-          : "text-black"
-      )}
-    >
-      {label}
-    </Link>
-  );
+  const NavLink = ({ href, label }: { href: string; label: string }) => {
+    const isActive = pathname === href;
+    return (
+        <Link
+        href={href}
+        onClick={() => setIsMobileMenuOpen(false)}
+        className={cn(
+            "text-md font-bold transition-colors hover:text-primary",
+            isActive
+            ? "font-headline text-primary animate-breath"
+            : "text-black"
+        )}
+        style={
+            isActive
+            ? {
+                WebkitTextStroke: '2px black',
+                textShadow: '3px 3px 0px #000000',
+                animationDuration: '4s',
+                }
+            : {}
+        }
+        >
+        {label}
+        </Link>
+    );
+    };
   
   return (
     <>
