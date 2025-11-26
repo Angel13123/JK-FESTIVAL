@@ -1,8 +1,7 @@
 
 "use client";
 
-import type { Metadata } from 'next';
-import { Poppins, PT_Sans } from 'next/font/google';
+import { Bangers, Montserrat } from 'next/font/google';
 import './globals.css';
 import { cn } from '@/lib/utils';
 import { CartProvider } from '@/context/CartContext';
@@ -12,16 +11,16 @@ import { AudioPlayer } from '@/components/shared/AudioPlayer';
 import { LiveSalesNotification } from '@/components/shared/LiveSalesNotification';
 import { usePathname } from 'next/navigation';
 
-const fontHeadline = Poppins({
+const fontHeadline = Bangers({
   subsets: ['latin'],
-  weight: ['600', '700', '800'],
+  weight: ['400'],
   variable: '--font-headline',
   display: 'swap',
 });
 
-const fontBody = PT_Sans({
+const fontBody = Montserrat({
   subsets: ['latin'],
-  weight: ['400', '700'],
+  weight: ['700', '800'],
   variable: '--font-body',
   display: 'swap',
 });
@@ -58,8 +57,8 @@ export default function RootLayout({
             <Toaster />
             {!isAdminRoute && (
               <>
-                <AudioPlayer />
-                <LiveSalesNotification />
+                {/* <AudioPlayer />
+                <LiveSalesNotification /> */}
               </>
             )}
           </CartProvider>

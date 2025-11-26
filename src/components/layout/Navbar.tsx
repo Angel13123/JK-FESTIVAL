@@ -28,8 +28,8 @@ export function Navbar() {
       href={href}
       onClick={() => setIsMobileMenuOpen(false)}
       className={cn(
-        "text-sm font-medium transition-colors hover:text-primary",
-        pathname === href ? "text-primary" : "text-foreground/80"
+        "text-md font-bold transition-colors hover:text-primary",
+        pathname === href ? "text-primary" : "text-black"
       )}
     >
       {label}
@@ -38,11 +38,11 @@ export function Navbar() {
   
   return (
     <>
-      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 hidden md:block">
-        <div className="container flex h-14 max-w-screen-2xl items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 font-bold text-lg font-headline">
-            <Music className="h-6 w-6 text-primary" />
-            <span>JK Festival</span>
+      <header className="sticky top-0 z-50 w-full border-b-4 border-black bg-accent">
+        <div className="container flex h-20 max-w-screen-2xl items-center justify-between">
+          <Link href="/" className="flex items-center gap-2">
+            <Music className="h-10 w-10 text-black" />
+            <span className="text-4xl font-headline text-primary -webkit-text-stroke-2-black">JK Festival</span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-6">
@@ -52,23 +52,25 @@ export function Navbar() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <PwaInstallButton />
-            <Button asChild className="hidden sm:inline-flex">
-                <Link href="/tickets">Comprar entradas</Link>
-              </Button>
+            <div className="hidden sm:block">
+              <PwaInstallButton />
+            </div>
+            <Button asChild className="hidden sm:inline-flex" variant="secondary">
+                <Link href="/tickets">Comprar</Link>
+            </Button>
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild className="md:hidden">
-                <Button variant="outline" size="icon">
-                  <Menu className="h-5 w-5" />
+                <Button variant="secondary" size="icon">
+                  <Menu className="h-6 w-6" />
                   <span className="sr-only">Open menu</span>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-full max-w-xs pr-0">
+              <SheetContent side="left" className="w-full max-w-xs pr-0 bg-accent border-r-4 border-black">
                 <div className="flex flex-col h-full">
-                  <div className="flex items-center justify-between border-b p-4">
-                    <Link href="/" className="flex items-center gap-2 font-bold text-lg font-headline">
-                      <Music className="h-6 w-6 text-primary" />
-                      <span>JK Festival</span>
+                  <div className="flex items-center justify-between border-b-4 border-black p-4 h-20">
+                     <Link href="/" className="flex items-center gap-2">
+                      <Music className="h-8 w-8 text-black" />
+                      <span className="text-3xl font-headline text-primary">JK Festival</span>
                     </Link>
                   </div>
                   <nav className="flex flex-col gap-6 p-4">
@@ -76,7 +78,7 @@ export function Navbar() {
                       <NavLink key={link.href} {...link} />
                     ))}
                   </nav>
-                  <div className="mt-auto p-4 border-t">
+                  <div className="mt-auto p-4 border-t-4 border-black">
                     <Button asChild className="w-full">
                       <Link href="/tickets">Comprar entradas</Link>
                     </Button>
@@ -87,28 +89,6 @@ export function Navbar() {
           </div>
         </div>
       </header>
-
-      {/* Mobile Bottom Nav */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-background/80 backdrop-blur-lg border-t border-primary/20">
-          <div className="grid h-16 grid-cols-4 w-full">
-              <Link href="/" className={cn("flex flex-col items-center justify-center gap-1 transition-colors", pathname === '/' ? 'text-primary' : 'text-muted-foreground hover:text-primary')}>
-                  <Home className="h-5 w-5" />
-                  <span className="text-xs">Inicio</span>
-              </Link>
-              <Link href="/lineup" className={cn("flex flex-col items-center justify-center gap-1 transition-colors", pathname === '/lineup' ? 'text-primary' : 'text-muted-foreground hover:text-primary')}>
-                  <Music className="h-5 w-5" />
-                  <span className="text-xs">Lineup</span>
-              </Link>
-              <Link href="/tickets" className={cn("flex flex-col items-center justify-center gap-1 transition-colors", pathname === '/tickets' ? 'text-primary' : 'text-muted-foreground hover:text-primary')}>
-                  <Ticket className="h-5 w-5" />
-                  <span className="text-xs">Entradas</span>
-              </Link>
-              <Link href="/info" className={cn("flex flex-col items-center justify-center gap-1 transition-colors", pathname === '/info' ? 'text-primary' : 'text-muted-foreground hover:text-primary')}>
-                  <MapPin className="h-5 w-5" />
-                  <span className="text-xs">Info</span>
-              </Link>
-          </div>
-      </nav>
     </>
   );
 }

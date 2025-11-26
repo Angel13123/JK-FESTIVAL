@@ -51,11 +51,11 @@ export function Countdown() {
   return (
     <div className="flex justify-center gap-4 md:gap-8">
       {timeUnits.map((unit, index) => (
-        <div key={index} className="flex flex-col items-center text-center w-20 p-2 bg-black/20 backdrop-blur-sm rounded-lg border border-primary/20 animate-neon-pulse">
-          <div className="text-3xl md:text-5xl font-bold font-mono text-primary-foreground tabular-nums neon-glow-primary animate-digital-glitch" style={{ animationDelay: `${index * 250}ms` }}>
+        <div key={index} className="flex flex-col items-center text-center w-24 p-3 bg-primary rounded-xl border-[3px] hard-shadow">
+          <div className="text-4xl md:text-6xl font-bold font-mono text-black tabular-nums">
             {formatValue(unit.value)}
           </div>
-          <div className="text-xs md:text-sm font-semibold uppercase tracking-wider text-primary-foreground/70">
+          <div className="text-sm md:text-md font-bold uppercase tracking-wider text-black">
             {unit.label}
           </div>
         </div>

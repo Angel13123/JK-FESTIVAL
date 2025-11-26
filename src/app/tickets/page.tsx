@@ -20,11 +20,11 @@ export default function TicketsPage() {
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <div className="bg-card">
+    <div className="bg-background min-h-screen">
       <div className="container mx-auto max-w-screen-lg px-4 py-16">
-        <div className="text-center mb-12 animate-fade-in-down">
-          <h1 className="text-4xl md:text-5xl font-bold font-headline tracking-tight">Consigue tus entradas</h1>
-          <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
+        <div className="text-center mb-12">
+          <h1 className="text-5xl md:text-6xl">Consigue tus entradas</h1>
+          <p className="mt-4 text-lg text-black font-bold max-w-3xl mx-auto">
             Asegura tu sitio en el JK Festival. Elige tu experiencia y prepárate para vivir algo único.
           </p>
         </div>
@@ -37,103 +37,106 @@ export default function TicketsPage() {
               return (
                 <Card 
                   key={ticket.id} 
-                  className={`transition-all duration-300 ease-out hover:shadow-xl transform hover:-translate-y-1 animate-fade-in-up ${quantity > 0 ? 'border-primary ring-2 ring-primary' : ''}`}
-                  style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'both' }}
+                  className={`transition-all duration-150 ease-out hover:-translate-y-1 ${quantity > 0 ? 'bg-primary' : 'bg-white'}`}
                 >
                   <CardHeader>
-                    <CardTitle className="font-headline text-2xl">{ticket.name}</CardTitle>
-                    <CardDescription className="text-3xl font-bold text-primary">{ticket.price} EUR</CardDescription>
+                    <CardTitle className="text-3xl">{ticket.name}</CardTitle>
+                    <CardDescription className="text-4xl !font-black !text-black !-webkit-text-stroke-0 !no-underline" style={{textShadow: 'none'}}>
+                      {ticket.price} EUR
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <ul className="space-y-2 text-sm text-muted-foreground">
+                    <ul className="space-y-2 text-sm text-black font-bold">
                       {ticket.benefits.map((benefit, i) => (
                         <li key={i} className="flex items-center gap-2">
-                          <Check className="h-4 w-4 text-green-500" />
+                          <Check className="h-5 w-5 text-black" />
                           <span>{benefit}</span>
                         </li>
                       ))}
                     </ul>
                   </CardContent>
-                  <CardFooter className="flex justify-between items-center bg-muted/50 p-4">
-                    <p className="text-sm text-muted-foreground font-semibold">Cantidad:</p>
-                    <div className="flex items-center gap-2">
-                      <Button variant="outline" size="icon" onClick={() => updateQuantity(ticket.id, Math.max(0, quantity - 1))} className="bg-background">
-                        <Minus className="h-4 w-4" />
-                      </Button>
-                      <span className="font-bold text-lg w-8 text-center">{quantity}</span>
-                      <Button variant="outline" size="icon" onClick={() => updateQuantity(ticket.id, quantity + 1)} className="bg-background">
-                        <Plus className="h-4 w-4" />
-                      </Button>
+                  <CardFooter className="bg-white/50 p-4 border-t-4 border-black">
+                    <div className="flex w-full justify-between items-center">
+                      <p className="text-sm text-black font-bold">Cantidad:</p>
+                      <div className="flex items-center gap-2">
+                        <Button variant="secondary" size="icon" onClick={() => updateQuantity(ticket.id, Math.max(0, quantity - 1))}>
+                          <Minus className="h-5 w-5" />
+                        </Button>
+                        <span className="font-bold text-xl w-8 text-center text-black">{quantity}</span>
+                        <Button variant="secondary" size="icon" onClick={() => updateQuantity(ticket.id, quantity + 1)}>
+                          <Plus className="h-5 w-5" />
+                        </Button>
+                      </div>
                     </div>
                   </CardFooter>
                 </Card>
               );
             })}
              {ticketTypes.filter(t => !t.isAvailable).map(ticket => (
-                <Card key={ticket.id} className="relative overflow-hidden opacity-80 bg-muted/50 transition-all duration-300 ease-out hover:shadow-xl transform hover:-translate-y-1 animate-fade-in-up">
-                    <div className="absolute top-8 -right-12 transform rotate-45 bg-red-600/80 backdrop-blur-sm text-center text-white font-bold py-1 w-48 shadow-lg z-10 neon-glow-destructive">
+                <Card key={ticket.id} className="relative overflow-hidden opacity-70 bg-gray-300">
+                    <div className="absolute top-8 -right-12 transform rotate-45 bg-red-500 text-center text-white font-bold py-1 w-48 shadow-lg z-10 border-2 border-black">
                       AGOTADO
                     </div>
                    <CardHeader>
-                    <CardTitle className="font-headline text-2xl flex justify-between text-muted-foreground">
-                        {ticket.name}
-                    </CardTitle>
-                    <CardDescription className="text-3xl font-bold text-muted-foreground">{ticket.price} EUR</CardDescription>
+                    <CardTitle className="text-3xl text-gray-500">{ticket.name}</CardTitle>
+                    <CardDescription className="text-4xl !font-black !text-gray-600 !-webkit-text-stroke-0" style={{textShadow: 'none'}}>{ticket.price} EUR</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <ul className="space-y-2 text-sm text-muted-foreground">
+                    <ul className="space-y-2 text-sm font-bold text-gray-600">
                       {ticket.benefits.map((benefit, i) => (
                         <li key={i} className="flex items-center gap-2">
-                          <Check className="h-4 w-4 text-muted-foreground" />
+                          <Check className="h-5 w-5" />
                           <span>{benefit}</span>
                         </li>
                       ))}
                     </ul>
                   </CardContent>
-                   <CardFooter className="flex justify-between items-center bg-muted/30 p-4">
-                    <p className="text-sm text-muted-foreground font-semibold">Cantidad:</p>
-                    <div className="flex items-center gap-2">
-                      <Button variant="outline" size="icon" disabled className="bg-background/50">
-                        <Minus className="h-4 w-4" />
-                      </Button>
-                      <span className="font-bold text-lg w-8 text-center">0</span>
-                      <Button variant="outline" size="icon" disabled className="bg-background/50">
-                        <Plus className="h-4 w-4" />
-                      </Button>
+                   <CardFooter className="p-4 border-t-4 border-black">
+                    <div className="flex justify-between items-center w-full">
+                      <p className="text-sm text-gray-600 font-bold">Cantidad:</p>
+                      <div className="flex items-center gap-2">
+                        <Button variant="secondary" size="icon" disabled>
+                          <Minus className="h-5 w-5" />
+                        </Button>
+                        <span className="font-bold text-xl w-8 text-center text-gray-600">0</span>
+                        <Button variant="secondary" size="icon" disabled>
+                          <Plus className="h-5 w-5" />
+                        </Button>
+                      </div>
                     </div>
                   </CardFooter>
                 </Card>
              ))}
           </div>
 
-          <div className="sticky top-24 animate-fade-in lg:col-span-1">
-            <Card className="bg-background shadow-lg">
+          <div className="sticky top-24 lg:col-span-1">
+            <Card className="bg-white">
               <CardHeader>
-                <CardTitle className="font-headline text-2xl flex items-center gap-2">
-                    <ShoppingCart className="h-6 w-6 text-primary"/>
-                    Resumen del pedido
+                <CardTitle className="text-3xl flex items-center gap-2">
+                    <ShoppingCart className="h-8 w-8"/>
+                    Resumen
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 {cartItems.length === 0 ? (
-                  <p className="text-muted-foreground text-center py-8">Aún no has seleccionado ninguna entrada.</p>
+                  <p className="text-muted-foreground font-bold text-center py-8">Aún no has seleccionado ninguna entrada.</p>
                 ) : (
-                  <div className="space-y-4">
+                  <div className="space-y-4 font-bold text-black">
                     {cartItems.map(item => {
                       const ticket = ticketTypes.find(t => t.id === item.ticketTypeId);
                       if (!ticket) return null;
                       return (
                         <div key={item.ticketTypeId} className="flex justify-between items-center">
                           <div>
-                            <p className="font-semibold">{ticket.name}</p>
-                            <p className="text-sm text-muted-foreground">x {item.quantity}</p>
+                            <p>{ticket.name}</p>
+                            <p className="text-sm text-gray-600">x {item.quantity}</p>
                           </div>
-                          <p className="font-semibold">{(ticket.price * item.quantity).toFixed(2)} EUR</p>
+                          <p>{(ticket.price * item.quantity).toFixed(2)} EUR</p>
                         </div>
                       )
                     })}
-                    <hr className="my-4 border-dashed" />
-                    <div className="flex justify-between items-center text-xl font-bold">
+                    <hr className="my-4 border-dashed border-black" />
+                    <div className="flex justify-between items-center text-xl">
                       <p>Total ({totalItems} {totalItems === 1 ? 'entrada' : 'entradas'})</p>
                       <p>{total.toFixed(2)} EUR</p>
                     </div>
@@ -141,8 +144,8 @@ export default function TicketsPage() {
                 )}
               </CardContent>
               <CardFooter>
-                <Button className="w-full transition-transform duration-300 hover:scale-105" size="lg" disabled={cartItems.length === 0} onClick={handleContinue}>
-                  Continuar con la compra
+                <Button className="w-full text-lg" size="lg" disabled={cartItems.length === 0} onClick={handleContinue}>
+                  Continuar
                 </Button>
               </CardFooter>
             </Card>
