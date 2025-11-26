@@ -70,12 +70,12 @@ export default function InfoPage() {
             </CardHeader>
             <CardContent className="space-y-4">
                 <div>
-                    <h3 className="font-bold text-lg text-black flex items-center gap-2" style={{textShadow: 'none'}}><Car className="h-4 w-4"/>En Coche</h3>
-                    <p className="text-black font-bold">Habrá un parking habilitado cerca del recinto. Se recomienda compartir coche y llegar con antelación.</p>
+                    <h3 className="font-extrabold text-xl text-black flex items-center gap-2" style={{textShadow: 'none'}}><Car className="h-4 w-4"/>En Coche</h3>
+                    <p className="font-bold text-black">Habrá un parking habilitado cerca del recinto. Se recomienda compartir coche y llegar con antelación.</p>
                 </div>
                  <div>
-                    <h3 className="font-bold text-lg text-black flex items-center gap-2" style={{textShadow: 'none'}}><Bus className="h-4 w-4"/>Transporte Público</h3>
-                    <p className="text-black font-bold">Se reforzarán las líneas de autobús desde Tetuán y otras ciudades cercanas. Consulta los horarios especiales que se publicarán próximamente.</p>
+                    <h3 className="font-extrabold text-xl text-black flex items-center gap-2" style={{textShadow: 'none'}}><Bus className="h-4 w-4"/>Transporte Público</h3>
+                    <p className="font-bold text-black">Se reforzarán las líneas de autobús desde Tetuán y otras ciudades cercanas. Consulta los horarios especiales que se publicarán próximamente.</p>
                 </div>
             </CardContent>
           </Card>
