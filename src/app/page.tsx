@@ -4,6 +4,7 @@ import { FlashNews } from "@/components/shared/FlashNews";
 import { Hero } from "@/components/shared/Hero";
 import { LineupPreview } from "@/components/shared/LineupPreview";
 import { Location } from "@/components/shared/Location";
+import { MysteryArtist } from "@/components/shared/MysteryArtist";
 import { Sponsors } from "@/components/shared/Sponsors";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -19,6 +20,7 @@ export default function Home() {
         <div className="bg-accent border-y-4 border-black">
           <LineupPreview />
         </div>
+        <MysteryArtist />
         <Location />
         <Sponsors />
         <section 
