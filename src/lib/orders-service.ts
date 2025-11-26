@@ -35,10 +35,12 @@ interface CreateOrderPayload {
 }
 
 /**
- * Creates an order and its associated tickets in Firestore.
- * It uses a Gemini flow to generate a unique ticket code.
+ * Creates an order and its associated tickets in Firestore using an atomic batch write.
+ * It uses a Gemini flow to generate a unique ticket code for each ticket.
+ * If any part of the process fails (code generation, Firestore write), the entire operation is rolled back.
  * @param payload - The data for the new order.
  * @returns The newly created order.
+ * @throws Throws an error if ticket code generation or the Firestore batch commit fails.
  */
 export async function createOrderAndTickets(payload: CreateOrderPayload): Promise<Order> {
   const batch = writeBatch(db);
@@ -46,7 +48,7 @@ export async function createOrderAndTickets(payload: CreateOrderPayload): Promis
   const orderRef = doc(ordersCollection);
   const orderId = orderRef.id;
 
-  const newOrder: Omit<Order, 'createdAt'> = {
+  const newOrderData: Omit<Order, 'createdAt'> = {
     id: orderId,
     customerName: payload.customerName,
     customerEmail: payload.customerEmail,
@@ -62,18 +64,18 @@ export async function createOrderAndTickets(payload: CreateOrderPayload): Promis
     })
   };
 
-  // Add server-side timestamp to the data being sent to Firestore
-  batch.set(orderRef, { ...newOrder, createdAt: serverTimestamp() });
+  batch.set(orderRef, { ...newOrderData, createdAt: serverTimestamp() });
 
-  // Generate individual tickets for the order
-  for (const item of payload.cartItems) {
-    const ticketType = ticketTypes.find(t => t.id === item.ticketTypeId);
-    if (ticketType) {
-        for (let i = 0; i < item.quantity; i++) {
+  try {
+    // Generate all ticket codes first. If any fails, the batch won't be committed.
+    const ticketPromises = payload.cartItems.flatMap(item => {
+        const ticketType = ticketTypes.find(t => t.id === item.ticketTypeId);
+        if (!ticketType) return [];
+        
+        return Array.from({ length: item.quantity }, async () => {
             const ticketRef = doc(ticketsCollection);
-            
-            // Generate a unique ticket code using the Gemini flow
-            const uniqueCode = await generateTicketCode();
+            // This will throw if the Genkit flow fails, preventing the batch commit.
+            const uniqueCode = await generateTicketCode(); 
             
             const newTicket: Omit<Ticket, 'createdAt' > = {
                 id: ticketRef.id,
@@ -86,28 +88,35 @@ export async function createOrderAndTickets(payload: CreateOrderPayload): Promis
                 code: uniqueCode.toUpperCase(),
             };
             batch.set(ticketRef, { ...newTicket, createdAt: serverTimestamp() });
-        }
-    }
+        });
+    });
+
+    // Wait for all ticket generation and batching to be prepared.
+    await Promise.all(ticketPromises);
+
+  } catch (error) {
+    console.error("Error during ticket code generation:", error);
+    // Re-throw the error to be caught by the checkout page, preventing order creation.
+    throw new Error("Failed to generate ticket codes. The order was not created.");
   }
 
-  // Chain a .catch() to handle potential permission errors from the batch commit.
+
+  // Commit the entire batch atomically.
   await batch.commit().catch(error => {
-    // We assume the error is from creating the order, as it's a common entry point.
-    // A more granular approach might be needed if rules are complex.
+    // Create a contextual error if the batch commit fails due to permissions.
     const permissionError = new FirestorePermissionError({
-      path: orderRef.path, // We use the order path as the primary context for the batch write
+      path: orderRef.path, // Use order path as context for the batch write.
       operation: 'create',
-      requestResourceData: newOrder,
+      requestResourceData: newOrderData,
     });
-    // Emit the contextual error globally.
+    // Emit the error for global handling.
     errorEmitter.emit('permission-error', permissionError);
-    // Re-throw the original error to be caught by the caller
+    // Re-throw the original Firestore error to be caught by the caller.
     throw error;
   });
   
-  const createdAtTimestamp = Timestamp.now();
-
-  return { ...newOrder, id: orderId, createdAt: createdAtTimestamp };
+  // If we get here, the batch was successful.
+  return { ...newOrderData, id: orderId, createdAt: Timestamp.now() };
 }
 
 export async function getOrders(count?: number): Promise<Order[]> {
