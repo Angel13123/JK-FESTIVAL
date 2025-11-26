@@ -3,7 +3,7 @@ import Link from "next/link";
 export function FlashNews() {
   return (
     <section className="relative py-12 md:py-20">
-      <div className="relative container mx-auto max-w-screen-lg px-4 text-center animate-breath" style={{ animationDuration: '8s' }}>
+      <div className="relative container mx-auto max-w-screen-lg px-4 text-center">
         <h2 
           className="text-5xl md:text-7xl lg:text-8xl font-headline uppercase"
           style={{
