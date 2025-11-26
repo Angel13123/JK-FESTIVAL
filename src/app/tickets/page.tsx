@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -50,13 +51,18 @@ export default function MyTicketPage() {
 
     const ticket = tickets[0]; // For this example, we'll just show the first ticket.
 
-    const handleShare = () => {
+    const handleShare = async () => {
         if(navigator.share) {
-            navigator.share({
-                title: 'Mi entrada para JK Festival',
-                text: `¡No te pierdas JK Festival! Aquí está mi entrada.`,
-                url: window.location.href,
-            })
+            try {
+                await navigator.share({
+                    title: 'Mi entrada para JK Festival',
+                    text: `¡No te pierdas JK Festival! Aquí está mi entrada.`,
+                    url: window.location.href,
+                })
+            } catch (error) {
+                // Catch errors silently, e.g., if the user cancels the share.
+                console.log('Share was cancelled or failed', error);
+            }
         } else {
             // Fallback for browsers that don't support Web Share API
             alert("La función de compartir no está disponible en este navegador.")
