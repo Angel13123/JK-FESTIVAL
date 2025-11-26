@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 
-// This function is now outside the component, so it can be called to initialize state.
+// This function is now outside the component.
 const calculateTimeLeft = () => {
   const festivalDate = new Date('2026-02-07T00:00:00');
   const difference = +festivalDate - +new Date();
@@ -27,25 +27,30 @@ const calculateTimeLeft = () => {
 };
 
 export function Countdown() {
-  // Initialize state with the calculated time to prevent hydration mismatch.
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+  // Initialize state to null to avoid hydration mismatch.
+  const [timeLeft, setTimeLeft] = useState<{ days: number, hours: number, minutes: number, seconds: number } | null>(null);
 
   useEffect(() => {
+    // Set the initial time on the client-side.
+    setTimeLeft(calculateTimeLeft());
+
+    // Then, set up the interval to update it.
     const timer = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
 
+    // Cleanup interval on component unmount.
     return () => clearInterval(timer);
-  }, []);
+  }, []); // Empty dependency array ensures this runs only once on the client after mount.
 
   const timeUnits = [
-    { label: 'Días', value: timeLeft.days },
-    { label: 'Horas', value: timeLeft.hours },
-    { label: 'Minutos', value: timeLeft.minutes },
-    { label: 'Segundos', value: timeLeft.seconds },
+    { label: 'Días', value: timeLeft?.days },
+    { label: 'Horas', value: timeLeft?.hours },
+    { label: 'Minutos', value: timeLeft?.minutes },
+    { label: 'Segundos', value: timeLeft?.seconds },
   ];
 
-  const formatValue = (value: number) => value.toString().padStart(2, '0');
+  const formatValue = (value: number | undefined) => (value ?? 0).toString().padStart(2, '0');
 
   return (
     <div className="flex justify-center gap-2 sm:gap-4 md:gap-8">
