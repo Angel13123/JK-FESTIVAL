@@ -1,3 +1,4 @@
+
 import { Timestamp } from "firebase/firestore";
 
 export type Artist = {
@@ -67,4 +68,12 @@ export type OrderStats = {
   totalRevenue: number;
   totalTicketsSold: number;
   totalOrders: number;
+}
+
+// --- Mobile App Specific Types ---
+export type AppUser = {
+  email: string;
+  username: string;
+  pin: string;
+  createdAt: Timestamp;
 }

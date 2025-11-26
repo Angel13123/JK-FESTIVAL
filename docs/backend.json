@@ -97,6 +97,39 @@
         "createdAt",
         "code"
       ]
+    },
+    "AppUser": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "AppUser",
+      "type": "object",
+      "description": "Represents a user account for the mobile app.",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "The user's email, used as a unique identifier.",
+          "format": "email"
+        },
+        "username": {
+          "type": "string",
+          "description": "The user's chosen display name."
+        },
+        "pin": {
+          "type": "string",
+          "description": "A 4-digit PIN for authentication.",
+          "pattern": "^[0-9]{4}$"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp of when the user account was created.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "email",
+        "username",
+        "pin",
+        "createdAt"
+      ]
     }
   },
   "auth": {
@@ -138,8 +171,24 @@
             }
           ]
         }
+      },
+      {
+        "path": "app_users/{email}",
+        "definition": {
+          "entityName": "AppUser",
+          "schema": {
+            "$ref": "#/backend/entities/AppUser"
+          },
+          "description": "Stores mobile app user accounts. The user's email is used as the document ID.",
+          "params": [
+            {
+              "name": "email",
+              "description": "The user's email address."
+            }
+          ]
+        }
       }
     ],
-    "reasoning": "The Firestore database structure is designed to manage orders and tickets for the JK Festival. It uses two collections: `orders` and `tickets`. The `tickets` collection includes the `orderId` to establish a relationship with the `orders` collection. To maintain Authorization Independence, particularly for listing tickets related to a specific order, the `customerName` and `customerEmail` are duplicated in the `tickets` collection, avoiding the need for security rules to fetch the parent order document. The `id` field is used as the document id.\n\nThis structure supports the required QAPs:\n\n1.  **Secure `list` operations for tickets by order:** By including `orderId` and the relevant customer information on each ticket, security rules can efficiently validate access to tickets belonging to a specific order without requiring `get()` operations on the parent `order` document. This avoids hierarchical authorization and ensures atomic operations.\n2.  **Data integrity:** Timestamps (`createdAt`) are included in both `orders` and `tickets` to track creation times. The explicit `status` field in the `tickets` collection (`valid` or `used`) maintains clear state management for tickets.\n3. **Clarity of Intent**: The document structures are named semantically."
+    "reasoning": "The Firestore database structure is designed to manage orders and tickets for the JK Festival. It uses two collections: `orders` and `tickets`. The `tickets` collection includes the `orderId` to establish a relationship with the `orders` collection. To maintain Authorization Independence, particularly for listing tickets related to a specific order, the `customerName` and `customerEmail` are duplicated in the `tickets` collection, avoiding the need for security rules to fetch the parent order document. The `id` field is used as the document id.\n\nA new `app_users` collection has been added to support a separate authentication system for the PWA/mobile app experience. This collection stores user profiles with an email, username, and a 4-digit PIN. The user's email serves as the unique document ID, simplifying lookups. This structure separates website order data from app user accounts, while still allowing tickets to be linked to users via their email address.\n\nThis structure supports the required QAPs:\n\n1.  **Secure `list` operations for tickets by order:** By including `orderId` and the relevant customer information on each ticket, security rules can efficiently validate access to tickets belonging to a specific order without requiring `get()` operations on the parent `order` document. This avoids hierarchical authorization and ensures atomic operations.\n2. **Email-based Ticket Sync**: The app can query the `tickets` collection using the logged-in user's email to find their purchased tickets, effectively linking web purchases to app accounts.\n3. **Data integrity:** Timestamps (`createdAt`) are included in `orders`, `tickets`, and `app_users` to track creation times. The explicit `status` field in the `tickets` collection (`valid` or `used`) maintains clear state management for tickets.\n4. **Clarity of Intent**: The document structures are named semantically."
   }
 }
