@@ -182,7 +182,7 @@ export default function ScanPage() {
                         <FormItem>
                             <FormLabel>Código de Entrada</FormLabel>
                             <FormControl>
-                            <Input placeholder="Ej: JK24FEST9B" {...field} autoFocus className="font-mono text-center text-lg tracking-widest" />
+                            <Input placeholder="Ej: JK24FEST9B" {...field} autoFocus className="font-mono text-center text-lg tracking-widest uppercase" />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

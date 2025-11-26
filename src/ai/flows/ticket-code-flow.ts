@@ -12,7 +12,7 @@ const TicketCodeInputSchema = z.object({});
 export type TicketCodeInput = z.infer<typeof TicketCodeInputSchema>;
 
 const TicketCodeOutputSchema = z.object({
-    code: z.string().length(10).describe('The unique 10-character alphanumeric ticket code.'),
+    code: z.string().length(20).describe('The unique 20-character alphanumeric ticket code.'),
 });
 export type TicketCodeOutput = z.infer<typeof TicketCodeOutputSchema>;
 
@@ -26,11 +26,12 @@ const prompt = ai.definePrompt({
     name: 'ticketCodePrompt',
     input: { schema: TicketCodeInputSchema },
     output: { schema: TicketCodeOutputSchema },
-    prompt: `Generate a unique, random, 10-character alphanumeric ticket code for the JK Festival.
+    prompt: `Generate a unique, random, 20-character alphanumeric ticket code for the JK Festival.
     
-    It should be memorable and easy to type, but secure. Mix uppercase letters and numbers.
+    The code must consist of ONLY uppercase letters (A-Z) and numbers (0-9).
+    The mix must be completely random.
     
-    For example: JK24FEST9B, G0LD3N25EP, AUREO26TIX`,
+    For example: 4F8KWP9Z2V6J3N7R1Y0E`,
 });
 
 const ticketCodeFlow = ai.defineFlow(
