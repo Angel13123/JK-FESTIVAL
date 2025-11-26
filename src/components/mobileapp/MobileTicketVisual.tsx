@@ -3,25 +3,58 @@
 
 import QRCode from "qrcode.react";
 import type { Ticket } from "@/lib/types";
-import { Badge } from "@/components/ui/badge";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
+import { Timestamp } from "firebase/firestore";
 
 interface MobileTicketVisualProps {
   ticket: Ticket;
 }
 
+const getJsDateFromTimestamp = (timestamp: any): Date | null => {
+    if (!timestamp) return null;
+    if (timestamp instanceof Timestamp) {
+      return timestamp.toDate();
+    }
+    if (typeof timestamp === 'string' || typeof timestamp === 'number') {
+      const date = new Date(timestamp);
+      if (!isNaN(date.getTime())) {
+        return date;
+      }
+    }
+    if (timestamp && typeof timestamp.seconds === 'number') {
+      return new Timestamp(timestamp.seconds, timestamp.nanoseconds).toDate();
+    }
+    return null;
+  };
+
 export function MobileTicketVisual({ ticket }: MobileTicketVisualProps) {
+  const purchaseDate = getJsDateFromTimestamp(ticket.createdAt);
 
   return (
-    <div className="w-full max-w-md rounded-2xl bg-gray-900 border border-gray-800 text-white p-6 flex flex-col items-center shadow-lg">
+    <div className="bg-white text-black border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] rounded-2xl p-6 flex flex-col items-center gap-6 w-full max-w-sm mx-auto">
         
-        {/* User and Ticket Info */}
-        <div className="text-center mb-6">
-            <p className="text-lg font-bold tracking-wider text-yellow-400">{ticket.ownerName}</p>
-            <p className="text-md text-gray-300">{ticket.ticketTypeName}</p>
+        {/* Header Section */}
+        <div className="text-center">
+            <h2 
+                className="text-4xl font-headline text-yellow-400"
+                style={{ WebkitTextStroke: '2px black', textShadow: '3px 3px 0px #000' }}
+            >
+                JK FESTIVAL
+            </h2>
+            <p className="font-bold text-sm">GRAND STADE DE MARTIL | 07/FEB/2026</p>
+             <div className="mt-4 inline-block">
+                <span 
+                    className="text-black font-extrabold text-lg bg-yellow-400 border-2 border-black px-4 py-1 rounded-md uppercase"
+                    style={{boxShadow: '3px 3px 0px #000'}}
+                >
+                    Entrada {ticket.ticketTypeName}
+                </span>
+            </div>
         </div>
 
-        {/* QR Code */}
-        <div className="bg-white p-4 rounded-lg shadow-md mb-6 w-[85%] max-w-[400px] aspect-square">
+        {/* QR Code Section */}
+        <div className="w-full max-w-[400px] aspect-square p-2 border-4 border-black bg-white rounded-lg">
             <QRCode 
                 value={ticket.code} 
                 size="100%"
@@ -31,15 +64,17 @@ export function MobileTicketVisual({ ticket }: MobileTicketVisualProps) {
             />
         </div>
 
-        {/* Alphanumeric Code */}
-        <div className="text-center mb-4">
-             <p className="font-mono text-4xl font-extrabold text-white tracking-widest">{ticket.code}</p>
+        {/* Alphanumeric Code Section */}
+        <div className="text-center">
+            <p className="text-xs font-bold text-gray-600">CÓDIGO DE ACCESO:</p>
+            <p className="font-mono text-xl font-black break-all">{ticket.code}</p>
         </div>
-        
-         {/* Status Badge */}
-        <Badge variant={ticket.status === 'valid' ? 'default' : 'secondary'} className={`uppercase text-sm font-bold ${ticket.status === 'valid' ? 'bg-green-500' : 'bg-yellow-600'}`}>
-            {ticket.status}
-        </Badge>
+
+        {/* Footer Section */}
+        <div className="border-t-2 border-dashed border-gray-300 w-full pt-4 text-center text-xs text-gray-700">
+            <p><strong>Propietario:</strong> {ticket.ownerName}</p>
+            <p><strong>Fecha de Compra:</strong> {purchaseDate ? format(purchaseDate, "d MMM yyyy, HH:mm", { locale: es }) : 'N/A'}</p>
+        </div>
     </div>
   );
 }
