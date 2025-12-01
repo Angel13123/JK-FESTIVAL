@@ -59,9 +59,7 @@ export async function POST(request: Request) {
       amount: amount,
       currency: 'eur',
       customer: customer.id,
-      automatic_payment_methods: {
-        enabled: true,
-      },
+      payment_method_types: ['card'],
       metadata: {
         cart: JSON.stringify(cartItems),
         customerName: customerInfo.fullName,
