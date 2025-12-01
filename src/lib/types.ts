@@ -55,14 +55,15 @@ export type Order = {
 
 export type Ticket = {
     id: string;
-    orderId: string;
+    orderId?: string; // Optional for physical tickets
     ticketTypeId: string;
     ticketTypeName: string;
-    ownerName: string;
-    customerEmail: string;
+    ownerName: string | null;
+    customerEmail: string | null;
     status: 'valid' | 'used' | 'revoked';
     code: string; // The "Gemini" generated code
     createdAt: Timestamp;
+    isPhysical?: boolean; // Flag for tickets generated for physical sale
     isPhysicalImport?: boolean; // Added for physical ticket distinction
 };
 
@@ -79,3 +80,5 @@ export type AppUser = {
   pin: string;
   createdAt: Timestamp;
 }
+
+    

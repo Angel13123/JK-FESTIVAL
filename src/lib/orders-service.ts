@@ -228,7 +228,47 @@ export async function deleteAllData(): Promise<{deletedOrders: number, deletedTi
 }
 
 
-// --- Physical Ticket Claiming ---
+// --- Physical Ticket Management ---
+
+export async function createPhysicalTickets(quantity: number, ticketTypeId: string): Promise<void> {
+  if (quantity <= 0 || quantity > 100) {
+    throw new Error("La cantidad debe estar entre 1 y 100.");
+  }
+  const ticketType = ticketTypes.find(t => t.id === ticketTypeId) ?? { name: "Entrada Física", price: 0 };
+  
+  const batch = writeBatch(db);
+
+  for (let i = 0; i < quantity; i++) {
+    const ticketRef = doc(ticketsCollection);
+    const uniqueCode = await generateTicketCode();
+    const newTicket: Omit<Ticket, 'createdAt' | 'orderId' | 'customerEmail' | 'ownerName'> = {
+      id: ticketRef.id,
+      ticketTypeId: ticketTypeId,
+      ticketTypeName: ticketType.name,
+      status: 'valid',
+      code: uniqueCode.toUpperCase(),
+      isPhysical: true, // Flag to identify as a physical ticket batch
+    };
+    batch.set(ticketRef, { ...newTicket, createdAt: serverTimestamp() });
+  }
+
+  await batch.commit().catch(error => {
+    const permissionError = new FirestorePermissionError({
+      path: 'tickets', // Generic path for batch
+      operation: 'create',
+    });
+    errorEmitter.emit('permission-error', permissionError);
+    throw error;
+  });
+}
+
+export async function getPhysicalTickets(): Promise<Ticket[]> {
+    const q = query(ticketsCollection, where("isPhysical", "==", true), orderBy("createdAt", "desc"));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => doc.data() as Ticket);
+}
+
+
 export async function findUnclaimedTicketByCode(code: string): Promise<Ticket | null> {
     const q = query(ticketsCollection, where("code", "==", code.toUpperCase()));
     const snapshot = await getDocs(q);
@@ -259,3 +299,5 @@ export async function claimTicket(ticketId: string, ownerName: string, ownerEmai
         throw error;
     });
 }
+
+    

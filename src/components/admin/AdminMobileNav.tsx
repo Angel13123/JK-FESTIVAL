@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Mic, Ticket, Music, QrCode, ShoppingCart, Menu } from "lucide-react";
+import { Home, Mic, Ticket, Music, QrCode, ShoppingCart, Menu, Newspaper } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,7 @@ import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/s
 const adminNavLinks = [
   { href: "/admin", label: "Dashboard", icon: Home },
   { href: "/admin/sales", label: "Ventas", icon: ShoppingCart },
+  { href: "/admin/physical-tickets", label: "Boletos Físicos", icon: Newspaper },
   { href: "/admin/lineup", label: "Lineup", icon: Mic },
   { href: "/admin/tickets-types", label: "Tipos de Entradas", icon: Ticket },
   { href: "/scan", label: "Validar Entradas", icon: QrCode },
@@ -65,3 +66,5 @@ export function AdminMobileNav() {
     </header>
   );
 }
+
+    
