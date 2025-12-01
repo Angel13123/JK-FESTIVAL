@@ -30,7 +30,7 @@ async function getTicketsForUser(email: string): Promise<Ticket[]> {
     return tickets.sort((a, b) => {
         const dateA = a.createdAt?.toMillis() || 0;
         const dateB = b.createdAt?.toMillis() || 0;
-        return dateA - dateB;
+        return dateB - dateA;
     });
 }
 
