@@ -4,7 +4,7 @@
 import { useState, useEffect } from "react";
 import { useCart } from "@/context/CartContext";
 import { ticketTypes } from "@/lib/data";
-import { useForm, useWatch } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { loadStripe } from "@stripe/stripe-js";
@@ -31,16 +31,19 @@ const customerInfoSchema = z.object({
 });
 
 type CustomerInfo = z.infer<typeof customerInfoSchema>;
+type CheckoutStep = "customerInfo" | "payment";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
-const CheckoutFormWrapper = () => {
+const CheckoutForm = () => {
     const { cartItems, getCartTotal, clearCart } = useCart();
     const total = getCartTotal(ticketTypes);
     const router = useRouter();
     const { toast } = useToast();
-    const [clientSecret, setClientSecret] = useState("");
 
+    const [step, setStep] = useState<CheckoutStep>("customerInfo");
+    const [clientSecret, setClientSecret] = useState("");
+    const [customerData, setCustomerData] = useState<CustomerInfo | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState<string | null>(null);
 
@@ -58,36 +61,35 @@ const CheckoutFormWrapper = () => {
         mode: "onChange",
     });
 
-    const watchedCustomerInfo = useWatch({ control: form.control });
-    const isFormValid = form.formState.isValid;
-    
-    useEffect(() => {
-        if (isFormValid && cartItems.length > 0) {
-          fetch("/api/create-payment-intent", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ 
-              cartItems, 
-              customerInfo: watchedCustomerInfo
-            }),
-          })
-          .then((res) => res.json())
-          .then((data) => {
-            if (data.clientSecret) {
-              setClientSecret(data.clientSecret);
-            } else if (data.error) {
-              console.error("API Error:", data.error);
+    const handleCustomerInfoSubmit = async (data: CustomerInfo) => {
+        setIsLoading(true);
+        setCustomerData(data); // Store customer data
+        try {
+            const res = await fetch("/api/create-payment-intent", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ 
+                  cartItems, 
+                  customerInfo: data
+                }),
+            });
+            const resData = await res.json();
+            if (resData.clientSecret) {
+                setClientSecret(resData.clientSecret);
+                setStep("payment"); // Move to payment step
+            } else if (resData.error) {
+                toast({ variant: "destructive", title: "Error de API", description: resData.error });
             }
-          })
-          .catch(error => {
-            console.error("Fetch Error:", error);
-          });
+        } catch (error) {
+             toast({ variant: "destructive", title: "Error de red", description: "No se pudo conectar con el servidor de pagos." });
+        } finally {
+            setIsLoading(false);
         }
-    }, [isFormValid, cartItems, watchedCustomerInfo]);
-
-
-    const handleStripeSubmit = async (customerData: CustomerInfo) => {
-        if (!stripe || !elements) return;
+    };
+    
+    const handleStripeSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!stripe || !elements || !customerData) return;
 
         setIsLoading(true);
 
@@ -97,14 +99,10 @@ const CheckoutFormWrapper = () => {
         });
 
         if (error) {
-            setMessage(error.message || "An unexpected error occurred.");
-            toast({
-                variant: "destructive",
-                title: "Error en el pago",
-                description: error.message || "An unexpected error occurred.",
-            });
-            setIsLoading(false);
+            setMessage(error.message || "Ocurrió un error inesperado.");
+            toast({ variant: "destructive", title: "Error en el pago", description: error.message });
             router.push('/payment/failure');
+            setIsLoading(false);
             return;
         }
 
@@ -117,92 +115,57 @@ const CheckoutFormWrapper = () => {
                     totalAmount: total,
                     cartItems: cartItems,
                 });
-
-                toast({
-                    title: "¡Compra completada!",
-                    description: `Tu pedido se ha procesado con éxito.`,
-                });
-
+                toast({ title: "¡Compra completada!", description: `Tu pedido se ha procesado con éxito.` });
                 clearCart();
-                router.push(`/payment/success?orderId=${newOrder.id}&provider=stripe&tid=${paymentIntent.id}`);
+                router.push(`/payment/success?orderId=${newOrder.id}`);
             } catch (e: any) {
                 console.error("Failed to create order after payment:", e);
-                toast({
-                    variant: "destructive",
-                    title: "Error post-pago",
-                    description: "Tu pago fue exitoso, pero hubo un error al crear tu pedido. Por favor, contacta a soporte.",
-                });
-                 setIsLoading(false);
+                toast({ variant: "destructive", title: "Error post-pago", description: "Tu pago fue exitoso, pero hubo un error al crear tu pedido. Por favor, contacta a soporte." });
             }
         } else {
-            setMessage("El pago no se completó. Estado: " + paymentIntent?.status);
-            setIsLoading(false);
-            router.push('/payment/failure');
+             setMessage("El pago no se completó. Estado: " + paymentIntent?.status);
+             router.push('/payment/failure');
         }
+        
+        setIsLoading(false);
     };
     
-    const paymentElementOptions = {
-        layout: "tabs" as const,
-    };
+    const paymentElementOptions = { layout: "tabs" as const };
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleStripeSubmit)} className="space-y-6">
-                <FormField control={form.control} name="fullName" render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Nombre completo</FormLabel>
-                        <FormControl><Input placeholder="Tu nombre y apellidos" {...field} /></FormControl>
-                        <FormMessage />
-                    </FormItem>
-                )}/>
-                <FormField control={form.control} name="email" render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl><Input type="email" placeholder="tu@email.com" {...field} /></FormControl>
-                        <FormMessage />
-                    </FormItem>
-                )}/>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <FormField control={form.control} name="country" render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>País</FormLabel>
-                            <FormControl><Input placeholder="Marruecos" {...field} /></FormControl>
-                            <FormMessage />
-                        </FormItem>
+            {step === 'customerInfo' ? (
+                 <form onSubmit={form.handleSubmit(handleCustomerInfoSubmit)} className="space-y-6">
+                    <FormField control={form.control} name="fullName" render={({ field }) => (
+                        <FormItem><FormLabel>Nombre completo</FormLabel><FormControl><Input placeholder="Tu nombre y apellidos" {...field} /></FormControl><FormMessage /></FormItem>
                     )}/>
-                    <FormField control={form.control} name="city" render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Ciudad (Opcional)</FormLabel>
-                            <FormControl><Input placeholder="Tetuán" {...field} /></FormControl>
-                            <FormMessage />
-                        </FormItem>
+                    <FormField control={form.control} name="email" render={({ field }) => (
+                        <FormItem><FormLabel>Email</FormLabel><FormControl><Input type="email" placeholder="tu@email.com" {...field} /></FormControl><FormMessage /></FormItem>
                     )}/>
-                </div>
-                <hr className="my-4 border-dashed" />
-                
-                {clientSecret ? (
-                    <>
-                        <PaymentElement id="payment-element" options={paymentElementOptions} />
-                        <Button
-                            type="submit"
-                            disabled={isLoading || !stripe || !elements || !isFormValid}
-                            className="w-full"
-                            size="lg"
-                        >
-                            {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                            Pagar {total.toFixed(2)} EUR
-                        </Button>
-                    </>
-                ) : (
-                    <div className="flex flex-col items-center justify-center h-24 text-center">
-                        <Loader2 className="h-8 w-8 animate-spin mb-4" />
-                        <p className="text-muted-foreground">
-                            Completa tus datos para continuar...
-                        </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <FormField control={form.control} name="country" render={({ field }) => (
+                            <FormItem><FormLabel>País</FormLabel><FormControl><Input placeholder="Marruecos" {...field} /></FormControl><FormMessage /></FormItem>
+                        )}/>
+                        <FormField control={form.control} name="city" render={({ field }) => (
+                            <FormItem><FormLabel>Ciudad (Opcional)</FormLabel><FormControl><Input placeholder="Tetuán" {...field} /></FormControl><FormMessage /></FormItem>
+                        )}/>
                     </div>
-                )}
-                {message && <div id="payment-message" className="text-destructive text-sm">{message}</div>}
-            </form>
+                    <Button type="submit" disabled={isLoading || !form.formState.isValid} className="w-full" size="lg">
+                        {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                        Continuar al Pago
+                    </Button>
+                </form>
+            ) : (
+                <form onSubmit={handleStripeSubmit} className="space-y-6">
+                    <PaymentElement id="payment-element" options={paymentElementOptions} />
+                    <Button type="submit" disabled={isLoading || !stripe || !elements} className="w-full" size="lg">
+                        {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                        Pagar {total.toFixed(2)} EUR
+                    </Button>
+                    <Button variant="link" onClick={() => setStep('customerInfo')} className="w-full text-sm text-muted-foreground">Volver atrás</Button>
+                    {message && <div id="payment-message" className="text-destructive text-sm">{message}</div>}
+                </form>
+            )}
         </Form>
     );
 };
@@ -236,34 +199,15 @@ export default function CheckoutPage() {
         borderRadius: '12px',
     },
      rules: {
-        '.Input': {
-            borderColor: '#000000',
-            borderWidth: '1px',
-        },
-        '.Input:focus': {
-            borderColor: '#F7FF00',
-            boxShadow: '0 0 0 1px #F7FF00'
-        },
-        '.Tab': {
-            borderColor: '#000000',
-            borderWidth: '1px'
-        },
-        '.Tab:focus': {
-            borderColor: '#F7FF00',
-            boxShadow: '0 0 0 1px #F7FF00'
-        },
-        '.Tab--selected': {
-            borderColor: '#F7FF00',
-            backgroundColor: '#F7FF00'
-        }
+        '.Input': { borderColor: '#000000', borderWidth: '1px' },
+        '.Input:focus': { borderColor: '#F7FF00', boxShadow: '0 0 0 1px #F7FF00' },
+        '.Tab': { borderColor: '#000000', borderWidth: '1px' },
+        '.Tab:focus': { borderColor: '#F7FF00', boxShadow: '0 0 0 1px #F7FF00' },
+        '.Tab--selected': { borderColor: '#F7FF00', backgroundColor: '#F7FF00' }
     }
   };
   
-  const stripeOptions = {
-    // clientSecret is set within the form now
-    appearance,
-  };
-
+  const stripeOptions = { appearance };
 
   return (
     <div className="bg-transparent">
@@ -280,7 +224,7 @@ export default function CheckoutPage() {
             </CardHeader>
             <CardContent>
                 <Elements stripe={stripePromise} options={stripeOptions}>
-                    <CheckoutFormWrapper />
+                    <CheckoutForm />
                 </Elements>
             </CardContent>
           </Card>
