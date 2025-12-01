@@ -1,7 +1,7 @@
 {
   "name": "JK Festival",
   "short_name": "JK Festival",
-  "description": "La web y app oficial del JK Festival de música urbana en Martil, Marruecos.",
+  "description": "La web oficial y app del JK Festival de música urbana en Martil, Marruecos.",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
@@ -14,9 +14,9 @@
       "type": "image/png"
     }
   ],
-  "theme_color": "#000000",
-  "background_color": "#000000",
-  "start_url": "/mobileapp",
+  "theme_color": "#FF00FF",
+  "background_color": "#FFE5F2",
+  "start_url": "/",
   "display": "standalone",
   "orientation": "portrait"
 }
