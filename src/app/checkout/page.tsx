@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -41,6 +42,7 @@ export default function CheckoutPage() {
   const [customerData, setCustomerData] = useState<CustomerInfo | null>(null);
   const { toast } = useToast();
   const [clientSecret, setClientSecret] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<CustomerInfo>({
       resolver: zodResolver(customerInfoSchema),
@@ -54,6 +56,7 @@ export default function CheckoutPage() {
   });
   
   const handleCustomerInfoSubmit = async (data: CustomerInfo) => {
+    setIsLoading(true);
     setCustomerData(data);
     
     try {
@@ -75,6 +78,8 @@ export default function CheckoutPage() {
         }
     } catch (error) {
          toast({ variant: "destructive", title: "Error de red", description: "No se pudo conectar con el servidor de pagos." });
+    } finally {
+        setIsLoading(false);
     }
   };
 
@@ -131,7 +136,7 @@ export default function CheckoutPage() {
     }
   };
   
-  const stripeOptions = { appearance };
+  const stripeOptions = { appearance, clientSecret };
 
   return (
     <div className="bg-transparent">
@@ -164,13 +169,13 @@ export default function CheckoutPage() {
                               <FormItem><FormLabel>Ciudad (Opcional)</FormLabel><FormControl><Input placeholder="Tetuán" {...field} /></FormControl><FormMessage /></FormItem>
                           )}/>
                       </div>
-                      <Button type="submit" disabled={!form.formState.isValid} className="w-full" size="lg">
-                          Continuar al Pago
+                      <Button type="submit" disabled={!form.formState.isValid || isLoading} className="w-full" size="lg">
+                          {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Continuar al Pago'}
                       </Button>
                   </form>
                 </Form>
               ) : (clientSecret && customerData) ? (
-                 <Elements stripe={stripePromise} options={{...stripeOptions, clientSecret}}>
+                 <Elements stripe={stripePromise} options={stripeOptions}>
                     <CheckoutForm customerInfo={customerData} />
                  </Elements>
               ) : <div className="flex justify-center items-center h-40"><Loader2 className="h-8 w-8 animate-spin" /></div>}

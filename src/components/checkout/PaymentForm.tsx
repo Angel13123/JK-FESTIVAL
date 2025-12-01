@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useState } from "react";
@@ -54,7 +55,7 @@ export const CheckoutForm = ({ customerInfo }: { customerInfo: CustomerInfo }) =
                 });
                 toast({ title: "¡Compra completada!", description: `Tu pedido ${newOrder.id} se ha procesado.` });
                 clearCart();
-                router.push(`/payment/success?orderId=${newOrder.id}`);
+                router.push(`/mobileapp/payment-success`);
             } catch (e: any) {
                 console.error("Failed to create order after payment:", e);
                 toast({ variant: "destructive", title: "Error post-pago", description: "Tu pago fue exitoso, pero hubo un error al crear tu pedido. Por favor, contacta a soporte." });
