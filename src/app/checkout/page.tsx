@@ -25,12 +25,14 @@ const formSchema = z.object({
   city: z.string().optional(),
 });
 
+type CustomerInfo = z.infer<typeof formSchema>;
+
 export default function CheckoutPage() {
   const { cartItems, getCartTotal } = useCart();
-  const [customerInfo, setCustomerInfo] = useState<z.infer<typeof formSchema> | null>(null);
+  const [customerInfo, setCustomerInfo] = useState<CustomerInfo | null>(null);
   const total = getCartTotal(ticketTypes);
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<CustomerInfo>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       fullName: "",
@@ -41,7 +43,7 @@ export default function CheckoutPage() {
     mode: "onChange",
   });
   
-  const handleCustomerInfoSubmit = (values: z.infer<typeof formSchema>) => {
+  const handleCustomerInfoSubmit = (values: CustomerInfo) => {
       setCustomerInfo(values);
   }
 

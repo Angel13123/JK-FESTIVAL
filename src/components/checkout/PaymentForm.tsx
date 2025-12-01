@@ -141,25 +141,24 @@ export function PaymentForm({ cartItems, customerInfo }: PaymentFormProps) {
   const [clientSecret, setClientSecret] = useState("");
 
   useEffect(() => {
-    // Only fetch the client secret if we have customer info and items in the cart
-    if (customerInfo && cartItems.length > 0) {
-      fetch("/api/create-payment-intent", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cartItems, customerInfo }),
+    // customerInfo is guaranteed to exist here because the parent component
+    // only renders PaymentForm when customerInfo is not null.
+    fetch("/api/create-payment-intent", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ cartItems, customerInfo }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.clientSecret) {
+          setClientSecret(data.clientSecret);
+        } else if (data.error) {
+            console.error("API Error:", data.error);
+        }
       })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.clientSecret) {
-            setClientSecret(data.clientSecret);
-          } else if (data.error) {
-              console.error("API Error:", data.error);
-          }
-        })
-        .catch(error => {
-            console.error("Fetch Error:", error);
-        });
-    }
+      .catch(error => {
+          console.error("Fetch Error:", error);
+      });
   }, [cartItems, customerInfo]);
 
   const appearance = {
@@ -201,15 +200,17 @@ export function PaymentForm({ cartItems, customerInfo }: PaymentFormProps) {
     appearance,
   };
 
+  if (!clientSecret) {
+    return (
+      <div className="flex justify-center items-center h-48">
+          <Loader2 className="h-8 w-8 animate-spin"/>
+      </div>
+    );
+  }
+
   return (
-      clientSecret ? (
-        <Elements options={options} stripe={stripePromise}>
-          <CheckoutForm cartItems={cartItems} customerInfo={customerInfo}/>
-        </Elements>
-      ) : (
-        <div className="flex justify-center items-center h-48">
-            <Loader2 className="h-8 w-8 animate-spin"/>
-        </div>
-      )
+      <Elements options={options} stripe={stripePromise}>
+        <CheckoutForm cartItems={cartItems} customerInfo={customerInfo}/>
+      </Elements>
   );
 }
