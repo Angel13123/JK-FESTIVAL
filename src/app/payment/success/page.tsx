@@ -125,11 +125,14 @@ function SuccessContent() {
                 ) : (
                     <div className="mt-6 text-destructive">No se encontraron tus entradas. Por favor, contacta a soporte si no las recibes por email.</div>
                 )}
+                 <div className="mt-8 bg-primary/10 border-2 border-dashed border-primary/50 p-4 rounded-lg text-center">
+                    <p className="font-bold text-primary mb-2">¿Quieres tener tus boletos a mano?</p>
+                    <PwaInstallButton />
+                 </div>
                 <div className="mt-8 flex flex-wrap justify-center gap-4">
                     <Button asChild>
                         <Link href="/">Volver al inicio</Link>
                     </Button>
-                    <PwaInstallButton />
                 </div>
             </CardContent>
         </Card>

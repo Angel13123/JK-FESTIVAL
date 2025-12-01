@@ -1,22 +1,33 @@
+
 {
-  "name": "JK Festival",
-  "short_name": "JK Festival",
-  "description": "La web oficial y app del JK Festival de música urbana en Martil, Marruecos.",
-  "icons": [
-    {
-      "src": "/icons/icon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ],
-  "theme_color": "#FF00FF",
-  "background_color": "#FFE5F2",
-  "start_url": "/",
-  "display": "standalone",
-  "orientation": "portrait"
+    "theme_color": "#ff00ff",
+    "background_color": "#ffe5f2",
+    "display": "standalone",
+    "scope": "/",
+    "start_url": "/mobileapp",
+    "name": "JK Festival",
+    "short_name": "JK Pass",
+    "description": "La app oficial del JK Festival. Accede a tus boletos, horarios y más.",
+    "icons": [
+        {
+            "src": "/icons/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/icon-256x256.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/icon-384x384.png",
+            "sizes": "384x384",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
 }
