@@ -62,6 +62,7 @@ function CheckoutForm({ cartItems, customerInfo }: PaymentFormProps) {
         description: error.message || "An unexpected error occurred.",
       });
       setIsLoading(false);
+      router.push('/payment/failure');
       return;
     }
 
@@ -69,8 +70,9 @@ function CheckoutForm({ cartItems, customerInfo }: PaymentFormProps) {
       await handleSuccessfulPayment("stripe", paymentIntent.id);
     } else {
         // Handle other statuses like processing, requires_action, etc.
-        setMessage("El pago no se completó. Estado: " + paymentIntent.status);
+        setMessage("El pago no se completó. Estado: " + paymentIntent?.status);
         setIsLoading(false);
+        router.push('/payment/failure');
     }
   };
 
@@ -139,22 +141,25 @@ export function PaymentForm({ cartItems, customerInfo }: PaymentFormProps) {
   const [clientSecret, setClientSecret] = useState("");
 
   useEffect(() => {
-    fetch("/api/create-payment-intent", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ cartItems, customerInfo }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.clientSecret) {
-          setClientSecret(data.clientSecret);
-        } else if (data.error) {
-            console.error("API Error:", data.error);
-        }
+    // Only fetch the client secret if we have customer info and items in the cart
+    if (customerInfo && cartItems.length > 0) {
+      fetch("/api/create-payment-intent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cartItems, customerInfo }),
       })
-      .catch(error => {
-          console.error("Fetch Error:", error);
-      });
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.clientSecret) {
+            setClientSecret(data.clientSecret);
+          } else if (data.error) {
+              console.error("API Error:", data.error);
+          }
+        })
+        .catch(error => {
+            console.error("Fetch Error:", error);
+        });
+    }
   }, [cartItems, customerInfo]);
 
   const appearance = {
