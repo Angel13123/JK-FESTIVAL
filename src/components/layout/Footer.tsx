@@ -30,13 +30,13 @@ export function Footer() {
             </Link>
           </div>
           <div className="flex items-center gap-4">
-            <Link href="#" aria-label="Twitter">
+            <Link href="#" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
               <Twitter className="h-6 w-6 text-black hover:text-primary transition-colors" />
             </Link>
-            <Link href="#" aria-label="Instagram">
+            <Link href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
               <Instagram className="h-6 w-6 text-black hover:text-primary transition-colors" />
             </Link>
-            <Link href="#" aria-label="Facebook">
+            <Link href="#" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
               <Facebook className="h-6 w-6 text-black hover:text-primary transition-colors" />
             </Link>
           </div>

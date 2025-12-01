@@ -125,9 +125,9 @@ export default function ContactPage() {
                     <h3 className="text-xl font-semibold font-headline">Síguenos en Redes</h3>
                     <p className="text-muted-foreground mt-2">No te pierdas ninguna novedad.</p>
                     <div className="flex items-center gap-4 mt-4">
-                        <Link href="#" aria-label="Twitter"><Twitter className="h-6 w-6 text-muted-foreground hover:text-primary transition-all duration-300 hover:scale-125" /></Link>
-                        <Link href="#" aria-label="Instagram"><Instagram className="h-6 w-6 text-muted-foreground hover:text-primary transition-all duration-300 hover:scale-125" /></Link>
-                        <Link href="#" aria-label="Facebook"><Facebook className="h-6 w-6 text-muted-foreground hover:text-primary transition-all duration-300 hover:scale-125" /></Link>
+                        <Link href="#" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><Twitter className="h-6 w-6 text-muted-foreground hover:text-primary transition-all duration-300 hover:scale-125" /></Link>
+                        <Link href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><Instagram className="h-6 w-6 text-muted-foreground hover:text-primary transition-all duration-300 hover:scale-125" /></Link>
+                        <Link href="#" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><Facebook className="h-6 w-6 text-muted-foreground hover:text-primary transition-all duration-300 hover:scale-125" /></Link>
                     </div>
                 </div>
             </div>
