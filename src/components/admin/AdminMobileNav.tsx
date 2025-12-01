@@ -7,7 +7,7 @@ import { Home, Mic, Ticket, Music, QrCode, ShoppingCart, Menu, Newspaper } from 
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetTitle } from "@/components/ui/sheet";
 
 const adminNavLinks = [
   { href: "/admin", label: "Dashboard", icon: Home },
@@ -36,6 +36,7 @@ export function AdminMobileNav() {
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="flex flex-col">
+          <SheetTitle className="sr-only">Menú de Navegación del Administrador</SheetTitle>
           <nav className="grid gap-2 text-lg font-medium">
             <Link
               href="/admin"
@@ -66,5 +67,3 @@ export function AdminMobileNav() {
     </header>
   );
 }
-
-    
