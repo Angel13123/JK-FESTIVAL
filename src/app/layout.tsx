@@ -8,8 +8,6 @@ import { cn } from '@/lib/utils';
 import { CartProvider } from '@/context/CartContext';
 import { Toaster } from '@/components/ui/toaster';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
-import { AudioPlayer } from '@/components/shared/AudioPlayer';
-import { LiveSalesNotification } from '@/components/shared/LiveSalesNotification';
 import { usePathname } from 'next/navigation';
 import { AppProvider } from '@/context/AppContext';
 import { Navbar } from '@/components/layout/Navbar';
@@ -39,7 +37,7 @@ export default function RootLayout({
   const isMobileApp = pathname.startsWith('/mobileapp');
   const isHomePage = pathname === '/';
 
-  const showPublicNav = !isAdminRoute && !isMobileApp && !isHomePage;
+  const showPublicNav = !isAdminRoute && !isMobileApp;
 
   return (
     <html lang="es" className="dark" suppressHydrationWarning>
@@ -68,18 +66,14 @@ export default function RootLayout({
               </AppProvider>
             ) : (
               <CartProvider>
-                {showPublicNav && <Navbar />}
-                {children}
-                {showPublicNav && <Footer />}
+                <div className="flex flex-col min-h-screen">
+                  {showPublicNav && <Navbar />}
+                  <main className="flex-1">{children}</main>
+                  {showPublicNav && <Footer />}
+                </div>
               </CartProvider>
             )}
             <Toaster />
-            {!isAdminRoute && !isMobileApp && !isHomePage && (
-              <>
-                {/* <AudioPlayer />
-                <LiveSalesNotification /> */}
-              </>
-            )}
         </FirebaseClientProvider>
       </body>
     </html>
