@@ -4,19 +4,17 @@
 import { useState } from "react";
 import { useCart } from "@/context/CartContext";
 import { ticketTypes } from "@/lib/data";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { createOrderAndTickets } from "@/lib/orders-service";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useToast } from "@/hooks/use-toast";
+import { PaymentForm } from "@/components/checkout/PaymentForm";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   fullName: z.string()
@@ -28,12 +26,9 @@ const formSchema = z.object({
 });
 
 export default function CheckoutPage() {
-  const { cartItems, getCartTotal, clearCart } = useCart();
-  const router = useRouter();
-  const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
+  const { cartItems, getCartTotal } = useCart();
+  const [customerInfo, setCustomerInfo] = useState<z.infer<typeof formSchema> | null>(null);
   const total = getCartTotal(ticketTypes);
-
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -43,64 +38,14 @@ export default function CheckoutPage() {
       country: "",
       city: "",
     },
-    mode: "onChange", // Validate on change to enable/disable button
+    mode: "onChange",
   });
+  
+  const handleCustomerInfoSubmit = (values: z.infer<typeof formSchema>) => {
+      setCustomerInfo(values);
+  }
 
-  const handleCheckout = async (values: z.infer<typeof formSchema>) => {
-    setIsLoading(true);
-    
-    // Simulate payment processing
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    const isSuccess = Math.random() > 0.1; // 90% success rate
-
-    if (isSuccess) {
-      try {
-        // Create order and tickets in Firestore
-        const newOrder = await createOrderAndTickets({
-            customerName: values.fullName,
-            customerEmail: values.email,
-            customerCountry: values.country,
-            totalAmount: total,
-            cartItems: cartItems
-        });
-        
-        toast({
-            title: "¡Compra completada!",
-            description: "Tu pedido se ha procesado correctamente."
-        });
-
-        clearCart();
-        // Pass the new order ID to the success page
-        router.push(`/payment/success?orderId=${newOrder.id}`);
-      } catch(e: any) {
-         console.error(e);
-         // Do not show a generic toast for permission errors,
-         // they are now handled globally. Only show for other types of errors.
-         if (e.name !== 'FirebaseError') {
-            toast({
-              variant: "destructive",
-              title: "Error al registrar el pedido",
-              description: "Hubo un problema al guardar tu compra. Por favor, intenta de nuevo."
-            });
-         }
-         // Redirect to failure page for any kind of error during creation.
-         router.push('/payment/failure');
-      }
-    } else {
-      toast({
-        variant: "destructive",
-        title: "Error en el pago",
-        description: "No se pudo procesar tu pago. Por favor, intenta de nuevo."
-      });
-      router.push('/payment/failure');
-    }
-    
-    setIsLoading(false);
-  };
-
-
-  if (cartItems.length === 0 && !isLoading) {
+  if (cartItems.length === 0) {
      return (
       <div className="container mx-auto max-w-screen-md px-4 py-16 text-center animate-fade-in-down">
         <h1 className="text-3xl">Tu carrito está vacío</h1>
@@ -123,51 +68,56 @@ export default function CheckoutPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 animate-fade-in-up">
           <Card className="bg-card transition-shadow duration-300 hover:shadow-xl">
             <CardHeader>
-              <CardTitle>Tus datos</CardTitle>
+              <CardTitle>{customerInfo ? "Paso 2: Realiza el Pago" : "Paso 1: Tus Datos"}</CardTitle>
             </CardHeader>
             <CardContent>
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(handleCheckout)} className="space-y-6">
-                  <FormField control={form.control} name="fullName" render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Nombre completo</FormLabel>
-                        <FormControl><Input placeholder="Tu nombre y apellidos" {...field} /></FormControl>
-                        <FormMessage />
-                      </FormItem>
-                  )}/>
-                  <FormField control={form.control} name="email" render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl><Input type="email" placeholder="tu@email.com" {...field} /></FormControl>
-                        <FormMessage />
-                      </FormItem>
-                  )}/>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <FormField control={form.control} name="country" render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>País</FormLabel>
-                            <FormControl><Input placeholder="Marruecos" {...field} /></FormControl>
-                            <FormMessage />
-                          </FormItem>
-                      )}/>
-                      <FormField control={form.control} name="city" render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Ciudad (Opcional)</FormLabel>
-                            <FormControl><Input placeholder="Tetuán" {...field} /></FormControl>
-                            <FormMessage />
-                          </FormItem>
-                      )}/>
-                  </div>
-                  
-                  <Button type="submit" className="w-full transition-transform duration-300 hover:scale-105" size="lg" disabled={isLoading || !form.formState.isValid}>
-                    {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                    {isLoading ? 'Procesando pago...' : `Pagar ahora ${total.toFixed(2)} EUR`}
-                  </Button>
-                  <p className="text-xs text-center text-muted-foreground pt-2">
-                      Al hacer clic, se simulará una pasarela de pago.
-                  </p>
-                </form>
-              </Form>
+              {!customerInfo ? (
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(handleCustomerInfoSubmit)} className="space-y-6">
+                    <FormField control={form.control} name="fullName" render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Nombre completo</FormLabel>
+                          <FormControl><Input placeholder="Tu nombre y apellidos" {...field} /></FormControl>
+                          <FormMessage />
+                        </FormItem>
+                    )}/>
+                    <FormField control={form.control} name="email" render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email</FormLabel>
+                          <FormControl><Input type="email" placeholder="tu@email.com" {...field} /></FormControl>
+                          <FormMessage />
+                        </FormItem>
+                    )}/>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <FormField control={form.control} name="country" render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>País</FormLabel>
+                              <FormControl><Input placeholder="Marruecos" {...field} /></FormControl>
+                              <FormMessage />
+                            </FormItem>
+                        )}/>
+                        <FormField control={form.control} name="city" render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Ciudad (Opcional)</FormLabel>
+                              <FormControl><Input placeholder="Tetuán" {...field} /></FormControl>
+                              <FormMessage />
+                            </FormItem>
+                        )}/>
+                    </div>
+                    
+                    <Button type="submit" className="w-full transition-transform duration-300 hover:scale-105" size="lg" disabled={!form.formState.isValid}>
+                       Continuar al Pago
+                    </Button>
+                  </form>
+                </Form>
+              ) : (
+                <div>
+                    <PaymentForm cartItems={cartItems} customerInfo={customerInfo} />
+                    <Button variant="link" onClick={() => setCustomerInfo(null)} className="w-full mt-4">
+                      Editar información
+                    </Button>
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -204,5 +154,3 @@ export default function CheckoutPage() {
     </div>
   );
 }
-
-    
