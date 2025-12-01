@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { useApp } from '@/context/AppContext';
-import { collection, query, where, getDocs, getFirestore } from 'firebase/firestore';
+import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
 import type { Ticket } from '@/lib/types';
 import { initializeFirebase } from '@/firebase';
 import { MobileTicketVisual } from '@/components/mobileapp/MobileTicketVisual';
@@ -18,7 +18,7 @@ const { firestore } = initializeFirebase();
 // Firestore query function
 async function getTicketsForUser(email: string): Promise<Ticket[]> {
     const ticketsCollection = collection(firestore, 'tickets');
-    const q = query(ticketsCollection, where("customerEmail", "==", email));
+    const q = query(ticketsCollection, where("customerEmail", "==", email), orderBy("createdAt", "asc"));
     const snapshot = await getDocs(q);
     if (snapshot.empty) {
         return [];
