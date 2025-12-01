@@ -69,14 +69,13 @@ function CheckoutForm({ cartItems, customerInfo }: PaymentFormProps) {
     if (paymentIntent && paymentIntent.status === "succeeded") {
       await handleSuccessfulPayment("stripe", paymentIntent.id);
     } else {
-        // Handle other statuses like processing, requires_action, etc.
         setMessage("El pago no se completó. Estado: " + paymentIntent?.status);
         setIsLoading(false);
         router.push('/payment/failure');
     }
   };
 
-  const handleSuccessfulPayment = async (provider: 'stripe' | 'paypal', transactionId: string) => {
+  const handleSuccessfulPayment = async (provider: 'stripe', transactionId: string) => {
     try {
       const newOrder = await createOrderAndTickets({
         customerName: customerInfo.fullName,
@@ -101,7 +100,6 @@ function CheckoutForm({ cartItems, customerInfo }: PaymentFormProps) {
         description:
           "Tu pago fue exitoso, pero hubo un error al crear tu pedido. Por favor, contacta a soporte.",
       });
-      // Don't redirect, so user can see the error
     } finally {
         setIsLoading(false);
     }
