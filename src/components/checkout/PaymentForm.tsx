@@ -5,17 +5,10 @@ import { useEffect, useState } from "react";
 import {
   PaymentElement,
   useStripe,
-  useElements,
-  AddressElement,
+  useElements
 } from "@stripe/react-stripe-js";
 import { StripePaymentElementOptions, loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
-import {
-  PayPalScriptProvider,
-  PayPalButtons,
-  OnApproveData,
-  CreateOrderData,
-} from "@paypal/react-paypal-js";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
@@ -27,7 +20,6 @@ import { ticketTypes } from "@/lib/data";
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 );
-const paypalClientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID!;
 
 interface PaymentFormProps {
   cartItems: { ticketTypeId: string; quantity: number }[];
@@ -135,52 +127,10 @@ function CheckoutForm({ cartItems, customerInfo }: PaymentFormProps) {
           {isLoading ? (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : null}
-          Pagar con Tarjeta
+          Pagar {totalAmount.toFixed(2)} EUR
         </Button>
         {message && <div id="payment-message" className="text-destructive text-sm">{message}</div>}
       </form>
-
-      <div className="relative flex py-2 items-center">
-        <div className="flex-grow border-t border-muted"></div>
-        <span className="flex-shrink mx-4 text-muted-foreground text-xs uppercase">O</span>
-        <div className="flex-grow border-t border-muted"></div>
-      </div>
-
-      <PayPalButtons
-        style={{ layout: "vertical", color: 'black', shape: 'rect', label: 'pay', tagline: false, height: 48 }}
-        disabled={isLoading}
-        forceReRender={[totalAmount]}
-        createOrder={(data: CreateOrderData, actions) => {
-          return actions.order.create({
-            purchase_units: [
-              {
-                amount: {
-                  value: totalAmount.toFixed(2),
-                  currency_code: 'EUR',
-                },
-              },
-            ],
-          });
-        }}
-        onApprove={(data: OnApproveData, actions) => {
-          setIsLoading(true);
-          return actions.order!.capture().then(async (details) => {
-            await handleSuccessfulPayment("paypal", details.id);
-          });
-        }}
-        onError={(err) => {
-            console.error("PayPal Error:", err);
-            toast({
-                variant: "destructive",
-                title: "Error con PayPal",
-                description: "No se pudo iniciar el proceso de pago de PayPal.",
-            });
-            setIsLoading(false);
-        }}
-        onCancel={() => {
-            setIsLoading(false);
-        }}
-      />
     </div>
   );
 }
@@ -247,8 +197,7 @@ export function PaymentForm({ cartItems, customerInfo }: PaymentFormProps) {
   };
 
   return (
-    <PayPalScriptProvider options={{ clientId: paypalClientId, currency: "EUR" }}>
-      {clientSecret ? (
+      clientSecret ? (
         <Elements options={options} stripe={stripePromise}>
           <CheckoutForm cartItems={cartItems} customerInfo={customerInfo}/>
         </Elements>
@@ -256,7 +205,6 @@ export function PaymentForm({ cartItems, customerInfo }: PaymentFormProps) {
         <div className="flex justify-center items-center h-48">
             <Loader2 className="h-8 w-8 animate-spin"/>
         </div>
-      )}
-    </PayPalScriptProvider>
+      )
   );
 }
