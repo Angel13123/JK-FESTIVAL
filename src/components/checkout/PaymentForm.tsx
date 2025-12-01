@@ -141,8 +141,11 @@ export function PaymentForm({ cartItems, customerInfo }: PaymentFormProps) {
   const [clientSecret, setClientSecret] = useState("");
 
   useEffect(() => {
-    // customerInfo is guaranteed to exist here because the parent component
-    // only renders PaymentForm when customerInfo is not null.
+    // Strict guard to ensure all required data is present before fetching.
+    if (!customerInfo || !customerInfo.email || !cartItems || cartItems.length === 0) {
+      return;
+    }
+
     fetch("/api/create-payment-intent", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
