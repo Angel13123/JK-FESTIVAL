@@ -8,6 +8,7 @@ import { useApp } from "@/context/AppContext";
 import { findUnclaimedTicketByCode, claimTicket } from "@/lib/orders-service";
 import type { Ticket } from "@/lib/types";
 import { Html5Qrcode, Html5QrcodeScannerState } from 'html5-qrcode';
+import Link from 'next/link';
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -24,7 +25,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 
-import { ScanLine, CaseUpper, Loader2, Video } from "lucide-react";
+import { ScanLine, CaseUpper, Loader2, Video, LogIn } from "lucide-react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -40,7 +41,7 @@ const claimSchema = z.object({
 });
 
 export default function AddTicketPage() {
-  const { user } = useApp();
+  const { user, isGuest } = useApp();
   const { toast } = useToast();
   const router = useRouter();
   
@@ -153,6 +154,25 @@ export default function AddTicketPage() {
     return () => stopScanner();
   }, [isScannerActive]);
 
+
+   if (isGuest) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[70vh] text-center">
+          <Card className="bg-gray-900 border-gray-800 w-full max-w-md text-center">
+              <CardHeader className="items-center">
+                  <LogIn className="h-12 w-12 text-yellow-400 mb-4"/>
+                  <CardTitle className="text-white">Inicia sesión para añadir boletos</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                  <p className="text-gray-400">Para digitalizar un boleto físico, necesitas una cuenta. ¡Es rápido y fácil!</p>
+                  <Button asChild className="bg-yellow-400 text-black hover:bg-yellow-500">
+                      <Link href="/mobileapp/login">Iniciar Sesión / Registrarse</Link>
+                  </Button>
+              </CardContent>
+          </Card>
+      </div>
+    );
+  }
 
   return (
     <>
