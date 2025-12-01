@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { loadStripe } from "@stripe/stripe-js";
-import { Elements, useStripe, useElements, PaymentElement } from "@stripe/react-stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { createOrderAndTickets } from "@/lib/orders-service";
+import { CheckoutForm } from "@/components/checkout/PaymentForm";
 
 
 const customerInfoSchema = z.object({
@@ -30,109 +30,17 @@ const customerInfoSchema = z.object({
   city: z.string().optional(),
 });
 
-type CustomerInfo = z.infer<typeof customerInfoSchema>;
+export type CustomerInfo = z.infer<typeof customerInfoSchema>;
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
-
-const CheckoutForm = ({ customerInfo }: { customerInfo: CustomerInfo }) => {
-    const { cartItems, getCartTotal, clearCart } = useCart();
-    const total = getCartTotal(ticketTypes);
-    const router = useRouter();
-    const { toast } = useToast();
-    const stripe = useStripe();
-    const elements = useElements();
-
-    const [isLoading, setIsLoading] = useState(false);
-    const [message, setMessage] = useState<string | null>(null);
-    const [clientSecret, setClientSecret] = useState("");
-
-    useEffect(() => {
-        if (customerInfo && cartItems.length > 0) {
-            fetch("/api/create-payment-intent", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ 
-                  cartItems, 
-                  customerInfo
-                }),
-            })
-            .then((res) => res.json())
-            .then((data) => {
-                if (data.clientSecret) {
-                    setClientSecret(data.clientSecret);
-                } else if (data.error) {
-                    toast({ variant: "destructive", title: "Error de API", description: data.error });
-                }
-            })
-            .catch(() => {
-                toast({ variant: "destructive", title: "Error de red", description: "No se pudo conectar con el servidor de pagos." });
-            });
-        }
-    }, [customerInfo, cartItems, toast]);
-
-    const handleStripeSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!stripe || !elements || !customerInfo || !clientSecret) return;
-
-        setIsLoading(true);
-
-        const { error, paymentIntent } = await stripe.confirmPayment({
-            elements,
-            redirect: "if_required",
-        });
-
-        if (error) {
-            setMessage(error.message || "Ocurrió un error inesperado.");
-            toast({ variant: "destructive", title: "Error en el pago", description: error.message });
-            router.push('/payment/failure');
-            setIsLoading(false);
-            return;
-        }
-
-        if (paymentIntent && paymentIntent.status === "succeeded") {
-            try {
-                const newOrder = await createOrderAndTickets({
-                    customerName: customerInfo.fullName,
-                    customerEmail: customerInfo.email,
-                    customerCountry: customerInfo.country,
-                    totalAmount: total,
-                    cartItems: cartItems,
-                });
-                toast({ title: "¡Compra completada!", description: `Tu pedido se ha procesado con éxito.` });
-                clearCart();
-                router.push(`/payment/success?orderId=${newOrder.id}`);
-            } catch (e: any) {
-                console.error("Failed to create order after payment:", e);
-                toast({ variant: "destructive", title: "Error post-pago", description: "Tu pago fue exitoso, pero hubo un error al crear tu pedido. Por favor, contacta a soporte." });
-            }
-        } else {
-             setMessage("El pago no se completó. Estado: " + paymentIntent?.status);
-             router.push('/payment/failure');
-        }
-        
-        setIsLoading(false);
-    };
-    
-    const paymentElementOptions = { layout: "tabs" as const };
-
-    return (
-        <form onSubmit={handleStripeSubmit} className="space-y-6">
-            <PaymentElement id="payment-element" options={paymentElementOptions} />
-            <Button type="submit" disabled={isLoading || !stripe || !elements || !clientSecret} className="w-full" size="lg">
-                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                Pagar {total.toFixed(2)} EUR
-            </Button>
-            {message && <div id="payment-message" className="text-destructive text-sm">{message}</div>}
-        </form>
-    );
-};
-
 
 export default function CheckoutPage() {
   const { cartItems, getCartTotal } = useCart();
   const total = getCartTotal(ticketTypes);
   const [step, setStep] = useState<"customerInfo" | "payment">("customerInfo");
   const [customerData, setCustomerData] = useState<CustomerInfo | null>(null);
+  const { toast } = useToast();
+  const [clientSecret, setClientSecret] = useState('');
 
   const form = useForm<CustomerInfo>({
       resolver: zodResolver(customerInfoSchema),
@@ -145,9 +53,29 @@ export default function CheckoutPage() {
       mode: "onChange",
   });
   
-  const handleCustomerInfoSubmit = (data: CustomerInfo) => {
+  const handleCustomerInfoSubmit = async (data: CustomerInfo) => {
     setCustomerData(data);
-    setStep("payment");
+    
+    try {
+        const response = await fetch("/api/create-payment-intent", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+              cartItems, 
+              customerInfo: data
+            }),
+        });
+        const paymentData = await response.json();
+
+        if (paymentData.clientSecret) {
+            setClientSecret(paymentData.clientSecret);
+            setStep("payment");
+        } else if (paymentData.error) {
+            toast({ variant: "destructive", title: "Error de API", description: paymentData.error });
+        }
+    } catch (error) {
+         toast({ variant: "destructive", title: "Error de red", description: "No se pudo conectar con el servidor de pagos." });
+    }
   };
 
   if (cartItems.length === 0) {
@@ -165,8 +93,8 @@ export default function CheckoutPage() {
   const appearance = {
     theme: 'stripe' as const,
     variables: {
-        colorPrimary: '#F7FF00',
-        colorBackground: '#ffffff',
+        colorPrimary: '#FF00FF',
+        colorBackground: '#FFFFFF',
         colorText: '#000000',
         colorDanger: '#df1b41',
         fontFamily: 'Montserrat, sans-serif',
@@ -174,11 +102,32 @@ export default function CheckoutPage() {
         borderRadius: '12px',
     },
      rules: {
-        '.Input': { borderColor: '#000000', borderWidth: '1px' },
-        '.Input:focus': { borderColor: '#F7FF00', boxShadow: '0 0 0 1px #F7FF00' },
-        '.Tab': { borderColor: '#000000', borderWidth: '1px' },
-        '.Tab:focus': { borderColor: '#F7FF00', boxShadow: '0 0 0 1px #F7FF00' },
-        '.Tab--selected': { borderColor: '#F7FF00', backgroundColor: '#F7FF00' }
+        '.Input': {
+          border: '2px solid #000',
+          boxShadow: 'none',
+        },
+        '.Input:focus': {
+          borderColor: '#FF00FF',
+          boxShadow: '0 0 0 2px #FF00FF',
+        },
+        '.Tab': {
+           border: '2px solid #000',
+           boxShadow: 'none',
+        },
+        '.Tab:focus': {
+           outline: 'none',
+           boxShadow: '0 0 0 2px #FF00FF',
+        },
+        '.Tab--selected': {
+            borderColor: '#000',
+            backgroundColor: '#FFE5F2',
+        },
+        '.Tab--selected:hover': {
+            backgroundColor: '#FFE5F2',
+        },
+        '.Tab:hover': {
+            backgroundColor: '#f2f2f2',
+        }
     }
   };
   
@@ -193,9 +142,9 @@ export default function CheckoutPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 animate-fade-in-up">
-          <Card className="bg-card transition-shadow duration-300 hover:shadow-xl">
+          <Card className="bg-card text-black border-2 border-black hard-shadow transition-shadow duration-300 hover:shadow-xl">
             <CardHeader>
-              <CardTitle>Tus Datos y Pago</CardTitle>
+              <CardTitle className="text-black" style={{textShadow: 'none', WebkitTextStroke: 0}}>Tus Datos y Pago</CardTitle>
             </CardHeader>
             <CardContent>
               {step === 'customerInfo' ? (
@@ -220,17 +169,17 @@ export default function CheckoutPage() {
                       </Button>
                   </form>
                 </Form>
-              ) : customerData ? (
-                 <Elements stripe={stripePromise} options={{...stripeOptions, clientSecret: 'dummy'}}>
+              ) : (clientSecret && customerData) ? (
+                 <Elements stripe={stripePromise} options={{...stripeOptions, clientSecret}}>
                     <CheckoutForm customerInfo={customerData} />
                  </Elements>
-              ) : null}
+              ) : <div className="flex justify-center items-center h-40"><Loader2 className="h-8 w-8 animate-spin" /></div>}
             </CardContent>
           </Card>
 
-          <Card className="bg-card transition-shadow duration-300 hover:shadow-xl">
+          <Card className="bg-card text-black border-2 border-black hard-shadow transition-shadow duration-300 hover:shadow-xl">
             <CardHeader>
-              <CardTitle>Resumen del pedido</CardTitle>
+              <CardTitle className="text-black" style={{textShadow: 'none', WebkitTextStroke: 0}}>Resumen del pedido</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -247,7 +196,7 @@ export default function CheckoutPage() {
                     </div>
                   )
                 })}
-                <hr className="my-4 border-dashed" />
+                <hr className="my-4 border-dashed border-gray-300" />
                 <div className="flex justify-between items-center text-xl font-bold">
                   <p>Total</p>
                   <p>{total.toFixed(2)} EUR</p>
