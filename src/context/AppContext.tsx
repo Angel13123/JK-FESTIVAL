@@ -12,9 +12,12 @@ interface AppUser {
 
 interface AppContextType {
   user: AppUser | null;
+  isGuest: boolean;
   isLoading: boolean;
   login: (user: AppUser) => void;
   logout: () => void;
+  enterGuestMode: () => void;
+  exitGuestMode: () => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -23,28 +26,55 @@ const { firestore } = initializeFirebase();
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<AppUser | null>(null);
+  const [isGuest, setIsGuest] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('appUser');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+    try {
+      const storedUser = localStorage.getItem('appUser');
+      const guestStatus = localStorage.getItem('isGuest') === 'true';
+
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+        setIsGuest(false);
+      } else if (guestStatus) {
+        setIsGuest(true);
+      }
+    } catch (error) {
+        console.error("Error reading from localStorage", error);
+        // Clear potentially corrupted storage
+        localStorage.removeItem('appUser');
+        localStorage.removeItem('isGuest');
     }
     setIsLoading(false);
   }, []);
 
   const login = (appUser: AppUser) => {
     localStorage.setItem('appUser', JSON.stringify(appUser));
+    localStorage.removeItem('isGuest');
     setUser(appUser);
+    setIsGuest(false);
   };
 
   const logout = () => {
     localStorage.removeItem('appUser');
     setUser(null);
   };
+  
+  const enterGuestMode = () => {
+      localStorage.setItem('isGuest', 'true');
+      localStorage.removeItem('appUser');
+      setIsGuest(true);
+      setUser(null);
+  };
+  
+  const exitGuestMode = () => {
+      localStorage.removeItem('isGuest');
+      setIsGuest(false);
+  }
 
   return (
-    <AppContext.Provider value={{ user, isLoading, login, logout }}>
+    <AppContext.Provider value={{ user, isGuest, isLoading, login, logout, enterGuestMode, exitGuestMode }}>
       {children}
     </AppContext.Provider>
   );

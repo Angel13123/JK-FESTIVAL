@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Loader2, Mail, Lock, Ticket } from "lucide-react";
+import { Loader2, Mail, Lock, Ticket, User as UserIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const emailSchema = z.object({
@@ -34,7 +34,7 @@ const registerSchema = z.object({
 type Step = "email" | "pin" | "register";
 
 export default function LoginPage() {
-  const { login } = useApp();
+  const { login, enterGuestMode } = useApp();
   const router = useRouter();
   const { toast } = useToast();
   
@@ -101,6 +101,11 @@ export default function LoginPage() {
     }
     setIsLoading(false);
   };
+  
+  const handleGuestMode = () => {
+    enterGuestMode();
+    router.push('/mobileapp');
+  }
 
   const renderStep = () => {
     switch (step) {
@@ -109,7 +114,7 @@ export default function LoginPage() {
           <div className="space-y-6">
              <div className="p-4 bg-gray-800/50 border-2 border-dashed border-yellow-400/50 rounded-lg animate-pulse">
                 <div className="flex items-start gap-4">
-                    <Ticket className="h-6 w-6 text-yellow-400 mt-1 flex-shrink-0"/>
+                    <Ticket className="h-8 w-8 text-yellow-400 mt-1 flex-shrink-0"/>
                     <div>
                         <h3 className="font-bold text-yellow-400 text-base">⚠️ ¿Ya compraste tu entrada?</h3>
                         <p className="text-sm text-gray-300 mt-1">Para que tus boletos aparezcan automáticamente aquí, asegúrate de ingresar con el mismo correo electrónico que usaste al comprar en la web.</p>
@@ -117,7 +122,7 @@ export default function LoginPage() {
                 </div>
             </div>
             <Form {...emailForm}>
-              <form onSubmit={emailForm.handleSubmit(handleEmailSubmit)} className="space-y-6">
+              <form onSubmit={emailForm.handleSubmit(handleEmailSubmit)} className="space-y-4">
                 <FormField control={emailForm.control} name="email" render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-gray-400">Email</FormLabel>
@@ -131,6 +136,15 @@ export default function LoginPage() {
                 </Button>
               </form>
             </Form>
+             <div className="relative flex py-2 items-center">
+                    <div className="flex-grow border-t border-gray-700"></div>
+                    <span className="flex-shrink mx-4 text-gray-500 text-xs uppercase">O</span>
+                    <div className="flex-grow border-t border-gray-700"></div>
+            </div>
+             <Button onClick={handleGuestMode} variant="outline" className="w-full text-white border-gray-600 hover:bg-gray-800 hover:text-white">
+                <UserIcon className="mr-2 h-4 w-4"/>
+                Continuar como Invitado
+            </Button>
           </div>
         );
       case "pin":
@@ -193,7 +207,7 @@ export default function LoginPage() {
   }
    const getDescription = () => {
     switch(step) {
-      case "email": return "Introduce tu email para empezar.";
+      case "email": return "Introduce tu email o entra como invitado.";
       case "pin": return "¡Qué bueno verte de nuevo!";
       case "register": return "Únete a la experiencia del festival.";
       default: return "";

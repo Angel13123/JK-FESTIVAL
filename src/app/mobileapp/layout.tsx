@@ -13,16 +13,16 @@ export default function MobileAppLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { user, isLoading } = useApp();
+  const { user, isGuest, isLoading } = useApp();
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
-    // If not loading and no user, and not on the login page, redirect to login
-    if (!isLoading && !user && pathname !== "/mobileapp/login") {
+    // If not loading, and not a user, and not a guest, and not on the login page, redirect to login
+    if (!isLoading && !user && !isGuest && pathname !== "/mobileapp/login") {
       router.replace("/mobileapp/login");
     }
-  }, [user, isLoading, router, pathname]);
+  }, [user, isGuest, isLoading, router, pathname]);
 
   if (isLoading) {
     // You can return a loading spinner here
@@ -38,8 +38,8 @@ export default function MobileAppLayout({
       return <div className="bg-black min-h-screen">{children}</div>;
   }
   
-  if (!user) {
-    // This will be shown briefly before the redirect happens
+  // If not logged in and not a guest, show nothing before redirect
+  if (!user && !isGuest) {
     return null; 
   }
 
