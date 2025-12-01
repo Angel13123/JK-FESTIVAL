@@ -1,4 +1,5 @@
 
+
 import { Timestamp } from "firebase/firestore";
 
 export type Artist = {
@@ -62,6 +63,7 @@ export type Ticket = {
     status: 'valid' | 'used' | 'revoked';
     code: string; // The "Gemini" generated code
     createdAt: Timestamp;
+    isPhysicalImport?: boolean; // Added for physical ticket distinction
 };
 
 export type OrderStats = {

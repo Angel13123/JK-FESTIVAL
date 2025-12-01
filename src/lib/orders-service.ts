@@ -1,4 +1,5 @@
 
+
 'use client';
 import {
   collection,
@@ -224,4 +225,37 @@ export async function deleteAllData(): Promise<{deletedOrders: number, deletedTi
       deletedOrders: ordersSnapshot.size,
       deletedTickets: ticketsSnapshot.size,
     };
+}
+
+
+// --- Physical Ticket Claiming ---
+export async function findUnclaimedTicketByCode(code: string): Promise<Ticket | null> {
+    const q = query(ticketsCollection, where("code", "==", code.toUpperCase()));
+    const snapshot = await getDocs(q);
+    if (snapshot.empty) {
+        return null;
+    }
+    const ticket = snapshot.docs[0].data() as Ticket;
+    // An "unclaimed" ticket is one that is valid but has no customer email assigned yet.
+    if (ticket.status === 'valid' && !ticket.customerEmail) {
+        return ticket;
+    }
+    return null;
+}
+
+export async function claimTicket(ticketId: string, ownerName: string, ownerEmail: string): Promise<void> {
+    const ticketRef = doc(ticketsCollection, ticketId);
+    await updateDoc(ticketRef, {
+        ownerName: ownerName,
+        customerEmail: ownerEmail,
+        isPhysicalImport: true, // Mark as a digitized physical ticket
+    }).catch(error => {
+        const permissionError = new FirestorePermissionError({
+            path: ticketRef.path,
+            operation: 'update',
+            requestResourceData: { ownerName, customerEmail, isPhysicalImport: true },
+        });
+        errorEmitter.emit('permission-error', permissionError);
+        throw error;
+    });
 }

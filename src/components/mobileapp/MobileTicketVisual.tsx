@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import QRCode from "qrcode.react";
@@ -30,6 +31,7 @@ const getJsDateFromTimestamp = (timestamp: any): Date | null => {
 
 export function MobileTicketVisual({ ticket }: MobileTicketVisualProps) {
   const purchaseDate = getJsDateFromTimestamp(ticket.createdAt);
+  const isPhysical = ticket.isPhysicalImport === true;
 
   return (
     <div className="bg-white text-black border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] rounded-2xl p-6 flex flex-col items-center gap-6 w-full max-w-sm mx-auto">
@@ -37,7 +39,7 @@ export function MobileTicketVisual({ ticket }: MobileTicketVisualProps) {
         {/* Header Section */}
         <div className="text-center">
             <h2 
-                className="text-4xl font-headline text-yellow-400"
+                className={`text-4xl font-headline ${isPhysical ? 'text-cyan-400' : 'text-yellow-400'}`}
                 style={{ WebkitTextStroke: '2px black', textShadow: '3px 3px 0px #000' }}
             >
                 JK FESTIVAL
@@ -74,6 +76,13 @@ export function MobileTicketVisual({ ticket }: MobileTicketVisualProps) {
             <p className="text-xs font-bold text-gray-600">CÓDIGO DE ACCESO:</p>
             <p className="font-mono text-xl font-black break-all">{ticket.code || 'N/A'}</p>
         </div>
+        
+        {/* Physical import Badge */}
+        {isPhysical && (
+            <div className="text-xs font-bold uppercase bg-cyan-400 text-black border-2 border-black px-3 py-1 rounded-full">
+                Boleto Físico Digitalizado
+            </div>
+        )}
 
         {/* Footer Section */}
         <div className="border-t-2 border-dashed border-gray-300 w-full pt-4 text-center text-xs text-gray-700">
