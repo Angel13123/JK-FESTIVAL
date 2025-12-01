@@ -8,7 +8,7 @@ import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { loadStripe } from "@stripe/stripe-js";
-import { Elements, useStripe, useElements } from "@stripe/react-stripe-js";
+import { Elements, useStripe, useElements, PaymentElement } from "@stripe/react-stripe-js";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import { PaymentForm } from "@/components/checkout/PaymentForm";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { createOrderAndTickets } from "@/lib/orders-service";
@@ -35,11 +34,12 @@ type CustomerInfo = z.infer<typeof customerInfoSchema>;
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
-const CheckoutForm = () => {
+const CheckoutFormWrapper = () => {
     const { cartItems, getCartTotal, clearCart } = useCart();
     const total = getCartTotal(ticketTypes);
     const router = useRouter();
     const { toast } = useToast();
+    const [clientSecret, setClientSecret] = useState("");
 
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState<string | null>(null);
@@ -60,6 +60,31 @@ const CheckoutForm = () => {
 
     const watchedCustomerInfo = useWatch({ control: form.control });
     const isFormValid = form.formState.isValid;
+    
+    useEffect(() => {
+        if (isFormValid && cartItems.length > 0) {
+          fetch("/api/create-payment-intent", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+              cartItems, 
+              customerInfo: watchedCustomerInfo
+            }),
+          })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.clientSecret) {
+              setClientSecret(data.clientSecret);
+            } else if (data.error) {
+              console.error("API Error:", data.error);
+            }
+          })
+          .catch(error => {
+            console.error("Fetch Error:", error);
+          });
+        }
+    }, [isFormValid, cartItems, watchedCustomerInfo]);
+
 
     const handleStripeSubmit = async (customerData: CustomerInfo) => {
         if (!stripe || !elements) return;
@@ -115,6 +140,10 @@ const CheckoutForm = () => {
             router.push('/payment/failure');
         }
     };
+    
+    const paymentElementOptions = {
+        layout: "tabs" as const,
+    };
 
     return (
         <Form {...form}>
@@ -151,17 +180,27 @@ const CheckoutForm = () => {
                 </div>
                 <hr className="my-4 border-dashed" />
                 
-                <PaymentForm />
-
-                <Button
-                    type="submit"
-                    disabled={isLoading || !stripe || !elements || !isFormValid}
-                    className="w-full"
-                    size="lg"
-                >
-                    {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                    Pagar {total.toFixed(2)} EUR
-                </Button>
+                {clientSecret ? (
+                    <>
+                        <PaymentElement id="payment-element" options={paymentElementOptions} />
+                        <Button
+                            type="submit"
+                            disabled={isLoading || !stripe || !elements || !isFormValid}
+                            className="w-full"
+                            size="lg"
+                        >
+                            {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                            Pagar {total.toFixed(2)} EUR
+                        </Button>
+                    </>
+                ) : (
+                    <div className="flex flex-col items-center justify-center h-24 text-center">
+                        <Loader2 className="h-8 w-8 animate-spin mb-4" />
+                        <p className="text-muted-foreground">
+                            Completa tus datos para continuar...
+                        </p>
+                    </div>
+                )}
                 {message && <div id="payment-message" className="text-destructive text-sm">{message}</div>}
             </form>
         </Form>
@@ -171,47 +210,7 @@ const CheckoutForm = () => {
 
 export default function CheckoutPage() {
   const { cartItems, getCartTotal } = useCart();
-  const [clientSecret, setClientSecret] = useState("");
   const total = getCartTotal(ticketTypes);
-
-  // This is a dummy form just to watch customer info for the API call
-  const { control, formState: { isValid } } = useForm<CustomerInfo>({
-      resolver: zodResolver(customerInfoSchema),
-      mode: 'onChange'
-  });
-   const watchedCustomerInfo = useWatch({ control });
-
-
-  useEffect(() => {
-    // Only fetch the client secret if the form is valid and cart is not empty
-    if (isValid && cartItems.length > 0) {
-      fetch("/api/create-payment-intent", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          cartItems, 
-          customerInfo: {
-            name: watchedCustomerInfo.fullName,
-            email: watchedCustomerInfo.email,
-            country: watchedCustomerInfo.country,
-            city: watchedCustomerInfo.city
-          }
-        }),
-      })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.clientSecret) {
-          setClientSecret(data.clientSecret);
-        } else if (data.error) {
-          console.error("API Error:", data.error);
-        }
-      })
-      .catch(error => {
-        console.error("Fetch Error:", error);
-      });
-    }
-  }, [isValid, cartItems, watchedCustomerInfo]);
-
 
   if (cartItems.length === 0) {
      return (
@@ -259,8 +258,9 @@ export default function CheckoutPage() {
         }
     }
   };
+  
   const stripeOptions = {
-    clientSecret,
+    // clientSecret is set within the form now
     appearance,
   };
 
@@ -279,18 +279,9 @@ export default function CheckoutPage() {
               <CardTitle>Tus Datos y Pago</CardTitle>
             </CardHeader>
             <CardContent>
-               {clientSecret ? (
-                  <Elements options={stripeOptions} stripe={stripePromise}>
-                    <CheckoutForm />
-                  </Elements>
-                ) : (
-                  <div className="flex flex-col items-center justify-center h-48 text-center">
-                    <Loader2 className="h-8 w-8 animate-spin mb-4" />
-                    <p className="text-muted-foreground">
-                      Completa tus datos para generar el terminal de pago...
-                    </p>
-                  </div>
-                )}
+                <Elements stripe={stripePromise} options={stripeOptions}>
+                    <CheckoutFormWrapper />
+                </Elements>
             </CardContent>
           </Card>
 
@@ -327,5 +318,3 @@ export default function CheckoutPage() {
     </div>
   );
 }
-
-    
