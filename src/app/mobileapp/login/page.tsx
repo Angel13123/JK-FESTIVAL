@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Loader2, Mail, Lock } from "lucide-react";
+import { Loader2, Mail, Lock, Ticket } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const emailSchema = z.object({
@@ -106,21 +106,32 @@ export default function LoginPage() {
     switch (step) {
       case "email":
         return (
-          <Form {...emailForm}>
-            <form onSubmit={emailForm.handleSubmit(handleEmailSubmit)} className="space-y-6">
-              <FormField control={emailForm.control} name="email" render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-gray-400">Email</FormLabel>
-                  <FormControl><Input type="email" placeholder="tu@email.com" {...field} className="bg-gray-800 border-gray-700 text-white" /></FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}/>
-              <Button type="submit" className="w-full bg-yellow-400 text-black hover:bg-yellow-500" disabled={isLoading}>
-                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Mail className="mr-2 h-4 w-4" />}
-                Continuar
-              </Button>
-            </form>
-          </Form>
+          <div className="space-y-6">
+             <div className="p-4 bg-gray-800/50 border-2 border-dashed border-yellow-400/50 rounded-lg animate-pulse">
+                <div className="flex items-start gap-3">
+                    <Ticket className="h-5 w-5 text-yellow-400 mt-1 flex-shrink-0"/>
+                    <div>
+                        <h3 className="font-bold text-yellow-400 text-sm">⚠️ ¿Ya compraste tu entrada?</h3>
+                        <p className="text-xs text-gray-300 mt-1">Para que tus boletos aparezcan automáticamente aquí, asegúrate de ingresar con el mismo correo electrónico que usaste al comprar en la web.</p>
+                    </div>
+                </div>
+            </div>
+            <Form {...emailForm}>
+              <form onSubmit={emailForm.handleSubmit(handleEmailSubmit)} className="space-y-6">
+                <FormField control={emailForm.control} name="email" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-400">Email</FormLabel>
+                    <FormControl><Input type="email" placeholder="tu@email.com" {...field} className="bg-gray-800 border-gray-700 text-white" /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}/>
+                <Button type="submit" className="w-full bg-yellow-400 text-black hover:bg-yellow-500" disabled={isLoading}>
+                  {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Mail className="mr-2 h-4 w-4" />}
+                  Continuar
+                </Button>
+              </form>
+            </Form>
+          </div>
         );
       case "pin":
         return (
