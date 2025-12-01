@@ -30,7 +30,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid cart items' }, { status: 400 });
     }
     
-    if (!customerInfo || !customerInfo.email || !customerInfo.name) {
+    if (!customerInfo || !customerInfo.email || !customerInfo.fullName) {
       return NextResponse.json({ error: 'Customer information is missing' }, { status: 400 });
     }
 
@@ -50,7 +50,7 @@ export async function POST(request: Request) {
       // Create a new customer in Stripe
       customer = await stripe.customers.create({
         email: customerInfo.email,
-        name: customerInfo.name,
+        name: customerInfo.fullName,
       });
     }
 
@@ -64,7 +64,7 @@ export async function POST(request: Request) {
       },
       metadata: {
         cart: JSON.stringify(cartItems),
-        customerName: customerInfo.name,
+        customerName: customerInfo.fullName,
         customerEmail: customerInfo.email,
         customerCountry: customerInfo.country || '',
       }

@@ -31,65 +31,48 @@ const customerInfoSchema = z.object({
 });
 
 type CustomerInfo = z.infer<typeof customerInfoSchema>;
-type CheckoutStep = "customerInfo" | "payment";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
-const CheckoutForm = () => {
+const CheckoutForm = ({ customerInfo }: { customerInfo: CustomerInfo }) => {
     const { cartItems, getCartTotal, clearCart } = useCart();
     const total = getCartTotal(ticketTypes);
     const router = useRouter();
     const { toast } = useToast();
-
-    const [step, setStep] = useState<CheckoutStep>("customerInfo");
-    const [clientSecret, setClientSecret] = useState("");
-    const [customerData, setCustomerData] = useState<CustomerInfo | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [message, setMessage] = useState<string | null>(null);
-
     const stripe = useStripe();
     const elements = useElements();
 
-    const form = useForm<CustomerInfo>({
-        resolver: zodResolver(customerInfoSchema),
-        defaultValues: {
-            fullName: "",
-            email: "",
-            country: "",
-            city: "",
-        },
-        mode: "onChange",
-    });
+    const [isLoading, setIsLoading] = useState(false);
+    const [message, setMessage] = useState<string | null>(null);
+    const [clientSecret, setClientSecret] = useState("");
 
-    const handleCustomerInfoSubmit = async (data: CustomerInfo) => {
-        setIsLoading(true);
-        setCustomerData(data); // Store customer data
-        try {
-            const res = await fetch("/api/create-payment-intent", {
+    useEffect(() => {
+        if (customerInfo && cartItems.length > 0) {
+            fetch("/api/create-payment-intent", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ 
                   cartItems, 
-                  customerInfo: data
+                  customerInfo
                 }),
+            })
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.clientSecret) {
+                    setClientSecret(data.clientSecret);
+                } else if (data.error) {
+                    toast({ variant: "destructive", title: "Error de API", description: data.error });
+                }
+            })
+            .catch(() => {
+                toast({ variant: "destructive", title: "Error de red", description: "No se pudo conectar con el servidor de pagos." });
             });
-            const resData = await res.json();
-            if (resData.clientSecret) {
-                setClientSecret(resData.clientSecret);
-                setStep("payment"); // Move to payment step
-            } else if (resData.error) {
-                toast({ variant: "destructive", title: "Error de API", description: resData.error });
-            }
-        } catch (error) {
-             toast({ variant: "destructive", title: "Error de red", description: "No se pudo conectar con el servidor de pagos." });
-        } finally {
-            setIsLoading(false);
         }
-    };
-    
+    }, [customerInfo, cartItems, toast]);
+
     const handleStripeSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!stripe || !elements || !customerData) return;
+        if (!stripe || !elements || !customerInfo || !clientSecret) return;
 
         setIsLoading(true);
 
@@ -109,9 +92,9 @@ const CheckoutForm = () => {
         if (paymentIntent && paymentIntent.status === "succeeded") {
             try {
                 const newOrder = await createOrderAndTickets({
-                    customerName: customerData.fullName,
-                    customerEmail: customerData.email,
-                    customerCountry: customerData.country,
+                    customerName: customerInfo.fullName,
+                    customerEmail: customerInfo.email,
+                    customerCountry: customerInfo.country,
                     totalAmount: total,
                     cartItems: cartItems,
                 });
@@ -133,40 +116,14 @@ const CheckoutForm = () => {
     const paymentElementOptions = { layout: "tabs" as const };
 
     return (
-        <Form {...form}>
-            {step === 'customerInfo' ? (
-                 <form onSubmit={form.handleSubmit(handleCustomerInfoSubmit)} className="space-y-6">
-                    <FormField control={form.control} name="fullName" render={({ field }) => (
-                        <FormItem><FormLabel>Nombre completo</FormLabel><FormControl><Input placeholder="Tu nombre y apellidos" {...field} /></FormControl><FormMessage /></FormItem>
-                    )}/>
-                    <FormField control={form.control} name="email" render={({ field }) => (
-                        <FormItem><FormLabel>Email</FormLabel><FormControl><Input type="email" placeholder="tu@email.com" {...field} /></FormControl><FormMessage /></FormItem>
-                    )}/>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <FormField control={form.control} name="country" render={({ field }) => (
-                            <FormItem><FormLabel>País</FormLabel><FormControl><Input placeholder="Marruecos" {...field} /></FormControl><FormMessage /></FormItem>
-                        )}/>
-                        <FormField control={form.control} name="city" render={({ field }) => (
-                            <FormItem><FormLabel>Ciudad (Opcional)</FormLabel><FormControl><Input placeholder="Tetuán" {...field} /></FormControl><FormMessage /></FormItem>
-                        )}/>
-                    </div>
-                    <Button type="submit" disabled={isLoading || !form.formState.isValid} className="w-full" size="lg">
-                        {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                        Continuar al Pago
-                    </Button>
-                </form>
-            ) : (
-                <form onSubmit={handleStripeSubmit} className="space-y-6">
-                    <PaymentElement id="payment-element" options={paymentElementOptions} />
-                    <Button type="submit" disabled={isLoading || !stripe || !elements} className="w-full" size="lg">
-                        {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                        Pagar {total.toFixed(2)} EUR
-                    </Button>
-                    <Button variant="link" onClick={() => setStep('customerInfo')} className="w-full text-sm text-muted-foreground">Volver atrás</Button>
-                    {message && <div id="payment-message" className="text-destructive text-sm">{message}</div>}
-                </form>
-            )}
-        </Form>
+        <form onSubmit={handleStripeSubmit} className="space-y-6">
+            <PaymentElement id="payment-element" options={paymentElementOptions} />
+            <Button type="submit" disabled={isLoading || !stripe || !elements || !clientSecret} className="w-full" size="lg">
+                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                Pagar {total.toFixed(2)} EUR
+            </Button>
+            {message && <div id="payment-message" className="text-destructive text-sm">{message}</div>}
+        </form>
     );
 };
 
@@ -174,6 +131,24 @@ const CheckoutForm = () => {
 export default function CheckoutPage() {
   const { cartItems, getCartTotal } = useCart();
   const total = getCartTotal(ticketTypes);
+  const [step, setStep] = useState<"customerInfo" | "payment">("customerInfo");
+  const [customerData, setCustomerData] = useState<CustomerInfo | null>(null);
+
+  const form = useForm<CustomerInfo>({
+      resolver: zodResolver(customerInfoSchema),
+      defaultValues: {
+          fullName: "",
+          email: "",
+          country: "",
+          city: "",
+      },
+      mode: "onChange",
+  });
+  
+  const handleCustomerInfoSubmit = (data: CustomerInfo) => {
+    setCustomerData(data);
+    setStep("payment");
+  };
 
   if (cartItems.length === 0) {
      return (
@@ -223,9 +198,33 @@ export default function CheckoutPage() {
               <CardTitle>Tus Datos y Pago</CardTitle>
             </CardHeader>
             <CardContent>
-                <Elements stripe={stripePromise} options={stripeOptions}>
-                    <CheckoutForm />
-                </Elements>
+              {step === 'customerInfo' ? (
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(handleCustomerInfoSubmit)} className="space-y-6">
+                      <FormField control={form.control} name="fullName" render={({ field }) => (
+                          <FormItem><FormLabel>Nombre completo</FormLabel><FormControl><Input placeholder="Tu nombre y apellidos" {...field} /></FormControl><FormMessage /></FormItem>
+                      )}/>
+                      <FormField control={form.control} name="email" render={({ field }) => (
+                          <FormItem><FormLabel>Email</FormLabel><FormControl><Input type="email" placeholder="tu@email.com" {...field} /></FormControl><FormMessage /></FormItem>
+                      )}/>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <FormField control={form.control} name="country" render={({ field }) => (
+                              <FormItem><FormLabel>País</FormLabel><FormControl><Input placeholder="Marruecos" {...field} /></FormControl><FormMessage /></FormItem>
+                          )}/>
+                          <FormField control={form.control} name="city" render={({ field }) => (
+                              <FormItem><FormLabel>Ciudad (Opcional)</FormLabel><FormControl><Input placeholder="Tetuán" {...field} /></FormControl><FormMessage /></FormItem>
+                          )}/>
+                      </div>
+                      <Button type="submit" disabled={!form.formState.isValid} className="w-full" size="lg">
+                          Continuar al Pago
+                      </Button>
+                  </form>
+                </Form>
+              ) : customerData ? (
+                 <Elements stripe={stripePromise} options={{...stripeOptions, clientSecret: 'dummy'}}>
+                    <CheckoutForm customerInfo={customerData} />
+                 </Elements>
+              ) : null}
             </CardContent>
           </Card>
 
@@ -256,7 +255,6 @@ export default function CheckoutPage() {
               </div>
             </CardContent>
           </Card>
-
         </div>
       </div>
     </div>
