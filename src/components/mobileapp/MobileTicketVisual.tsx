@@ -48,7 +48,7 @@ export function MobileTicketVisual({ ticket }: MobileTicketVisualProps) {
                     className="text-black font-extrabold text-lg bg-yellow-400 border-2 border-black px-4 py-1 rounded-md uppercase"
                     style={{boxShadow: '3px 3px 0px #000'}}
                 >
-                    Entrada {ticket.ticketTypeName}
+                    {ticket.ticketTypeName}
                 </span>
             </div>
         </div>
