@@ -32,6 +32,7 @@ const getJsDateFromTimestamp = (timestamp: any): Date | null => {
 export function MobileTicketVisual({ ticket }: MobileTicketVisualProps) {
   const purchaseDate = getJsDateFromTimestamp(ticket.createdAt);
   const isPhysical = ticket.isPhysicalImport === true;
+  const isTicketValid = ticket.status === 'valid';
 
   return (
     <div className="bg-white text-black border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] rounded-2xl p-6 flex flex-col items-center gap-6 w-full max-w-sm mx-auto">
@@ -76,10 +77,23 @@ export function MobileTicketVisual({ ticket }: MobileTicketVisualProps) {
             <p className="text-xs font-bold text-gray-600">CÓDIGO DE ACCESO:</p>
             <p className="font-mono text-xl font-black break-all">{ticket.code || 'N/A'}</p>
         </div>
+
+        {/* Status Badge Section */}
+        <div className="w-full text-center">
+            {isTicketValid ? (
+                <div className="w-full text-center p-2 rounded-md border-4 border-black bg-[#39FF14] text-black font-bold uppercase animate-pulse">
+                    ✅ Disponible para acceso
+                </div>
+            ) : (
+                <div className="w-full text-center p-2 rounded-md border-4 border-black bg-[#FF0000] text-white font-bold uppercase">
+                    ❌ Usado / Ya escaneado
+                </div>
+            )}
+        </div>
         
         {/* Physical import Badge */}
         {isPhysical && (
-            <div className="text-xs font-bold uppercase bg-cyan-400 text-black border-2 border-black px-3 py-1 rounded-full">
+            <div className="text-xs font-bold uppercase bg-cyan-400 text-black border-2 border-black px-3 py-1 rounded-full -mt-3">
                 Boleto Físico Digitalizado
             </div>
         )}
