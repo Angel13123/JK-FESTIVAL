@@ -1,14 +1,13 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   PaymentElement,
   useStripe,
   useElements
 } from "@stripe/react-stripe-js";
-import { StripePaymentElementOptions, loadStripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
+import { StripePaymentElementOptions } from "@stripe/stripe-js";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
@@ -16,10 +15,6 @@ import { useCart } from "@/context/CartContext";
 import { createOrderAndTickets } from "@/lib/orders-service";
 import { useRouter } from "next/navigation";
 import { ticketTypes } from "@/lib/data";
-
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
-);
 
 interface PaymentFormProps {
   cartItems: { ticketTypeId: string; quantity: number }[];
@@ -31,7 +26,7 @@ interface PaymentFormProps {
   };
 }
 
-function CheckoutForm({ cartItems, customerInfo }: PaymentFormProps) {
+export function PaymentForm({ cartItems, customerInfo }: PaymentFormProps) {
   const stripe = useStripe();
   const elements = useElements();
   const { toast } = useToast();
@@ -132,86 +127,5 @@ function CheckoutForm({ cartItems, customerInfo }: PaymentFormProps) {
         {message && <div id="payment-message" className="text-destructive text-sm">{message}</div>}
       </form>
     </div>
-  );
-}
-
-export function PaymentForm({ cartItems, customerInfo }: PaymentFormProps) {
-  const [clientSecret, setClientSecret] = useState("");
-
-  useEffect(() => {
-    // Strict guard to ensure all required data is present before fetching.
-    if (!customerInfo || !customerInfo.email || !cartItems || cartItems.length === 0) {
-      return;
-    }
-
-    fetch("/api/create-payment-intent", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ cartItems, customerInfo }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.clientSecret) {
-          setClientSecret(data.clientSecret);
-        } else if (data.error) {
-            console.error("API Error:", data.error);
-        }
-      })
-      .catch(error => {
-          console.error("Fetch Error:", error);
-      });
-  }, [cartItems, customerInfo]);
-
-  const appearance = {
-    theme: 'stripe' as const,
-    variables: {
-        colorPrimary: '#F7FF00',
-        colorBackground: '#ffffff',
-        colorText: '#000000',
-        colorDanger: '#df1b41',
-        fontFamily: 'Montserrat, sans-serif',
-        spacingUnit: '4px',
-        borderRadius: '12px',
-    },
-     rules: {
-        '.Input': {
-            borderColor: '#000000',
-            borderWidth: '1px',
-        },
-        '.Input:focus': {
-            borderColor: '#F7FF00',
-            boxShadow: '0 0 0 1px #F7FF00'
-        },
-        '.Tab': {
-            borderColor: '#000000',
-            borderWidth: '1px'
-        },
-        '.Tab:focus': {
-            borderColor: '#F7FF00',
-            boxShadow: '0 0 0 1px #F7FF00'
-        },
-        '.Tab--selected': {
-            borderColor: '#F7FF00',
-            backgroundColor: '#F7FF00'
-        }
-    }
-  };
-  const options = {
-    clientSecret,
-    appearance,
-  };
-
-  if (!clientSecret) {
-    return (
-      <div className="flex justify-center items-center h-48">
-          <Loader2 className="h-8 w-8 animate-spin"/>
-      </div>
-    );
-  }
-
-  return (
-      <Elements options={options} stripe={stripePromise}>
-        <CheckoutForm cartItems={cartItems} customerInfo={customerInfo}/>
-      </Elements>
   );
 }
