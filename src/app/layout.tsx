@@ -47,10 +47,12 @@ export default function RootLayout({
         <title>JK Festival</title>
         <meta name="description" content="La web oficial del JK Festival de música urbana en Martil, Marruecos." />
         <link rel="manifest" href="/manifest.json" />
+        <meta name="application-name" content="JK Festival"/>
         <meta name="theme-color" content="#000000" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="JK Festival Admin" />
+        <meta name="apple-mobile-web-app-title" content="JK Festival" />
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
       </head>
       <body
         className={cn(
