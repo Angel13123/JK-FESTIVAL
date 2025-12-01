@@ -8,7 +8,8 @@ import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { loadStripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
+import { Elements, useStripe, useElements } from "@stripe/react-stripe-js";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,6 +18,9 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { PaymentForm } from "@/components/checkout/PaymentForm";
 import { Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { createOrderAndTickets } from "@/lib/orders-service";
+
 
 const customerInfoSchema = z.object({
   fullName: z.string()
@@ -31,28 +35,156 @@ type CustomerInfo = z.infer<typeof customerInfoSchema>;
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
+const CheckoutForm = () => {
+    const { cartItems, getCartTotal, clearCart } = useCart();
+    const total = getCartTotal(ticketTypes);
+    const router = useRouter();
+    const { toast } = useToast();
+
+    const [isLoading, setIsLoading] = useState(false);
+    const [message, setMessage] = useState<string | null>(null);
+
+    const stripe = useStripe();
+    const elements = useElements();
+
+    const form = useForm<CustomerInfo>({
+        resolver: zodResolver(customerInfoSchema),
+        defaultValues: {
+            fullName: "",
+            email: "",
+            country: "",
+            city: "",
+        },
+        mode: "onChange",
+    });
+
+    const watchedCustomerInfo = useWatch({ control: form.control });
+    const isFormValid = form.formState.isValid;
+
+    const handleStripeSubmit = async (customerData: CustomerInfo) => {
+        if (!stripe || !elements) return;
+
+        setIsLoading(true);
+
+        const { error, paymentIntent } = await stripe.confirmPayment({
+            elements,
+            redirect: "if_required",
+        });
+
+        if (error) {
+            setMessage(error.message || "An unexpected error occurred.");
+            toast({
+                variant: "destructive",
+                title: "Error en el pago",
+                description: error.message || "An unexpected error occurred.",
+            });
+            setIsLoading(false);
+            router.push('/payment/failure');
+            return;
+        }
+
+        if (paymentIntent && paymentIntent.status === "succeeded") {
+            try {
+                const newOrder = await createOrderAndTickets({
+                    customerName: customerData.fullName,
+                    customerEmail: customerData.email,
+                    customerCountry: customerData.country,
+                    totalAmount: total,
+                    cartItems: cartItems,
+                });
+
+                toast({
+                    title: "¡Compra completada!",
+                    description: `Tu pedido se ha procesado con éxito.`,
+                });
+
+                clearCart();
+                router.push(`/payment/success?orderId=${newOrder.id}&provider=stripe&tid=${paymentIntent.id}`);
+            } catch (e: any) {
+                console.error("Failed to create order after payment:", e);
+                toast({
+                    variant: "destructive",
+                    title: "Error post-pago",
+                    description: "Tu pago fue exitoso, pero hubo un error al crear tu pedido. Por favor, contacta a soporte.",
+                });
+                 setIsLoading(false);
+            }
+        } else {
+            setMessage("El pago no se completó. Estado: " + paymentIntent?.status);
+            setIsLoading(false);
+            router.push('/payment/failure');
+        }
+    };
+
+    return (
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(handleStripeSubmit)} className="space-y-6">
+                <FormField control={form.control} name="fullName" render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Nombre completo</FormLabel>
+                        <FormControl><Input placeholder="Tu nombre y apellidos" {...field} /></FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}/>
+                <FormField control={form.control} name="email" render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl><Input type="email" placeholder="tu@email.com" {...field} /></FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}/>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <FormField control={form.control} name="country" render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>País</FormLabel>
+                            <FormControl><Input placeholder="Marruecos" {...field} /></FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}/>
+                    <FormField control={form.control} name="city" render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Ciudad (Opcional)</FormLabel>
+                            <FormControl><Input placeholder="Tetuán" {...field} /></FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}/>
+                </div>
+                <hr className="my-4 border-dashed" />
+                
+                <PaymentForm />
+
+                <Button
+                    type="submit"
+                    disabled={isLoading || !stripe || !elements || !isFormValid}
+                    className="w-full"
+                    size="lg"
+                >
+                    {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                    Pagar {total.toFixed(2)} EUR
+                </Button>
+                {message && <div id="payment-message" className="text-destructive text-sm">{message}</div>}
+            </form>
+        </Form>
+    );
+};
+
+
 export default function CheckoutPage() {
   const { cartItems, getCartTotal } = useCart();
   const [clientSecret, setClientSecret] = useState("");
   const total = getCartTotal(ticketTypes);
 
-  const form = useForm<CustomerInfo>({
-    resolver: zodResolver(customerInfoSchema),
-    defaultValues: {
-      fullName: "",
-      email: "",
-      country: "",
-      city: "",
-    },
-    mode: "onChange",
+  // This is a dummy form just to watch customer info for the API call
+  const { control, formState: { isValid } } = useForm<CustomerInfo>({
+      resolver: zodResolver(customerInfoSchema),
+      mode: 'onChange'
   });
-  
-  const watchedCustomerInfo = useWatch({ control: form.control });
-  const isFormValid = form.formState.isValid;
+   const watchedCustomerInfo = useWatch({ control });
+
 
   useEffect(() => {
     // Only fetch the client secret if the form is valid and cart is not empty
-    if (isFormValid && cartItems.length > 0) {
+    if (isValid && cartItems.length > 0) {
       fetch("/api/create-payment-intent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -78,7 +210,7 @@ export default function CheckoutPage() {
         console.error("Fetch Error:", error);
       });
     }
-  }, [isFormValid, cartItems, watchedCustomerInfo]);
+  }, [isValid, cartItems, watchedCustomerInfo]);
 
 
   if (cartItems.length === 0) {
@@ -147,64 +279,18 @@ export default function CheckoutPage() {
               <CardTitle>Tus Datos y Pago</CardTitle>
             </CardHeader>
             <CardContent>
-              <Form {...form}>
-                <form className="space-y-6">
-                  <FormField control={form.control} name="fullName" render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Nombre completo</FormLabel>
-                        <FormControl><Input placeholder="Tu nombre y apellidos" {...field} /></FormControl>
-                        <FormMessage />
-                      </FormItem>
-                  )}/>
-                  <FormField control={form.control} name="email" render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl><Input type="email" placeholder="tu@email.com" {...field} /></FormControl>
-                        <FormMessage />
-                      </FormItem>
-                  )}/>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <FormField control={form.control} name="country" render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>País</FormLabel>
-                            <FormControl><Input placeholder="Marruecos" {...field} /></FormControl>
-                            <FormMessage />
-                          </FormItem>
-                      )}/>
-                      <FormField control={form.control} name="city" render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Ciudad (Opcional)</FormLabel>
-                            <FormControl><Input placeholder="Tetuán" {...field} /></FormControl>
-                            <FormMessage />
-                          </FormItem>
-                      )}/>
+               {clientSecret ? (
+                  <Elements options={stripeOptions} stripe={stripePromise}>
+                    <CheckoutForm />
+                  </Elements>
+                ) : (
+                  <div className="flex flex-col items-center justify-center h-48 text-center">
+                    <Loader2 className="h-8 w-8 animate-spin mb-4" />
+                    <p className="text-muted-foreground">
+                      Completa tus datos para generar el terminal de pago...
+                    </p>
                   </div>
-                  <hr className="my-4 border-dashed" />
-                  {clientSecret ? (
-                      <Elements options={stripeOptions} stripe={stripePromise}>
-                        <PaymentForm 
-                          cartItems={cartItems} 
-                          customerInfo={{
-                            fullName: watchedCustomerInfo.fullName,
-                            email: watchedCustomerInfo.email,
-                            country: watchedCustomerInfo.country,
-                            city: watchedCustomerInfo.city
-                          }}
-                        />
-                      </Elements>
-                    ) : (
-                      <div className="flex flex-col items-center justify-center h-48 text-center">
-                        <Loader2 className="h-8 w-8 animate-spin mb-4" />
-                        <p className="text-muted-foreground">
-                          {isFormValid 
-                            ? "Generando terminal de pago seguro..." 
-                            : "Completa tus datos para continuar."
-                          }
-                        </p>
-                      </div>
-                    )}
-                </form>
-              </Form>
+                )}
             </CardContent>
           </Card>
 
@@ -241,3 +327,5 @@ export default function CheckoutPage() {
     </div>
   );
 }
+
+    
