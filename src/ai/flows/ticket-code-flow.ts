@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview A Genkit flow to generate a unique ticket code.
@@ -31,6 +32,7 @@ const prompt = ai.definePrompt({
     The code must consist of ONLY uppercase letters (A-Z) and numbers (0-9).
     The mix must be completely random.
     The final output code must be exactly 20 characters long. Do not generate 19 or 21 characters.
+    Double-check the length before outputting. It must be 20.
     
     For example: 4F8KWP9Z2V6J3N7R1Y0E`,
 });
