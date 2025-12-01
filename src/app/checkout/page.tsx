@@ -56,7 +56,15 @@ export default function CheckoutPage() {
       fetch("/api/create-payment-intent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cartItems, customerInfo: watchedCustomerInfo }),
+        body: JSON.stringify({ 
+          cartItems, 
+          customerInfo: {
+            name: watchedCustomerInfo.fullName,
+            email: watchedCustomerInfo.email,
+            country: watchedCustomerInfo.country,
+            city: watchedCustomerInfo.city
+          }
+        }),
       })
       .then((res) => res.json())
       .then((data) => {
@@ -176,7 +184,12 @@ export default function CheckoutPage() {
                       <Elements options={stripeOptions} stripe={stripePromise}>
                         <PaymentForm 
                           cartItems={cartItems} 
-                          customerInfo={watchedCustomerInfo as CustomerInfo} 
+                          customerInfo={{
+                            fullName: watchedCustomerInfo.fullName,
+                            email: watchedCustomerInfo.email,
+                            country: watchedCustomerInfo.country,
+                            city: watchedCustomerInfo.city
+                          }}
                         />
                       </Elements>
                     ) : (
