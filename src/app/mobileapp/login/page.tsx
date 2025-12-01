@@ -108,11 +108,11 @@ export default function LoginPage() {
         return (
           <div className="space-y-6">
              <div className="p-4 bg-gray-800/50 border-2 border-dashed border-yellow-400/50 rounded-lg animate-pulse">
-                <div className="flex items-start gap-3">
-                    <Ticket className="h-5 w-5 text-yellow-400 mt-1 flex-shrink-0"/>
+                <div className="flex items-start gap-4">
+                    <Ticket className="h-6 w-6 text-yellow-400 mt-1 flex-shrink-0"/>
                     <div>
-                        <h3 className="font-bold text-yellow-400 text-sm">⚠️ ¿Ya compraste tu entrada?</h3>
-                        <p className="text-xs text-gray-300 mt-1">Para que tus boletos aparezcan automáticamente aquí, asegúrate de ingresar con el mismo correo electrónico que usaste al comprar en la web.</p>
+                        <h3 className="font-bold text-yellow-400 text-base">⚠️ ¿Ya compraste tu entrada?</h3>
+                        <p className="text-sm text-gray-300 mt-1">Para que tus boletos aparezcan automáticamente aquí, asegúrate de ingresar con el mismo correo electrónico que usaste al comprar en la web.</p>
                     </div>
                 </div>
             </div>
