@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useCart } from "@/context/CartContext";
 import { ticketTypes } from "@/lib/data";
 import { useForm } from "react-hook-form";
@@ -12,7 +12,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
@@ -33,12 +33,14 @@ const customerInfoSchema = z.object({
 
 export type CustomerInfo = z.infer<typeof customerInfoSchema>;
 
+type Step = "customerInfo" | "payment";
+
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 export default function CheckoutPage() {
   const { cartItems, getCartTotal, clearCart } = useCart();
   const total = getCartTotal(ticketTypes);
-  const [step, setStep] = useState<"customerInfo" | "payment">("customerInfo");
+  const [step, setStep] = useState<Step>("customerInfo");
   const [customerData, setCustomerData] = useState<CustomerInfo | null>(null);
   const { toast } = useToast();
   const [clientSecret, setClientSecret] = useState('');
@@ -170,6 +172,11 @@ export default function CheckoutPage() {
           <Card className="bg-card text-black border-2 border-black hard-shadow transition-shadow duration-300 hover:shadow-xl">
             <CardHeader>
               <CardTitle className="text-black" style={{textShadow: 'none', WebkitTextStroke: 0}}>Tus Datos y Pago</CardTitle>
+               {step === 'payment' && (
+                  <CardDescription>
+                    Estás a un paso de conseguir tus entradas.
+                  </CardDescription>
+                )}
             </CardHeader>
             <CardContent>
               {step === 'customerInfo' ? (

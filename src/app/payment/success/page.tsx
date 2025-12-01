@@ -27,7 +27,15 @@ function SuccessContent() {
     if (orderId) {
       const fetchTickets = async () => {
         try {
-          const fetchedTickets = await getTicketsByOrderId(orderId);
+          // Retry logic to give backend time to create tickets
+          let fetchedTickets: TicketType[] = [];
+          for (let i = 0; i < 5; i++) { // Try up to 5 times
+            fetchedTickets = await getTicketsByOrderId(orderId);
+            if (fetchedTickets.length > 0) {
+              break;
+            }
+            await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds
+          }
           setTickets(fetchedTickets);
         } catch (error) {
           console.error("Failed to fetch tickets:", error);
@@ -47,14 +55,14 @@ function SuccessContent() {
 
     setDownloading(ticket.id);
     try {
-        const fontURL = "https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=PT+Sans:wght@400;700&display=swap";
-        const response = await fetch(fontURL);
-        const cssText = await response.text();
-
         const dataUrl = await toPng(ticketNode, { 
             cacheBust: true, 
             pixelRatio: 2,
-            fontEmbedCSS: cssText
+            // Fetch fonts to embed them.
+            fetchRequestInit: {
+                headers: new Headers(),
+                credentials: 'omit'
+            }
         });
         const link = document.createElement('a');
         link.download = `JK-Festival-Ticket-${ticket.code}.png`;
@@ -69,21 +77,22 @@ function SuccessContent() {
 
   return (
      <div className="container mx-auto max-w-screen-md px-4 py-16 flex items-center justify-center min-h-[calc(100vh-10rem)]">
-        <Card className="w-full max-w-lg text-center shadow-lg animate-fade-in-down">
+        <Card className="w-full max-w-lg text-center shadow-lg animate-fade-in-down bg-card">
             <CardHeader className="items-center">
                 <div className="bg-green-100 dark:bg-green-900/30 p-3 rounded-full">
                     <CheckCircle className="h-10 w-10 text-green-600 dark:text-green-400" />
                 </div>
                 <CardTitle className="text-3xl font-headline mt-4">¡Pago completado con éxito!</CardTitle>
-                <CardDescription className="text-base">Gracias por tu compra.</CardDescription>
+                <CardDescription className="text-base text-muted-foreground">Gracias por tu compra.</CardDescription>
             </CardHeader>
             <CardContent>
                 <p className="text-muted-foreground">
-                    Hemos generado tus entradas. Puedes descargarlas ahora o revisar el correo electrónico que te hemos enviado con todos los detalles.
+                    {loading ? "Estamos generando tus boletos digitales..." : "Hemos generado tus entradas. Puedes descargarlas ahora o revisar el correo electrónico que te hemos enviado."}
                 </p>
                 {loading ? (
-                    <div className="flex justify-center items-center mt-6">
-                        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                    <div className="flex flex-col justify-center items-center mt-6 space-y-4">
+                        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+                        <p className="text-sm text-muted-foreground">Por favor, no cierres esta página.</p>
                     </div>
                 ) : tickets.length > 0 ? (
                     <div className="mt-6 text-left">
@@ -104,7 +113,7 @@ function SuccessContent() {
                                   {downloading === ticket.id ? 'Descargando...' : 'Descargar'}
                                 </Button>
                                 {/* This element is hidden and used only for generating the image */}
-                                <div className="fixed -left-[9999px] top-0">
+                                <div className="fixed -left-[9999px] top-0 p-4 bg-white">
                                     <div ref={el => (ticketRefs.current[ticket.id] = el)}>
                                         <TicketVisual ticket={ticket} />
                                     </div>
@@ -114,22 +123,13 @@ function SuccessContent() {
                         </div>
                     </div>
                 ) : (
-                    <div className="mt-6 text-muted-foreground">No se encontraron los códigos de tus entradas.</div>
+                    <div className="mt-6 text-destructive">No se encontraron tus entradas. Por favor, contacta a soporte si no las recibes por email.</div>
                 )}
                 <div className="mt-8 flex flex-wrap justify-center gap-4">
                     <Button asChild>
                         <Link href="/">Volver al inicio</Link>
                     </Button>
-                     <Button asChild variant="secondary">
-                        <Link href="/app">
-                           <Smartphone className="mr-2 h-4 w-4"/>
-                           Probar la App
-                        </Link>
-                    </Button>
-                    <PwaInstallButton variant="outline">
-                      <Download className="mr-2 h-4"/>
-                      Instalar App
-                    </PwaInstallButton>
+                    <PwaInstallButton />
                 </div>
             </CardContent>
         </Card>

@@ -77,7 +77,7 @@ export function TicketVisual({ ticket }: TicketVisualProps) {
             {/* Right Part */}
             <div className="w-1/3 bg-cyan-300 flex flex-col items-center justify-center p-6 gap-4">
                 <div className="bg-white p-2 border-4 border-black">
-                     <QRCode value={ticket.code} size={160} bgColor="#ffffff" fgColor="#000000" />
+                     <QRCode value={ticket?.code || 'no-code'} size={160} bgColor="#ffffff" fgColor="#000000" />
                 </div>
                  <div className="text-center">
                     <p className="text-xs font-bold text-gray-800">CÓDIGO DE ACCESO:</p>
