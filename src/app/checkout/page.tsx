@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -51,7 +50,7 @@ export default function CheckoutPage() {
       defaultValues: {
           fullName: "",
           email: "",
-          country: "",
+          country: "España",
           city: "",
       },
       mode: "onChange",
@@ -184,7 +183,7 @@ export default function CheckoutPage() {
                       )}/>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <FormField control={form.control} name="country" render={({ field }) => (
-                              <FormItem><FormLabel>País</FormLabel><FormControl><Input placeholder="Marruecos" {...field} /></FormControl><FormMessage /></FormItem>
+                              <FormItem><FormLabel>País</FormLabel><FormControl><Input placeholder="España" {...field} /></FormControl><FormMessage /></FormItem>
                           )}/>
                           <FormField control={form.control} name="city" render={({ field }) => (
                               <FormItem><FormLabel>Ciudad (Opcional)</FormLabel><FormControl><Input placeholder="Tetuán" {...field} /></FormControl><FormMessage /></FormItem>
