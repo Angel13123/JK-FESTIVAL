@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { useApp } from '@/context/AppContext';
-import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 import type { Ticket } from '@/lib/types';
 import { initializeFirebase } from '@/firebase';
 import { MobileTicketVisual } from '@/components/mobileapp/MobileTicketVisual';
@@ -18,12 +18,20 @@ const { firestore } = initializeFirebase();
 // Firestore query function
 async function getTicketsForUser(email: string): Promise<Ticket[]> {
     const ticketsCollection = collection(firestore, 'tickets');
-    const q = query(ticketsCollection, where("customerEmail", "==", email), orderBy("createdAt", "asc"));
+    // The orderBy was removed to prevent a missing index error. Sorting is now done on the client.
+    const q = query(ticketsCollection, where("customerEmail", "==", email));
     const snapshot = await getDocs(q);
     if (snapshot.empty) {
         return [];
     }
-    return snapshot.docs.map(doc => doc.data() as Ticket);
+    const tickets = snapshot.docs.map(doc => doc.data() as Ticket);
+    
+    // Sort tickets on the client-side
+    return tickets.sort((a, b) => {
+        const dateA = a.createdAt?.toMillis() || 0;
+        const dateB = b.createdAt?.toMillis() || 0;
+        return dateA - dateB;
+    });
 }
 
 
