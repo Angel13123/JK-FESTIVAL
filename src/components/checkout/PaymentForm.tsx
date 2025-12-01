@@ -3,19 +3,21 @@
 "use client";
 
 import { useState } from "react";
-import { useCart } from "@/context/CartContext";
-import { ticketTypes } from "@/lib/data";
 import { useStripe, useElements, PaymentElement } from "@stripe/react-stripe-js";
 import { useRouter } from "next/navigation";
-import type { CustomerInfo } from "@/app/checkout/page";
+import { useCart } from "@/context/CartContext";
+import { ticketTypes } from "@/lib/data";
 
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { createOrderAndTickets } from "@/lib/orders-service";
 
-export const CheckoutForm = ({ customerInfo }: { customerInfo: CustomerInfo }) => {
-    const { cartItems, getCartTotal, clearCart } = useCart();
+interface CheckoutFormProps {
+    onPaymentSuccess: () => void;
+}
+
+export const CheckoutForm = ({ onPaymentSuccess }: CheckoutFormProps) => {
+    const { getCartTotal } = useCart();
     const total = getCartTotal(ticketTypes);
     const router = useRouter();
     const { toast } = useToast();
@@ -27,7 +29,7 @@ export const CheckoutForm = ({ customerInfo }: { customerInfo: CustomerInfo }) =
 
     const handleStripeSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!stripe || !elements || !customerInfo) return;
+        if (!stripe || !elements) return;
 
         setIsLoading(true);
 
@@ -45,21 +47,7 @@ export const CheckoutForm = ({ customerInfo }: { customerInfo: CustomerInfo }) =
         }
 
         if (paymentIntent && paymentIntent.status === "succeeded") {
-            try {
-                const newOrder = await createOrderAndTickets({
-                    customerName: customerInfo.fullName,
-                    customerEmail: customerInfo.email,
-                    customerCountry: customerInfo.country,
-                    totalAmount: total,
-                    cartItems: cartItems,
-                });
-                toast({ title: "¡Compra completada!", description: `Tu pedido ${newOrder.id} se ha procesado.` });
-                clearCart();
-                router.push(`/mobileapp/payment-success`);
-            } catch (e: any) {
-                console.error("Failed to create order after payment:", e);
-                toast({ variant: "destructive", title: "Error post-pago", description: "Tu pago fue exitoso, pero hubo un error al crear tu pedido. Por favor, contacta a soporte." });
-            }
+            onPaymentSuccess();
         } else {
              setMessage("El pago no se completó. Estado: " + paymentIntent?.status);
              router.push('/payment/failure');

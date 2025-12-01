@@ -20,6 +20,7 @@ import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { CheckoutForm } from "@/components/checkout/PaymentForm";
+import { createOrderAndTickets } from "@/lib/orders-service";
 
 
 const customerInfoSchema = z.object({
@@ -36,13 +37,14 @@ export type CustomerInfo = z.infer<typeof customerInfoSchema>;
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 export default function CheckoutPage() {
-  const { cartItems, getCartTotal } = useCart();
+  const { cartItems, getCartTotal, clearCart } = useCart();
   const total = getCartTotal(ticketTypes);
   const [step, setStep] = useState<"customerInfo" | "payment">("customerInfo");
   const [customerData, setCustomerData] = useState<CustomerInfo | null>(null);
   const { toast } = useToast();
   const [clientSecret, setClientSecret] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const form = useForm<CustomerInfo>({
       resolver: zodResolver(customerInfoSchema),
@@ -82,6 +84,25 @@ export default function CheckoutPage() {
         setIsLoading(false);
     }
   };
+  
+  const handlePaymentSuccess = async () => {
+    if (!customerData) return;
+     try {
+        const newOrder = await createOrderAndTickets({
+            customerName: customerData.fullName,
+            customerEmail: customerData.email,
+            customerCountry: customerData.country,
+            totalAmount: total,
+            cartItems: cartItems,
+        });
+        toast({ title: "¡Compra completada!", description: `Tu pedido ${newOrder.id} se ha procesado.` });
+        clearCart();
+        router.push(`/payment/success?orderId=${newOrder.id}`);
+    } catch (e: any) {
+        console.error("Failed to create order after payment:", e);
+        toast({ variant: "destructive", title: "Error post-pago", description: "Tu pago fue exitoso, pero hubo un error al crear tu pedido. Por favor, contacta a soporte." });
+    }
+  }
 
   if (cartItems.length === 0) {
      return (
@@ -176,7 +197,7 @@ export default function CheckoutPage() {
                 </Form>
               ) : (clientSecret && customerData) ? (
                  <Elements stripe={stripePromise} options={stripeOptions}>
-                    <CheckoutForm customerInfo={customerData} />
+                    <CheckoutForm onPaymentSuccess={handlePaymentSuccess} />
                  </Elements>
               ) : <div className="flex justify-center items-center h-40"><Loader2 className="h-8 w-8 animate-spin" /></div>}
             </CardContent>
