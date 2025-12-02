@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { MobileCountdown } from "@/components/mobileapp/MobileCountdown";
 import { MapPin, Check, X, CalendarDays, HelpCircle } from "lucide-react";
 import { artists } from "@/lib/data";
 
@@ -101,6 +101,10 @@ export default function MobileAppHomePage() {
                     Faltan <span className="text-3xl">{daysLeft}</span> Días para el JK Festival
                  </p>
             )}
+        </div>
+        
+        <div className="mt-4">
+            <MobileCountdown />
         </div>
 
         {/* Artist of the Day */}
