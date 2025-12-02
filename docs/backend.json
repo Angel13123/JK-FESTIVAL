@@ -1,3 +1,4 @@
+
 {
   "entities": {
     "Order": {
@@ -130,6 +131,37 @@
         "pin",
         "createdAt"
       ]
+    },
+    "ChatMessage": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ChatMessage",
+      "type": "object",
+      "description": "Represents a single message in the community chat.",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "The content of the chat message."
+        },
+        "userId": {
+          "type": "string",
+          "description": "The ID of the user who sent the message."
+        },
+        "userName": {
+          "type": "string",
+          "description": "The display name of the user who sent the message."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "The server timestamp of when the message was sent.",
+          "format": "date-time"
+        },
+        "role": {
+          "type": "string",
+          "description": "The role of the user at the time of sending.",
+          "enum": ["admin", "vip", "general"]
+        }
+      },
+      "required": ["text", "userId", "userName", "timestamp", "role"]
     }
   },
   "auth": {
@@ -187,8 +219,24 @@
             }
           ]
         }
+      },
+      {
+        "path": "chat_messages/{messageId}",
+        "definition": {
+          "entityName": "ChatMessage",
+          "schema": {
+            "$ref": "#/backend/entities/ChatMessage"
+          },
+          "description": "Stores all messages from the community chat. Requires authentication to create.",
+          "params": [
+            {
+              "name": "messageId",
+              "description": "The unique identifier for the chat message."
+            }
+          ]
+        }
       }
     ],
-    "reasoning": "The Firestore database structure is designed to manage orders and tickets for the JK Festival. It uses two collections: `orders` and `tickets`. The `tickets` collection includes the `orderId` to establish a relationship with the `orders` collection. To maintain Authorization Independence, particularly for listing tickets related to a specific order, the `customerName` and `customerEmail` are duplicated in the `tickets` collection, avoiding the need for security rules to fetch the parent order document. The `id` field is used as the document id.\n\nA new `app_users` collection has been added to support a separate authentication system for the PWA/mobile app experience. This collection stores user profiles with an email, username, and a 4-digit PIN. The user's email serves as the unique document ID, simplifying lookups. This structure separates website order data from app user accounts, while still allowing tickets to be linked to users via their email address.\n\nThis structure supports the required QAPs:\n\n1.  **Secure `list` operations for tickets by order:** By including `orderId` and the relevant customer information on each ticket, security rules can efficiently validate access to tickets belonging to a specific order without requiring `get()` operations on the parent `order` document. This avoids hierarchical authorization and ensures atomic operations.\n2. **Email-based Ticket Sync**: The app can query the `tickets` collection using the logged-in user's email to find their purchased tickets, effectively linking web purchases to app accounts.\n3. **Data integrity:** Timestamps (`createdAt`) are included in `orders`, `tickets`, and `app_users` to track creation times. The explicit `status` field in the `tickets` collection (`valid` or `used`) maintains clear state management for tickets.\n4. **Clarity of Intent**: The document structures are named semantically."
+    "reasoning": "The Firestore database structure is designed to manage orders and tickets for the JK Festival. It uses two collections: `orders` and `tickets`. The `tickets` collection includes the `orderId` to establish a relationship with the `orders` collection. To maintain Authorization Independence, particularly for listing tickets related to a specific order, the `customerName` and `customerEmail` are duplicated in the `tickets` collection, avoiding the need for security rules to fetch the parent order document. The `id` field is used as the document id.\n\nA new `app_users` collection has been added to support a separate authentication system for the PWA/mobile app experience. This collection stores user profiles with an email, username, and a 4-digit PIN. The user's email serves as the unique document ID, simplifying lookups. This structure separates website order data from app user accounts, while still allowing tickets to be linked to users via their email address.\n\n The `chat_messages` collection is added to store messages for the real-time community chat. Each message includes user info and a `role` field ('admin', 'vip', 'general') to enable role-based UI styling in the chat, providing special visual treatment for messages from VIPs and administrators.\n\nThis structure supports the required QAPs:\n\n1.  **Secure `list` operations for tickets by order:** By including `orderId` and the relevant customer information on each ticket, security rules can efficiently validate access to tickets belonging to a specific order without requiring `get()` operations on the parent `order` document. This avoids hierarchical authorization and ensures atomic operations.\n2. **Email-based Ticket Sync**: The app can query the `tickets` collection using the logged-in user's email to find their purchased tickets, effectively linking web purchases to app accounts.\n3. **Data integrity:** Timestamps (`createdAt`) are included in `orders`, `tickets`, and `app_users` to track creation times. The explicit `status` field in the `tickets` collection (`valid` or `used`) maintains clear state management for tickets.\n4. **Clarity of Intent**: The document structures are named semantically."
   }
 }

@@ -81,4 +81,12 @@ export type AppUser = {
   createdAt: Timestamp;
 }
 
+export type ChatMessage = {
+  id: string;
+  text: string;
+  userId: string;
+  userName: string;
+  timestamp: Timestamp;
+  role: 'admin' | 'vip' | 'general';
+};
     

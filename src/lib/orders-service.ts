@@ -13,9 +13,9 @@ import {
   orderBy,
   Timestamp,
   limit,
-  getFirestore,
+  addDoc,
 } from 'firebase/firestore';
-import type { Order, Ticket, CartItem, OrderStats } from './types';
+import type { Order, Ticket, CartItem, OrderStats, ChatMessage } from './types';
 import { ticketTypes } from './data';
 import { FirestorePermissionError, errorEmitter, initializeFirebase } from '@/firebase';
 import { generateTicketCode } from '@/ai/flows/ticket-code-flow';
@@ -26,6 +26,11 @@ const { firestore: db } = initializeFirebase();
 
 const ordersCollection = collection(db, 'orders');
 const ticketsCollection = collection(db, 'tickets');
+const chatMessagesCollection = collection(db, 'chat_messages');
+
+// Hardcoded list of admin emails for role checking
+const ADMIN_EMAILS = ['admin@jkfestival.com', 'test@firebase.com'];
+
 
 interface CreateOrderPayload {
     customerName: string;
@@ -300,4 +305,60 @@ export async function claimTicket(ticketId: string, ownerName: string, ownerEmai
     });
 }
 
+// --- Chat Service ---
+
+/**
+ * Determines a user's role ('admin', 'vip', 'general').
+ * @param userEmail The user's email address.
+ * @returns A promise that resolves to the user's role.
+ */
+export async function getUserRole(userEmail: string): Promise<'admin' | 'vip' | 'general'> {
+    if (ADMIN_EMAILS.includes(userEmail)) {
+        return 'admin';
+    }
+
+    const vipTicketsQuery = query(
+        ticketsCollection,
+        where("customerEmail", "==", userEmail),
+        where("ticketTypeId", "==", "vip")
+    );
+    const vipSnapshot = await getDocs(vipTicketsQuery);
+    if (!vipSnapshot.empty) {
+        return 'vip';
+    }
+
+    return 'general';
+}
+
+
+/**
+ * Saves a new chat message to Firestore after determining the user's role.
+ * @param userId - The ID of the user sending the message.
+ * @param userName - The display name of the user.
+ * @param userEmail - The email of the user (for role checking).
+ * @param text - The content of the message.
+ */
+export async function sendChatMessage(userId: string, userName: string, userEmail: string, text: string): Promise<void> {
+    const role = await getUserRole(userEmail);
+    
+    const messageData: Omit<ChatMessage, 'id' | 'timestamp'> = {
+        userId,
+        userName,
+        text,
+        role,
+    };
+    
+    await addDoc(chatMessagesCollection, {
+        ...messageData,
+        timestamp: serverTimestamp(),
+    }).catch(error => {
+        const permissionError = new FirestorePermissionError({
+          path: 'chat_messages',
+          operation: 'create',
+          requestResourceData: messageData,
+        });
+        errorEmitter.emit('permission-error', permissionError);
+        throw error;
+    });
+}
     
