@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, forwardRef, useImperativeHandle } from "react";
 import { useApp } from "@/context/AppContext";
 import { useCollection } from "@/firebase/firestore/use-collection";
 import { initializeFirebase, useMemoFirebase } from "@/firebase";
@@ -14,9 +14,12 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { LogIn, Send, Loader2, Crown, Shield } from "lucide-react";
+import { LogIn, Send, Loader2, Crown, Shield, Settings } from "lucide-react";
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 const { firestore } = initializeFirebase();
 
@@ -61,25 +64,33 @@ function ChatBubble({ message, isCurrentUser }: { message: ChatMessage, isCurren
     );
 }
 
-export default function ChatPage() {
-    const { user, isGuest } = useApp();
+const ChatPage = forwardRef((props, ref) => {
+    const { user, isGuest, updateLastReadTimestamp, notificationSettings, setNotificationSettings } = useApp();
     const [newMessage, setNewMessage] = useState("");
     const [isSending, setIsSending] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     
     const messagesQuery = useMemoFirebase(() => 
         query(collection(firestore, "chat_messages"), orderBy("timestamp", "asc"))
     , [firestore]);
 
     const { data: messages, isLoading } = useCollection<ChatMessage>(messagesQuery);
+    
+    useImperativeHandle(ref, () => ({
+      openSettings: () => setIsSettingsOpen(true),
+    }));
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
 
     useEffect(() => {
+        // When entering chat, update the last read timestamp
+        updateLastReadTimestamp();
+        // Scroll to bottom when messages load
         scrollToBottom();
-    }, [messages]);
+    }, [messages, updateLastReadTimestamp]);
     
     const handleSendMessage = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -91,7 +102,6 @@ export default function ChatPage() {
             setNewMessage("");
         } catch (error) {
             console.error("Error sending message:", error);
-            // Optionally, show a toast notification
         } finally {
             setIsSending(false);
         }
@@ -117,12 +127,12 @@ export default function ChatPage() {
     }
   
     return (
+      <>
         <div className="h-[calc(100vh-8rem)] flex flex-col">
             <div className="text-center mb-4">
                 <h1 className="text-2xl font-bold text-yellow-400">JK FESTIVAL FEBRERO CHAT</h1>
             </div>
             
-            {/* Messages Area */}
             <div className="flex-1 overflow-y-auto space-y-6 p-4">
                 {isLoading && (
                     <div className="flex justify-center items-center h-full">
@@ -135,7 +145,6 @@ export default function ChatPage() {
                  <div ref={messagesEndRef} />
             </div>
 
-            {/* Input Form */}
             <div className="p-4 border-t border-gray-800">
                 <form onSubmit={handleSendMessage} className="flex items-center gap-2">
                     <Input
@@ -151,5 +160,52 @@ export default function ChatPage() {
                 </form>
             </div>
         </div>
+
+        <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Ajustes de Notificaciones</DialogTitle>
+                    <DialogDescription>
+                        Gestiona cómo quieres recibir las notificaciones del chat.
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="py-4 space-y-6">
+                    <div className="flex items-center justify-between space-x-2">
+                        <Label htmlFor="notifications-enabled" className="flex flex-col space-y-1">
+                            <span>🔔 Activar Notificaciones</span>
+                            <span className="font-normal leading-snug text-muted-foreground">
+                                Recibe alertas cuando lleguen nuevos mensajes.
+                            </span>
+                        </Label>
+                        <Switch
+                            id="notifications-enabled"
+                            checked={notificationSettings.enabled}
+                            onCheckedChange={(checked) => setNotificationSettings({ ...notificationSettings, enabled: checked })}
+                        />
+                    </div>
+                     <div className="flex items-center justify-between space-x-2">
+                        <Label htmlFor="priority-only" className="flex flex-col space-y-1">
+                            <span>🛡️ Prioridad (Solo Admins)</span>
+                            <span className="font-normal leading-snug text-muted-foreground">
+                                Recibe notificaciones solo de administradores.
+                            </span>
+                        </Label>
+                        <Switch
+                            id="priority-only"
+                            checked={notificationSettings.priorityOnly}
+                            onCheckedChange={(checked) => setNotificationSettings({ ...notificationSettings, priorityOnly: checked })}
+                            disabled={!notificationSettings.enabled}
+                        />
+                    </div>
+                </div>
+                 <DialogFooter>
+                    <Button onClick={() => setIsSettingsOpen(false)}>Cerrar</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+      </>
     );
-}
+});
+
+ChatPage.displayName = 'ChatPage';
+export default ChatPage;
