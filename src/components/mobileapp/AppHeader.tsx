@@ -9,7 +9,7 @@ export function AppHeader() {
 
   const getHeaderText = () => {
       if(isGuest) return "Modo Invitado";
-      if(user) return `Hola, ${user.username}`;
+      if(user) return `JK Festival`;
       return "Bienvenido";
   }
 
