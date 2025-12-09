@@ -7,8 +7,6 @@ import { ticketTypes } from "@/lib/data";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { loadStripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
@@ -18,7 +16,6 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { CheckoutForm } from "@/components/checkout/PaymentForm";
 import { createOrderAndTickets } from "@/lib/orders-service";
 
 
@@ -34,8 +31,6 @@ const customerInfoSchema = z.object({
 export type CustomerInfo = z.infer<typeof customerInfoSchema>;
 
 type Step = "customerInfo" | "payment";
-
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 export default function CheckoutPage() {
   const { cartItems, getCartTotal, clearCart } = useCart();
@@ -62,37 +57,45 @@ export default function CheckoutPage() {
     setIsLoading(true);
     setCustomerData(data);
     
-    try {
-        const response = await fetch("/api/create-payment-intent", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ 
-              cartItems, 
-              customerInfo: data
-            }),
-        });
-        const paymentData = await response.json();
+    // SIMULATION: API Route is not supported in static export.
+    // We will simulate a successful payment flow.
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
 
-        if (paymentData.clientSecret) {
-            setClientSecret(paymentData.clientSecret);
-            setStep("payment");
-        } else if (paymentData.error) {
-            toast({ variant: "destructive", title: "Error de API", description: paymentData.error });
-        }
-    } catch (error) {
-         toast({ variant: "destructive", title: "Error de red", description: "No se pudo conectar con el servidor de pagos." });
-    } finally {
-        setIsLoading(false);
-    }
+    // Simulate creating an order and getting a success response.
+    await handlePaymentSuccess(data);
+    
+    // The original code tried to use an API route, which is not supported by `output: 'export'`.
+    // try {
+    //     const response = await fetch("/api/create-payment-intent", {
+    //         method: "POST",
+    //         headers: { "Content-Type": "application/json" },
+    //         body: JSON.stringify({ 
+    //           cartItems, 
+    //           customerInfo: data
+    //         }),
+    //     });
+    //     const paymentData = await response.json();
+
+    //     if (paymentData.clientSecret) {
+    //         setClientSecret(paymentData.clientSecret);
+    //         setStep("payment");
+    //     } else if (paymentData.error) {
+    //         toast({ variant: "destructive", title: "Error de API", description: paymentData.error });
+    //     }
+    // } catch (error) {
+    //      toast({ variant: "destructive", title: "Error de red", description: "No se pudo conectar con el servidor de pagos." });
+    // } finally {
+    //     setIsLoading(false);
+    // }
   };
   
-  const handlePaymentSuccess = async () => {
-    if (!customerData) return;
+  const handlePaymentSuccess = async (currentCustomerData: CustomerInfo) => {
+    if (!currentCustomerData) return;
      try {
         const newOrder = await createOrderAndTickets({
-            customerName: customerData.fullName,
-            customerEmail: customerData.email,
-            customerCountry: customerData.country,
+            customerName: currentCustomerData.fullName,
+            customerEmail: currentCustomerData.email,
+            customerCountry: currentCustomerData.country,
             totalAmount: total,
             cartItems: cartItems,
         });
@@ -102,6 +105,9 @@ export default function CheckoutPage() {
     } catch (e: any) {
         console.error("Failed to create order after payment:", e);
         toast({ variant: "destructive", title: "Error post-pago", description: "Tu pago fue exitoso, pero hubo un error al crear tu pedido. Por favor, contacta a soporte." });
+        router.push('/payment/failure');
+    } finally {
+        setIsLoading(false);
     }
   }
 
@@ -117,49 +123,6 @@ export default function CheckoutPage() {
      )
   }
 
-  const appearance = {
-    theme: 'stripe' as const,
-    variables: {
-        colorPrimary: '#FF00FF',
-        colorBackground: '#FFFFFF',
-        colorText: '#000000',
-        colorDanger: '#df1b41',
-        fontFamily: 'Montserrat, sans-serif',
-        spacingUnit: '4px',
-        borderRadius: '12px',
-    },
-     rules: {
-        '.Input': {
-          border: '2px solid #000',
-          boxShadow: 'none',
-        },
-        '.Input:focus': {
-          borderColor: '#FF00FF',
-          boxShadow: '0 0 0 2px #FF00FF',
-        },
-        '.Tab': {
-           border: '2px solid #000',
-           boxShadow: 'none',
-        },
-        '.Tab:focus': {
-           outline: 'none',
-           boxShadow: '0 0 0 2px #FF00FF',
-        },
-        '.Tab--selected': {
-            borderColor: '#000',
-            backgroundColor: '#FFE5F2',
-        },
-        '.Tab--selected:hover': {
-            backgroundColor: '#FFE5F2',
-        },
-        '.Tab:hover': {
-            backgroundColor: '#f2f2f2',
-        }
-    }
-  };
-  
-  const stripeOptions = { appearance, clientSecret };
-
   return (
     <div className="bg-transparent">
       <div className="container mx-auto max-w-screen-lg px-4 py-16">
@@ -171,15 +134,12 @@ export default function CheckoutPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 animate-fade-in-up">
           <Card className="bg-card text-black border-2 border-black hard-shadow transition-shadow duration-300 hover:shadow-xl">
             <CardHeader>
-              <CardTitle className="text-black" style={{textShadow: 'none', WebkitTextStroke: 0}}>Tus Datos y Pago</CardTitle>
-               {step === 'payment' && (
-                  <CardDescription>
-                    Estás a un paso de conseguir tus entradas.
-                  </CardDescription>
-                )}
+              <CardTitle className="text-black" style={{textShadow: 'none', WebkitTextStroke: 0}}>Tus Datos</CardTitle>
+               <CardDescription>
+                  Completa tu información para generar los boletos.
+                </CardDescription>
             </CardHeader>
             <CardContent>
-              {step === 'customerInfo' ? (
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(handleCustomerInfoSubmit)} className="space-y-6">
                       <FormField control={form.control} name="fullName" render={({ field }) => (
@@ -197,15 +157,10 @@ export default function CheckoutPage() {
                           )}/>
                       </div>
                       <Button type="submit" disabled={!form.formState.isValid || isLoading} className="w-full" size="lg">
-                          {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Continuar al Pago'}
+                          {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Confirmar y generar boletos'}
                       </Button>
                   </form>
                 </Form>
-              ) : (clientSecret && customerData) ? (
-                 <Elements stripe={stripePromise} options={stripeOptions}>
-                    <CheckoutForm onPaymentSuccess={handlePaymentSuccess} />
-                 </Elements>
-              ) : <div className="flex justify-center items-center h-40"><Loader2 className="h-8 w-8 animate-spin" /></div>}
             </CardContent>
           </Card>
 

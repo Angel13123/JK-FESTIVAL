@@ -8,7 +8,7 @@
 
 /**
  * Generates a random, 20-character alphanumeric string.
- * This is a deterministic local function that replaces the unreliable Genkit flow.
+ * This is a deterministic local function that is compatible with static export.
  * @returns {Promise<string>} A promise that resolves to the 20-character code.
  */
 export async function generateTicketCode(): Promise<string> {
