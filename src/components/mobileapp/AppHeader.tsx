@@ -2,7 +2,7 @@
 "use client";
 
 import { useApp } from "@/context/AppContext";
-import { User, Settings } from "lucide-react";
+import { Music, Settings } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { Button } from "../ui/button";
 
@@ -28,7 +28,7 @@ export function AppHeader({ onSettingsClick }: { onSettingsClick?: () => void })
     >
       <div className="flex items-center gap-3">
         <div className="w-9 h-9 rounded-full bg-yellow-400 flex items-center justify-center">
-          <User className="h-5 w-5 text-black" />
+          <Music className="h-5 w-5 text-black" />
         </div>
         <div>
           <p className="text-lg font-bold text-white leading-tight">{getHeaderText()}</p>

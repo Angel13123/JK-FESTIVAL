@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { LogIn, Send, Loader2, Crown, Shield, Settings } from "lucide-react";
+import { LogIn, Send, Loader2, Crown, Shield } from "lucide-react";
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
@@ -22,6 +22,11 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
 const { firestore } = initializeFirebase();
+
+// Define an interface for the methods exposed by the forwardRef
+export interface ChatPageHandles {
+  openSettings: () => void;
+}
 
 function ChatBubble({ message, isCurrentUser }: { message: ChatMessage, isCurrentUser: boolean }) {
     const bubbleAlignment = isCurrentUser ? "justify-end" : "justify-start";
@@ -64,7 +69,7 @@ function ChatBubble({ message, isCurrentUser }: { message: ChatMessage, isCurren
     );
 }
 
-const ChatPage = forwardRef((props, ref) => {
+const ChatPage = forwardRef<ChatPageHandles>((props, ref) => {
     const { user, isGuest, updateLastReadTimestamp, notificationSettings, setNotificationSettings } = useApp();
     const [newMessage, setNewMessage] = useState("");
     const [isSending, setIsSending] = useState(false);
