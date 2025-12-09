@@ -2,13 +2,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
-  
-  experimental: {
-    serverActions: {
-      enabled: false,
-    },
-    ppr: false,
-  },
 
   images: {
     unoptimized: true,

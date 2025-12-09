@@ -35,7 +35,6 @@ export default function RootLayout({
   const pathname = usePathname();
   const isAdminRoute = pathname.startsWith('/admin') || pathname === '/scan';
   const isMobileApp = pathname.startsWith('/mobileapp');
-  const isHomePage = pathname === '/';
 
   const showPublicNav = !isAdminRoute && !isMobileApp;
 
@@ -63,7 +62,7 @@ export default function RootLayout({
         <FirebaseClientProvider>
            {isMobileApp ? (
               <AppProvider>
-                  {children}
+                {children}
               </AppProvider>
             ) : (
               <CartProvider>
