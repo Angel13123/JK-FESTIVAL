@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { LogIn, Send, Loader2, Crown, Shield } from "lucide-react";
+import { LogIn, Send, Loader2, Crown, Shield, Settings } from "lucide-react";
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
@@ -22,11 +22,6 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
 const { firestore } = initializeFirebase();
-
-// Define an interface for the methods exposed by the forwardRef
-export interface ChatPageHandles {
-  openSettings: () => void;
-}
 
 function ChatBubble({ message, isCurrentUser }: { message: ChatMessage, isCurrentUser: boolean }) {
     const bubbleAlignment = isCurrentUser ? "justify-end" : "justify-start";
@@ -69,7 +64,7 @@ function ChatBubble({ message, isCurrentUser }: { message: ChatMessage, isCurren
     );
 }
 
-const ChatPage = forwardRef<ChatPageHandles>((props, ref) => {
+export default function ChatPage() {
     const { user, isGuest, updateLastReadTimestamp, notificationSettings, setNotificationSettings } = useApp();
     const [newMessage, setNewMessage] = useState("");
     const [isSending, setIsSending] = useState(false);
@@ -82,10 +77,6 @@ const ChatPage = forwardRef<ChatPageHandles>((props, ref) => {
 
     const { data: messages, isLoading } = useCollection<ChatMessage>(messagesQuery);
     
-    useImperativeHandle(ref, () => ({
-      openSettings: () => setIsSettingsOpen(true),
-    }));
-
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
@@ -134,8 +125,11 @@ const ChatPage = forwardRef<ChatPageHandles>((props, ref) => {
     return (
       <>
         <div className="h-[calc(100vh-8rem)] flex flex-col">
-            <div className="text-center mb-4">
+             <div className="text-center mb-4 relative">
                 <h1 className="text-2xl font-bold text-yellow-400">JK FESTIVAL FEBRERO CHAT</h1>
+                 <Button variant="ghost" size="icon" onClick={() => setIsSettingsOpen(true)} className="absolute top-1/2 right-0 -translate-y-1/2">
+                    <Settings className="h-6 w-6 text-gray-400"/>
+                </Button>
             </div>
             
             <div className="flex-1 overflow-y-auto space-y-6 p-4">
@@ -210,7 +204,4 @@ const ChatPage = forwardRef<ChatPageHandles>((props, ref) => {
         </Dialog>
       </>
     );
-});
-
-ChatPage.displayName = 'ChatPage';
-export default ChatPage;
+}

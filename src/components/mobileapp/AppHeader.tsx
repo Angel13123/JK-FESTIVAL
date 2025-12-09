@@ -2,14 +2,10 @@
 "use client";
 
 import { useApp } from "@/context/AppContext";
-import { Music, Settings } from "lucide-react";
-import { usePathname } from "next/navigation";
-import { Button } from "../ui/button";
+import { Music } from "lucide-react";
 
-export function AppHeader({ onSettingsClick }: { onSettingsClick?: () => void }) {
+export function AppHeader() {
   const { user, isGuest } = useApp();
-  const pathname = usePathname();
-  const isChatPage = pathname === "/mobileapp/chat";
 
   const getHeaderText = () => {
       if(isGuest) return "Modo Invitado";
@@ -34,11 +30,6 @@ export function AppHeader({ onSettingsClick }: { onSettingsClick?: () => void })
           <p className="text-lg font-bold text-white leading-tight">{getHeaderText()}</p>
         </div>
       </div>
-      {isChatPage && onSettingsClick && (
-          <Button variant="ghost" size="icon" onClick={onSettingsClick}>
-              <Settings className="h-6 w-6 text-gray-400"/>
-          </Button>
-      )}
     </header>
   );
 }
