@@ -3,7 +3,12 @@ import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
   output: 'export',
-  /* config options here */
+  
+  experimental: {
+    serverActions: false, // Desactiva las Server Actions que causan el error
+    ppr: false,           // Desactiva el Prerendering
+  },
+
   images: {
     unoptimized: true,
     remotePatterns: [
