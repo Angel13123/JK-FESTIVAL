@@ -1,5 +1,5 @@
 
-'use server';
+'use client';
 /**
  * @fileOverview A utility to generate a unique ticket code.
  *

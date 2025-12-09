@@ -1,2 +1,2 @@
-// Flows will be imported for their side effects in this file.
-import './flows/ticket-code-flow';
+// This file is used for Genkit development and can be extended with more flows.
+// For now, it is empty to ensure static export compatibility.
