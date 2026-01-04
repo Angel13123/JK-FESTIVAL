@@ -1,23 +1,91 @@
+'use client';
 
-import { ParticlesBackground } from "@/components/ui/ParticlesBackground";
+import React from 'react';
+import { NexusHeader } from '@/components/nexus/NexusHeader';
+import { ThreeStellarFog } from '@/components/nexus/ThreeStellarFog';
+import { useArchitectLogger } from '@/lib/ArchitectLogger';
 
-export default function LandingPage() {
+const ScrollySection = ({
+  id,
+  title,
+  subtitle,
+  children,
+  align = 'center'
+}: {
+  id: string,
+  title: string,
+  subtitle?: string,
+  children?: React.ReactNode,
+  align?: 'left' | 'center' | 'right'
+}) => {
   return (
-    <main className="relative w-full h-screen bg-black overflow-hidden flex flex-col items-center justify-center">
-      {/* Background Particles */}
-      <ParticlesBackground />
+    <section
+      id={id}
+      data-track-section
+      className="min-h-screen w-full flex flex-col justify-center px-6 md:px-20 py-20 relative snap-center"
+    >
+      <div className={`max-w-4xl w-full z-10 transition-all duration-1000 ease-in-out hover:translate-y-[-10px] ${align === 'center' ? 'mx-auto text-center' : align === 'right' ? 'ml-auto text-right' : 'mr-auto text-left'}`}>
+        <h2 className="text-4xl md:text-6xl font-bold font-headline tracking-tighter text-white mb-4 bg-clip-text text-transparent bg-gradient-to-r from-metallic-gold to-white">
+          {title}
+        </h2>
+        {subtitle && (
+          <p className="text-lg md:text-xl text-gray-300 font-light tracking-wide max-w-2xl mb-10 leading-relaxed border-l-2 border-electric-blue pl-4">
+            {subtitle}
+          </p>
+        )}
 
-      {/* Content Container */}
-      <div className="z-10 flex flex-col items-center gap-8 text-center px-4">
+        {/* Container for future simulations */}
+        <div className="w-full bg-deep-black/30 backdrop-blur-sm border border-white/5 rounded-xl p-6 shadow-[0_0_50px_rgba(0,123,255,0.05)]">
+          {children}
+        </div>
+      </div>
+    </section>
+  );
+};
 
-        {/* Animated Gradient Text */}
-        <h1 className="text-4xl md:text-6xl font-bold tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-[#FFD700] via-[#4169E1] to-[#FFD700] animate-pulse drop-shadow-[0_0_15px_rgba(65,105,225,0.5)] font-serif">
-          Cargando en unos instantes estará disponible la experiencia
-        </h1>
+export default function GoldenNexusPage() {
+  useArchitectLogger(); // Initialize the logger
 
-        {/* Loading Spinner */}
-        <div className="w-12 h-12 border-4 border-blue-500/30 border-t-yellow-400 rounded-full animate-spin shadow-[0_0_20px_rgba(255,215,0,0.3)]"></div>
+  return (
+    <main className="relative w-full text-white overflow-x-hidden snap-y snap-mandatory h-screen overflow-y-scroll scroll-smooth">
+      <NexusHeader />
+      <ThreeStellarFog />
 
+      {/* Intro Section */}
+      <ScrollySection id="nexus-intro" title="THE GOLDEN NEXUS" subtitle="Welcome to the convergence of Thermodynamics and Digital Alchemy.">
+        <div className="p-10 border border-dashed border-white/20 rounded-lg flex items-center justify-center">
+          <span className="text-electric-blue animate-pulse">Initializing Phase 1 Protocols...</span>
+        </div>
+      </ScrollySection>
+
+      {/* Atomic Microscope Container */}
+      <ScrollySection id="atomic-microscope-section" title="ATOMIC MICROSCOPE" subtitle="Observe the fundamental chaos of matter.">
+        <div id="atomic-microscope" className="w-full h-[400px] flex items-center justify-center bg-black/40 rounded-lg relative overflow-hidden group">
+          <div className="absolute inset-0 bg-electric-blue/5 group-hover:bg-electric-blue/10 transition-colors duration-500"></div>
+          <p className="text-gray-500 font-mono text-sm">[ MODULE: ATOMIC_MICROSCOPE // STATUS: AWAITING_INJECTION ]</p>
+        </div>
+      </ScrollySection>
+
+      {/* Equation Forge Container */}
+      <ScrollySection id="equation-forge-section" title="EQUATION FORGE" subtitle="Where mathematical truths are tempered." align="left">
+        <div id="equation-forge" className="w-full h-[400px] flex items-center justify-center bg-black/40 rounded-lg relative overflow-hidden group">
+          <div className="absolute inset-0 bg-metallic-gold/5 group-hover:bg-metallic-gold/10 transition-colors duration-500"></div>
+          <p className="text-gray-500 font-mono text-sm">[ MODULE: EQUATION_FORGE // STATUS: AWAITING_INJECTION ]</p>
+        </div>
+      </ScrollySection>
+
+      {/* Carnot Simulator Container */}
+      <ScrollySection id="carnot-simulator-section" title="CARNOT ENGINE" subtitle="The perfect cycle. The theoretical limit." align="right">
+        <div id="carnot-simulator" className="w-full h-[400px] flex items-center justify-center bg-black/40 rounded-lg relative overflow-hidden group">
+          <div className="absolute inset-0 bg-electric-blue/5 group-hover:bg-metallic-gold/10 transition-colors duration-500"></div>
+          <p className="text-gray-500 font-mono text-sm">[ MODULE: CARNOT_SIMULATOR // STATUS: AWAITING_INJECTION ]</p>
+        </div>
+      </ScrollySection>
+
+      {/* Footer Helper */}
+      <div className="w-full py-10 text-center text-gray-600 text-xs font-mono snap-end">
+        <p>THERMODYNAMICS: THE GOLDEN NEXUS &copy; 2024</p>
+        <p>SYSTEM ARCHITECT: ANTIGRAVITY AGENT</p>
       </div>
     </main>
   );

@@ -24,8 +24,12 @@ module.exports = {
         'hard': '6px 6px 0px 0px #000000',
       },
       colors: {
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
+        background: "var(--background)",
+        foreground: "var(--foreground)",
+        "deep-black": "#000000",
+        "electric-blue": "#007BFF",
+        "metallic-gold": "#D4AF37",
+        "lab-gray": "#1F2937", // Low luminance gray
         card: {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
