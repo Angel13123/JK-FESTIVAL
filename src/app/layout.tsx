@@ -36,7 +36,7 @@ export default function RootLayout({
   const isAdminRoute = pathname.startsWith('/admin') || pathname === '/scan';
   const isMobileApp = pathname.startsWith('/mobileapp');
 
-  const showPublicNav = !isAdminRoute && !isMobileApp;
+  const showPublicNav = !isAdminRoute && !isMobileApp && pathname !== '/';
 
   return (
     <html lang="es" className="dark" suppressHydrationWarning>
@@ -46,7 +46,7 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
         <link rel="icon" href="/icons/icon-192x192.png" />
         <link rel="apple-touch-icon" href="/icons/icon-512x512.png" />
-        <meta name="application-name" content="JK Festival"/>
+        <meta name="application-name" content="JK Festival" />
         <meta name="theme-color" content="#000000" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -60,20 +60,20 @@ export default function RootLayout({
         )}
       >
         <FirebaseClientProvider>
-           {isMobileApp ? (
-              <AppProvider>
-                {children}
-              </AppProvider>
-            ) : (
-              <CartProvider>
-                <div className="flex flex-col min-h-screen">
-                  {showPublicNav && <Navbar />}
-                  <main className="flex-1">{children}</main>
-                  {showPublicNav && <Footer />}
-                </div>
-              </CartProvider>
-            )}
-            <Toaster />
+          {isMobileApp ? (
+            <AppProvider>
+              {children}
+            </AppProvider>
+          ) : (
+            <CartProvider>
+              <div className="flex flex-col min-h-screen">
+                {showPublicNav && <Navbar />}
+                <main className="flex-1">{children}</main>
+                {showPublicNav && <Footer />}
+              </div>
+            </CartProvider>
+          )}
+          <Toaster />
         </FirebaseClientProvider>
       </body>
     </html>
