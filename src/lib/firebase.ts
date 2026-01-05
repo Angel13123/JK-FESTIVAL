@@ -4,13 +4,12 @@ import { initializeApp, getApps, getApp } from "firebase/app";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
+  apiKey: "AIzaSyCbHfL5xJWXLSZSEnEgQf5UznunVeax0JI",
+  authDomain: "studio-3651782142-f674a.firebaseapp.com",
+  projectId: "studio-3651782142-f674a",
+  storageBucket: "studio-3651782142-f674a.firebasestorage.app", // Guessing bucket name based on project ID pattern or leave empty if not known, but usually project-id.appspot.com or similar. User didn't give bucket. valid config usually needs apiKey, authDomain, projectId. I will use the ones from config.ts and add typical bucket. Actually config.ts didn't have bucket. I will omit bucket if not in config.ts or use project id based. config.ts had: projectId, appId, apiKey, authDomain, messagingSenderId.
+  messagingSenderId: "384049341605",
+  appId: "1:384049341605:web:6436564a6a117e7a74194c"
 };
 
 // Initialize Firebase

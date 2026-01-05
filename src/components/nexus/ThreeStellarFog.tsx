@@ -63,7 +63,10 @@ export const ThreeStellarFog = () => {
             <Canvas camera={{ position: [0, 0, 1] }}>
                 <Fog />
                 <Stars />
+                <Fog />
+                <Stars />
                 <ambientLight intensity={0.5} />
+                <pointLight position={[10, 10, 10]} intensity={1.5} color="#007BFF" />
             </Canvas>
             {/* Radial Gradient Overlay */}
             <div
