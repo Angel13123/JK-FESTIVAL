@@ -1,91 +1,169 @@
 'use client';
 
 import React from 'react';
+import { motion } from 'framer-motion';
 import { NexusHeader } from '@/components/nexus/NexusHeader';
 import { ThreeStellarFog } from '@/components/nexus/ThreeStellarFog';
 import { useArchitectLogger } from '@/lib/ArchitectLogger';
+import { AtomicMassSimulator } from '@/components/nexus/AtomicMassSimulator';
+import { TemperatureSimulator } from '@/components/nexus/TemperatureSimulator';
+import { HeatFlowSimulator } from '@/components/nexus/HeatFlowSimulator';
+import { SpecificHeatLab } from '@/components/nexus/SpecificHeatLab';
+import { FormulaForge } from '@/components/nexus/FormulaForge';
 
 const ScrollySection = ({
   id,
   title,
-  subtitle,
   children,
-  align = 'center'
+  align = 'center',
+  academicSource
 }: {
   id: string,
   title: string,
-  subtitle?: string,
   children?: React.ReactNode,
-  align?: 'left' | 'center' | 'right'
+  align?: 'left' | 'center' | 'right',
+  academicSource?: React.ReactNode
 }) => {
   return (
     <section
       id={id}
       data-track-section
-      className="min-h-screen w-full flex flex-col justify-center px-6 md:px-20 py-20 relative snap-center opacity-100"
+      className="min-h-screen w-full flex flex-col justify-center px-6 md:px-20 py-24 relative snap-center"
     >
-      <div className={`max-w-4xl w-full z-10 ${align === 'center' ? 'mx-auto text-center' : align === 'right' ? 'ml-auto text-right' : 'mr-auto text-left'}`}>
-        <h1 className="text-5xl md:text-7xl font-bold font-headline tracking-tighter text-[#D4AF37] mb-6 drop-shadow-[0_0_10px_rgba(212,175,55,0.5)]">
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        viewport={{ once: false, amount: 0.3 }}
+        className={`max-w-5xl w-full z-10 ${align === 'center' ? 'mx-auto text-center' : align === 'right' ? 'ml-auto text-right' : 'mr-auto text-left'}`}
+      >
+        <h1 className="text-4xl md:text-6xl font-bold font-headline tracking-tighter text-[#D4AF37] mb-8 drop-shadow-[0_0_15px_rgba(212,175,55,0.4)]">
           {title}
         </h1>
-        {subtitle && (
-          <p className="text-xl md:text-2xl text-white font-medium tracking-wide max-w-2xl mb-12 leading-relaxed drop-shadow-md">
-            {subtitle}
-          </p>
+
+        {academicSource && (
+          <div className={`mb-10 text-lg md:text-xl text-white font-light tracking-wide leading-relaxed ${align === 'center' ? 'mx-auto' : 'ml-0'} max-w-3xl`}>
+            {academicSource}
+          </div>
         )}
 
-        {/* Container for future simulations */}
-        <div className="w-full bg-deep-black/30 backdrop-blur-sm border border-white/10 rounded-xl p-8 shadow-[0_0_50px_rgba(212,175,55,0.1)]">
-          {children}
-        </div>
-      </div>
+        {/* Simulator Container */}
+        {children && (
+          <div className="w-full bg-deep-black/40 backdrop-blur-md border border-white/10 rounded-xl p-4 md:p-8 shadow-[0_0_60px_rgba(0,123,255,0.08)]">
+            {children}
+          </div>
+        )}
+      </motion.div>
     </section>
   );
 };
 
 export default function GoldenNexusPage() {
-  useArchitectLogger(); // Initialize the logger
+  useArchitectLogger();
 
   return (
-    <main className="relative w-full text-white overflow-x-hidden snap-y snap-mandatory h-screen overflow-y-scroll scroll-smooth">
+    <main className="relative w-full text-white overflow-x-hidden snap-y snap-mandatory h-screen overflow-y-scroll scroll-smooth bg-deep-black">
       <NexusHeader />
       <ThreeStellarFog />
 
-      {/* Intro Section */}
-      <ScrollySection id="nexus-intro" title="THE GOLDEN NEXUS" subtitle="Welcome to the convergence of Thermodynamics and Digital Alchemy.">
+      {/* INTRO */}
+      <ScrollySection
+        id="nexus-intro"
+        title="EL NEXO ATÓMICO"
+        academicSource={
+          <p>Bienvenido a la convergencia de la Termodinámica y la Alquimia Digital. <br />
+            <span className="text-electric-blue text-sm font-mono mt-2 block">PROTOCOLO FASE 2: INICIADO</span></p>
+        }
+      >
         <div className="p-10 border border-dashed border-white/20 rounded-lg flex items-center justify-center">
-          <span className="text-electric-blue animate-pulse">Initializing Phase 1 Protocols...</span>
+          <span className="text-metallic-gold animate-pulse font-mono">SCROLL PARA INICIAR INVESTIGACIÓN ▼</span>
         </div>
       </ScrollySection>
 
-      {/* Atomic Microscope Container */}
-      <ScrollySection id="atomic-microscope-section" title="ATOMIC MICROSCOPE" subtitle="Observe the fundamental chaos of matter.">
-        <div id="atomic-microscope" className="w-full h-[400px] flex items-center justify-center bg-black/40 rounded-lg relative overflow-hidden group">
-          <div className="absolute inset-0 bg-electric-blue/5 group-hover:bg-electric-blue/10 transition-colors duration-500"></div>
-          <p className="text-gray-500 font-mono text-sm">[ MODULE: ATOMIC_MICROSCOPE // STATUS: AWAITING_INJECTION ]</p>
-        </div>
+      {/* SECCION 1: MASA / INERCIA */}
+      <ScrollySection
+        id="atomic-mass"
+        title="LA INERCIA TÉRMICA ($m$)"
+        academicSource={
+          <div className="text-left space-y-4 border-l-4 border-metallic-gold pl-6">
+            <p>"La masa no es solo peso; en termodinámica es la medida de la inercia térmica."</p>
+            <p className="text-sm text-gray-400 font-mono">
+              <strong className="text-white">UNAM (CCH):</strong> "La masa determina la cantidad de energía necesaria para alterar el equilibrio térmico de un sistema."
+              <br />
+              <strong className="text-white">MIT OCW:</strong> "Representa el número total de partículas con grados de libertad traslacional que pueden almacenar energía."
+            </p>
+          </div>
+        }
+      >
+        <AtomicMassSimulator />
       </ScrollySection>
 
-      {/* Equation Forge Container */}
-      <ScrollySection id="equation-forge-section" title="EQUATION FORGE" subtitle="Where mathematical truths are tempered." align="left">
-        <div id="equation-forge" className="w-full h-[400px] flex items-center justify-center bg-black/40 rounded-lg relative overflow-hidden group">
-          <div className="absolute inset-0 bg-metallic-gold/5 group-hover:bg-metallic-gold/10 transition-colors duration-500"></div>
-          <p className="text-gray-500 font-mono text-sm">[ MODULE: EQUATION_FORGE // STATUS: AWAITING_INJECTION ]</p>
-        </div>
+      {/* SECCION 2: TEMPERATURA / TEORIA CINETICA */}
+      <ScrollySection
+        id="kinetic-temperature"
+        title="TEORÍA CINÉTICA ($T$)"
+        align="left"
+        academicSource={
+          <div className="text-left space-y-4 border-l-4 border-electric-blue pl-6">
+            <p>"La temperatura no se posee, se mide. Es el promedio de la energía cinética de las moléculas."</p>
+            <p className="text-sm text-gray-400 font-mono">
+              <strong className="text-white">FACULTAD DE CIENCIAS (UNAM):</strong> "0 Kelvin es el punto teórico donde cesa toda vibración atómica."
+              <br />
+              <strong className="text-white">HARVARD PHYSICS:</strong> "Propiedad estadística que surge del caos molecular."
+            </p>
+          </div>
+        }
+      >
+        <TemperatureSimulator />
       </ScrollySection>
 
-      {/* Carnot Simulator Container */}
-      <ScrollySection id="carnot-simulator-section" title="CARNOT ENGINE" subtitle="The perfect cycle. The theoretical limit." align="right">
-        <div id="carnot-simulator" className="w-full h-[400px] flex items-center justify-center bg-black/40 rounded-lg relative overflow-hidden group">
-          <div className="absolute inset-0 bg-electric-blue/5 group-hover:bg-metallic-gold/10 transition-colors duration-500"></div>
-          <p className="text-gray-500 font-mono text-sm">[ MODULE: CARNOT_SIMULATOR // STATUS: AWAITING_INJECTION ]</p>
-        </div>
+      {/* SECCION 3: CALOR vs ENERGIA */}
+      <ScrollySection
+        id="heat-flow"
+        title="CALOR EN MOVIMIENTO ($Q$)"
+        align="right"
+        academicSource={
+          <div className="text-right space-y-4 border-r-4 border-red-500 pr-6">
+            <p>"El calor es energía en tránsito que fluye por diferencia de potencial térmico."</p>
+            <p className="text-sm text-gray-400 font-mono">
+              <strong className="text-white">NASA GLENN:</strong> "Conducción, Convección y Radiación son los mecanismos de transporte."
+              <br />
+              <strong className="text-white">UC BERKELEY:</strong> "El calor no es un fluido, es movimiento mecánico desordenado (Joule)."
+            </p>
+          </div>
+        }
+      >
+        <HeatFlowSimulator />
       </ScrollySection>
 
-      {/* Footer Helper */}
-      <div className="w-full py-10 text-center text-gray-600 text-xs font-mono snap-end">
+      {/* SECCION 4: CALOR ESPECIFICO */}
+      <ScrollySection
+        id="specific-heat"
+        title="RESISTENCIA TÉRMICA ($c$)"
+        academicSource={
+          <div className="text-center space-y-4">
+            <p>"¿Por qué el agua es el regulador de la vida? Su alto calor específico le permite absorber energía sin cambios drásticos."</p>
+          </div>
+        }
+      >
+        <SpecificHeatLab />
+      </ScrollySection>
+
+      {/* SECCION 5: FORMULA FINALE */}
+      <ScrollySection
+        id="formula-forge"
+        title="LA FORJA MATEMÁTICA"
+        academicSource={
+          <p className="font-mono text-electric-blue">Q = mcΔT</p>
+        }
+      >
+        <FormulaForge />
+      </ScrollySection>
+
+      {/* Footer */}
+      <div className="w-full py-20 text-center text-gray-600 text-xs font-mono snap-end">
         <p>THERMODYNAMICS: THE GOLDEN NEXUS &copy; 2024</p>
-        <p>SYSTEM ARCHITECT: ANTIGRAVITY AGENT</p>
+        <p>SYSTEM ARCHITECT: ANTIGRAVITY AGENT | PROTOCOL 3.0 COMPLETE</p>
       </div>
     </main>
   );
