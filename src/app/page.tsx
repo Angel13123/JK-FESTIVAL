@@ -22,20 +22,20 @@ const ScrollySection = ({
     <section
       id={id}
       data-track-section
-      className="min-h-screen w-full flex flex-col justify-center px-6 md:px-20 py-20 relative snap-center"
+      className="min-h-screen w-full flex flex-col justify-center px-6 md:px-20 py-20 relative snap-center opacity-100"
     >
-      <div className={`max-w-4xl w-full z-10 transition-all duration-1000 ease-in-out hover:translate-y-[-10px] ${align === 'center' ? 'mx-auto text-center' : align === 'right' ? 'ml-auto text-right' : 'mr-auto text-left'}`}>
-        <h2 className="text-4xl md:text-6xl font-bold font-headline tracking-tighter text-white mb-4 bg-clip-text text-transparent bg-gradient-to-r from-metallic-gold to-white">
+      <div className={`max-w-4xl w-full z-10 ${align === 'center' ? 'mx-auto text-center' : align === 'right' ? 'ml-auto text-right' : 'mr-auto text-left'}`}>
+        <h1 className="text-5xl md:text-7xl font-bold font-headline tracking-tighter text-[#D4AF37] mb-6 drop-shadow-[0_0_10px_rgba(212,175,55,0.5)]">
           {title}
-        </h2>
+        </h1>
         {subtitle && (
-          <p className="text-lg md:text-xl text-gray-300 font-light tracking-wide max-w-2xl mb-10 leading-relaxed border-l-2 border-electric-blue pl-4">
+          <p className="text-xl md:text-2xl text-white font-medium tracking-wide max-w-2xl mb-12 leading-relaxed drop-shadow-md">
             {subtitle}
           </p>
         )}
 
         {/* Container for future simulations */}
-        <div className="w-full bg-deep-black/30 backdrop-blur-sm border border-white/5 rounded-xl p-6 shadow-[0_0_50px_rgba(0,123,255,0.05)]">
+        <div className="w-full bg-deep-black/30 backdrop-blur-sm border border-white/10 rounded-xl p-8 shadow-[0_0_50px_rgba(212,175,55,0.1)]">
           {children}
         </div>
       </div>
