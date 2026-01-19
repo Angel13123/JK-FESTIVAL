@@ -24,3 +24,5 @@ export const useAtomicStore = create((set) => ({
     })),
     addLog: (entry) => set((state) => ({ logs: [...state.logs, entry] })),
 }));
+
+export default useAtomicStore;
