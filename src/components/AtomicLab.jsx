@@ -10,6 +10,7 @@ const Atom = ({ position, color, vibrationIntensity }) => {
     const randomPhase = useRef(Math.random() * Math.PI * 2);
 
     useFrame(({ clock }) => {
+        if (!mesh.current) return;
         const t = clock.getElapsedTime() + randomPhase.current;
         // Vibración basada en temperatura (vibrationIntensity)
         const offset = Math.sin(t * 10 * vibrationIntensity) * 0.05 * vibrationIntensity;
@@ -17,9 +18,6 @@ const Atom = ({ position, color, vibrationIntensity }) => {
         mesh.current.position.x = initialPos.current.x + offset;
         mesh.current.position.y = initialPos.current.y + Math.cos(t * 8) * 0.05 * vibrationIntensity;
         mesh.current.position.z = initialPos.current.z + Math.sin(t * 12) * 0.05 * vibrationIntensity;
-
-        // Color cambia con la temperatura (rojo = caliente, azul = frío)
-        // Lerp color logic could go here
     });
 
     return (
